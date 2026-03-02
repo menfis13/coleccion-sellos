@@ -1,38 +1,33 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Colección Filatélica · Isabel II</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:wght@300;400;600&display=swap" rel="stylesheet">
-
-<style>
-/* === TU CSS ORIGINAL SIN CAMBIOS === */
-</style>
+<title>Colección de Sellos</title>
 </head>
 <body>
 
-<!-- ================== INTERFAZ ORIGINAL ================== -->
-<!-- (no se toca nada visual) -->
-
-
 <input type="file" id="fileDelante" accept="image/*">
 <input type="file" id="fileDetras" accept="image/*">
+<button onclick="guardar()">Guardar</button>
+
+<img id="imgDelante" style="max-width:200px;display:none;">
+<img id="imgDetras" style="max-width:200px;display:none;">
 
 <script>
-/* ================= CONFIG ================= */
-const SCRIPT_URL = "PEGA_AQUI_TU_URL_DE_APPS_SCRIPT";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyN-QGFzHoUkHM73sv2xx4-dY8AV6HKIR8trlONAqb-m7-KcagEBN-aZ_6iuN3sv0Q/exec";
+const EDIFIL = 1; // usa aquí el número real
 
-/* ================= SUBIDA DE IMÁGENES ================= */
-function subirImagen(file, campo, filaEdifil) {
-  return new Promise((resolve) => {
+function subirImagen(file, campo) {
+  return new Promise(resolve => {
     const reader = new FileReader();
     reader.onload = () => {
       fetch(SCRIPT_URL, {
         method: "POST",
         body: JSON.stringify({
           action: "uploadImage",
-          edifil: filaEdifil,
+          edifil: EDIFIL,
           campo: campo,
           base64: reader.result
         })
@@ -44,29 +39,33 @@ function subirImagen(file, campo, filaEdifil) {
   });
 }
 
-/* ================= GUARDADO ================= */
-async function guardarSello(datos, edifil) {
-  if (datos.fileDelante) {
-    datos.delante = await subirImagen(datos.fileDelante, "delante", edifil);
-  }
-  if (datos.fileDetras) {
-    datos.detras = await subirImagen(datos.fileDetras, "detras", edifil);
-  }
+async function guardar() {
+  const delanteFile = document.getElementById("fileDelante").files[0];
+  const detrasFile  = document.getElementById("fileDetras").files[0];
+
+  let delanteURL = "";
+  let detrasURL = "";
+
+  if (delanteFile) delanteURL = await subirImagen(delanteFile, "delante");
+  if (detrasFile)  detrasURL  = await subirImagen(detrasFile, "detras");
 
   fetch(SCRIPT_URL, {
     method: "POST",
     body: JSON.stringify({
       action: "saveData",
-      data: datos
+      edifil: EDIFIL,
+      delante: delanteURL,
+      detras: detrasURL
     })
   });
-}
 
-/* ================= CARGA ================= */
-function renderImagen(img, url) {
-  if (url) {
-    img.src = url;
-    img.style.display = "block";
+  if (delanteURL) {
+    imgDelante.src = delanteURL;
+    imgDelante.style.display = "block";
+  }
+  if (detrasURL) {
+    imgDetras.src = detrasURL;
+    imgDetras.style.display = "block";
   }
 }
 </script>
