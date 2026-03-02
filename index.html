@@ -370,8 +370,9 @@ async function saveToSheets(stamp) {
   try {
     const payload = { ...stamp };
     delete payload.referencia;
-    delete payload.delante;
-    delete payload.detras;
+    // Solo borrar si son base64 (muy largas), no si son URLs de Cloudinary
+    if (payload.delante && payload.delante.startsWith('data:')) delete payload.delante;
+    if (payload.detras && payload.detras.startsWith('data:')) delete payload.detras;
     const url = SCRIPT_URL + '?action=save&payload=' + encodeURIComponent(JSON.stringify(payload));
     const res = await fetch(url);
     const json = await res.json();
