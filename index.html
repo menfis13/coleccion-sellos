@@ -171,7 +171,7 @@
   #cropHeader { color:#c8a96e; font-family:'Playfair Display',serif; font-size:1.1rem; letter-spacing:0.05em; }
   #cropHint { color:#6a5a40; font-family:'Crimson Pro',serif; font-size:0.82rem; letter-spacing:0.06em; }
   #cropWrap { position:relative; flex-shrink:1; overflow:visible; touch-action:none; display:inline-block; }
-  #cropImg { display:block; max-width:90vw; max-height:62vh; user-select:none; pointer-events:none; }
+  #cropBg { display:block; max-width:90vw; max-height:62vh; }
   #cropOverlay { position:absolute; top:0; left:0; cursor:crosshair; touch-action:none; }
   .crop-btns { display:flex; gap:12px; flex-shrink:0; }
   .crop-btns button { padding:11px 28px; font-family:'Crimson Pro',serif; font-size:1rem; font-weight:600; border:none; border-radius:2px; cursor:pointer; letter-spacing:0.04em; }
@@ -918,39 +918,38 @@ function showCropModal(sourceCanvas, callback) {
   _cropNatH = sourceCanvas.height;
   showCropModal._src = sourceCanvas;
 
-  // Abrir modal PRIMERO para que la imagen sea visible y tenga dimensiones
-  document.getElementById('cropModal').classList.add('open');
+  // Calcular tamaño display respetando max-width:90vw / max-height:62vh
+  const maxW = Math.floor(window.innerWidth  * 0.90);
+  const maxH = Math.floor(window.innerHeight * 0.62);
+  const scale = Math.min(1, maxW / _cropNatW, maxH / _cropNatH);
+  _cropDispW = Math.round(_cropNatW * scale);
+  _cropDispH = Math.round(_cropNatH * scale);
 
-  const cropImgEl = document.getElementById('cropImg');
+  // Dibujar imagen en canvas de fondo (sin img.onload)
+  const bg = document.getElementById('cropBg');
+  bg.width  = _cropDispW;
+  bg.height = _cropDispH;
+  bg.getContext('2d').drawImage(sourceCanvas, 0, 0, _cropDispW, _cropDispH);
 
-  cropImgEl.onload = () => {
-    // Usar getBoundingClientRect para dimensiones reales en pantalla
-    const rect = cropImgEl.getBoundingClientRect();
-    _cropDispW = Math.round(rect.width)  || cropImgEl.naturalWidth;
-    _cropDispH = Math.round(rect.height) || cropImgEl.naturalHeight;
+  // Canvas overlay encima
+  const ov = document.getElementById('cropOverlay');
+  ov.width  = _cropDispW;
+  ov.height = _cropDispH;
+  ov.style.width  = _cropDispW + 'px';
+  ov.style.height = _cropDispH + 'px';
 
-    const ov = document.getElementById('cropOverlay');
-    ov.style.position = 'absolute';
-    ov.style.left = '0'; ov.style.top = '0';
-    ov.style.width  = _cropDispW + 'px';
-    ov.style.height = _cropDispH + 'px';
-    ov.width  = _cropDispW;
-    ov.height = _cropDispH;
-
-    // Selección inicial = 80% centrada
-    const pad = 0.10;
-    _cropRect = {
-      x: Math.round(_cropDispW * pad),
-      y: Math.round(_cropDispH * pad),
-      w: Math.round(_cropDispW * (1 - pad*2)),
-      h: Math.round(_cropDispH * (1 - pad*2))
-    };
-    _drawCrop();
-    _initCropEvents();
+  // Selección inicial = 80% centrada
+  const pad = 0.10;
+  _cropRect = {
+    x: Math.round(_cropDispW * pad),
+    y: Math.round(_cropDispH * pad),
+    w: Math.round(_cropDispW * (1 - pad*2)),
+    h: Math.round(_cropDispH * (1 - pad*2))
   };
 
-  // Asignar src DESPUÉS de abrir el modal y de definir onload
-  cropImgEl.src = sourceCanvas.toDataURL('image/jpeg', 0.92);
+  document.getElementById('cropModal').classList.add('open');
+  _drawCrop();
+  _initCropEvents();
 }
 
 function confirmCrop(doCrop) {
@@ -1109,7 +1108,7 @@ loadFromSheets();
   <div id="cropHeader">Recortar imagen</div>
   <div id="cropHint">Arrastra los bordes o esquinas para ajustar · Toca dentro para mover</div>
   <div id="cropWrap">
-    <img id="cropImg" src="" alt="" draggable="false">
+    <canvas id="cropBg"></canvas>
     <canvas id="cropOverlay"></canvas>
   </div>
   <div class="crop-btns">
