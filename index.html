@@ -954,8 +954,8 @@ function showCropModal(sourceCanvas, callback) {
   showCropModal._stampWasOpen = stampWasOpen;
 
   document.getElementById('cropModal').classList.add('open');
-  _drawCrop();
-  _initCropEvents();
+  _initCropEvents();  // primero inicializar (clona el canvas)
+  requestAnimationFrame(() => { _drawCrop(); }); // dibujar tras render visible
 }
 
 function confirmCrop(doCrop) {
