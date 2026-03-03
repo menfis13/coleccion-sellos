@@ -170,9 +170,9 @@
   #cropModal.open { display:flex; }
   #cropHeader { color:#c8a96e; font-family:'Playfair Display',serif; font-size:1.1rem; letter-spacing:0.05em; }
   #cropHint { color:#6a5a40; font-family:'Crimson Pro',serif; font-size:0.82rem; letter-spacing:0.06em; }
-  #cropWrap { position:relative; flex-shrink:1; overflow:hidden; touch-action:none; }
+  #cropWrap { position:relative; flex-shrink:1; overflow:visible; touch-action:none; display:inline-block; }
   #cropImg { display:block; max-width:90vw; max-height:62vh; user-select:none; pointer-events:none; }
-  #cropOverlay { position:absolute; inset:0; cursor:crosshair; touch-action:none; }
+  #cropOverlay { position:absolute; top:0; left:0; cursor:crosshair; touch-action:none; }
   .crop-btns { display:flex; gap:12px; flex-shrink:0; }
   .crop-btns button { padding:11px 28px; font-family:'Crimson Pro',serif; font-size:1rem; font-weight:600; border:none; border-radius:2px; cursor:pointer; letter-spacing:0.04em; }
   #btnCropOk  { background:#b8860b; color:#1a1208; }
@@ -916,15 +916,22 @@ function showCropModal(sourceCanvas, callback) {
   _cropCallback = callback;
   _cropNatW = sourceCanvas.width;
   _cropNatH = sourceCanvas.height;
+  showCropModal._src = sourceCanvas;
 
-  const img = document.getElementById('cropImg');
-  img.src = sourceCanvas.toDataURL('image/jpeg', 0.92);
+  // Abrir modal PRIMERO para que la imagen sea visible y tenga dimensiones
+  document.getElementById('cropModal').classList.add('open');
 
-  img.onload = () => {
-    _cropDispW = img.offsetWidth  || img.naturalWidth;
-    _cropDispH = img.offsetHeight || img.naturalHeight;
+  const cropImgEl = document.getElementById('cropImg');
+
+  cropImgEl.onload = () => {
+    // Usar getBoundingClientRect para dimensiones reales en pantalla
+    const rect = cropImgEl.getBoundingClientRect();
+    _cropDispW = Math.round(rect.width)  || cropImgEl.naturalWidth;
+    _cropDispH = Math.round(rect.height) || cropImgEl.naturalHeight;
 
     const ov = document.getElementById('cropOverlay');
+    ov.style.position = 'absolute';
+    ov.style.left = '0'; ov.style.top = '0';
     ov.style.width  = _cropDispW + 'px';
     ov.style.height = _cropDispH + 'px';
     ov.width  = _cropDispW;
@@ -942,9 +949,8 @@ function showCropModal(sourceCanvas, callback) {
     _initCropEvents();
   };
 
-  // Guardar canvas para usarlo al confirmar
-  showCropModal._src = sourceCanvas;
-  document.getElementById('cropModal').classList.add('open');
+  // Asignar src DESPUÉS de abrir el modal y de definir onload
+  cropImgEl.src = sourceCanvas.toDataURL('image/jpeg', 0.92);
 }
 
 function confirmCrop(doCrop) {
