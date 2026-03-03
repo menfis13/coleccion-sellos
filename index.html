@@ -165,17 +165,18 @@
   .btn-login-google svg { flex-shrink: 0; }
   .read-only-notice { background: rgba(184,134,11,0.08); border: 1px solid rgba(184,134,11,0.2); color: #a89070; padding: 6px 32px; font-size: 0.78rem; text-align: center; letter-spacing: 0.08em; }
   .edit-only { } /* controlled via JS */
-  /* ── Modal recorte autocrop ── */
-  #cropModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.93); z-index:950; flex-direction:column; align-items:center; justify-content:center; gap:14px; padding:20px; }
+  /* ── Modal recortador manual ── */
+  #cropModal { display:none; position:fixed; inset:0; background:#0d0a06; z-index:950; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:16px; box-sizing:border-box; }
   #cropModal.open { display:flex; }
-  #cropCanvas { max-width:88vw; max-height:60vh; border:2px solid #b8860b; display:block; }
-  #cropInfo { color:#a89070; font-family:'Crimson Pro',serif; font-size:0.9rem; letter-spacing:0.07em; text-align:center; }
-  #cropControls { display:flex; align-items:center; gap:10px; color:#a89070; font-family:'Crimson Pro',serif; font-size:0.85rem; }
-  #cropControls input[type=range] { accent-color:#b8860b; width:120px; }
-  .crop-btns { display:flex; gap:12px; }
-  .crop-btns button { padding:10px 26px; font-family:'Crimson Pro',serif; font-size:1rem; font-weight:600; border:none; border-radius:2px; cursor:pointer; }
-  #btnCropOk { background:#b8860b; color:#1a1208; }
-  #btnCropSkip { background:none; border:1px solid rgba(184,134,11,0.35); color:#a89070; }
+  #cropHeader { color:#c8a96e; font-family:'Playfair Display',serif; font-size:1.1rem; letter-spacing:0.05em; }
+  #cropHint { color:#6a5a40; font-family:'Crimson Pro',serif; font-size:0.82rem; letter-spacing:0.06em; }
+  #cropWrap { position:relative; flex-shrink:1; overflow:hidden; touch-action:none; }
+  #cropImg { display:block; max-width:90vw; max-height:62vh; user-select:none; pointer-events:none; }
+  #cropOverlay { position:absolute; inset:0; cursor:crosshair; touch-action:none; }
+  .crop-btns { display:flex; gap:12px; flex-shrink:0; }
+  .crop-btns button { padding:11px 28px; font-family:'Crimson Pro',serif; font-size:1rem; font-weight:600; border:none; border-radius:2px; cursor:pointer; letter-spacing:0.04em; }
+  #btnCropOk  { background:#b8860b; color:#1a1208; }
+  #btnCropSkip{ background:none; border:1px solid rgba(184,134,11,0.35); color:#7a6040; }
 </style>
 </head>
 <body>
@@ -769,85 +770,201 @@ function triggerPhoto(side) { currentPhotoTarget = side; document.getElementById
 function triggerPhotoCamera(side) { currentPhotoTarget = side; window._fromCamera = true; document.getElementById('fileCamera').click(); }
 function triggerPhotoGallery(side) { currentPhotoTarget = side; window._fromCamera = false; document.getElementById('fileGallery').click(); }
 
-// ==================== AUTOCROP SELLO (FONDO NEGRO) ====================
-let _cropSourceCanvas = null;
+// ==================== RECORTADOR MANUAL ====================
 let _cropCallback = null;
+let _cropNatW = 1, _cropNatH = 1;   // tamaño real imagen
+let _cropDispW = 1, _cropDispH = 1; // tamaño display
+let _cropRect = { x:0, y:0, w:1, h:1 }; // en coords display
 
-function computeCropBounds(canvas, threshold) {
-  const ctx = canvas.getContext('2d');
-  const { width, height } = canvas;
-  const data = ctx.getImageData(0, 0, width, height).data;
-  const MARGIN_RATIO = 0.018;
-  let minX = width, maxX = 0, minY = height, maxY = 0;
-  for (let y = 0; y < height; y++) {
-    for (let x = 0; x < width; x++) {
-      const i = (y * width + x) * 4;
-      if (data[i] > threshold || data[i+1] > threshold || data[i+2] > threshold) {
-        if (x < minX) minX = x;
-        if (x > maxX) maxX = x;
-        if (y < minY) minY = y;
-        if (y > maxY) maxY = y;
-      }
-    }
-  }
-  if (minX >= maxX || minY >= maxY) return null;
-  const margin = Math.round(Math.max(width, height) * MARGIN_RATIO);
+const HANDLE_R = 10; // radio handles touch
+const HANDLES = ['tl','tm','tr','ml','mr','bl','bm','br','c'];
+
+function _getHandlePos(r) {
   return {
-    x0: Math.max(0, minX - margin),
-    y0: Math.max(0, minY - margin),
-    x1: Math.min(width, maxX + margin),
-    y1: Math.min(height, maxY + margin)
+    tl:{ x:r.x,           y:r.y           },
+    tm:{ x:r.x+r.w/2,     y:r.y           },
+    tr:{ x:r.x+r.w,       y:r.y           },
+    ml:{ x:r.x,           y:r.y+r.h/2     },
+    mr:{ x:r.x+r.w,       y:r.y+r.h/2     },
+    bl:{ x:r.x,           y:r.y+r.h       },
+    bm:{ x:r.x+r.w/2,     y:r.y+r.h       },
+    br:{ x:r.x+r.w,       y:r.y+r.h       },
+    c: { x:r.x+r.w/2,     y:r.y+r.h/2     }
   };
 }
 
-function cropCanvasTo(src, bounds) {
-  const cw = bounds.x1 - bounds.x0, ch = bounds.y1 - bounds.y0;
-  const out = document.createElement('canvas');
-  out.width = cw; out.height = ch;
-  out.getContext('2d').drawImage(src, bounds.x0, bounds.y0, cw, ch, 0, 0, cw, ch);
-  return out;
+function _hitHandle(px, py, r) {
+  const pts = _getHandlePos(r);
+  for (const h of HANDLES) {
+    const d = Math.hypot(px - pts[h].x, py - pts[h].y);
+    if (d <= HANDLE_R + 4) return h;
+  }
+  return null;
 }
 
-function recomputeCrop(val) {
-  const threshold = parseInt(val);
-  document.getElementById('cropThreshVal').textContent = threshold;
-  if (!_cropSourceCanvas) return;
-  const bounds = computeCropBounds(_cropSourceCanvas, threshold);
-  const preview = document.getElementById('cropCanvas');
-  const info = document.getElementById('cropInfo');
-  if (!bounds) {
-    info.textContent = 'No se detectó sello — ajusta la sensibilidad';
-    // Mostrar imagen completa
-    preview.width = _cropSourceCanvas.width;
-    preview.height = _cropSourceCanvas.height;
-    preview.getContext('2d').drawImage(_cropSourceCanvas, 0, 0);
-    return;
+function _drawCrop() {
+  const ov = document.getElementById('cropOverlay');
+  const ctx = ov.getContext('2d');
+  const W = ov.width, H = ov.height;
+  ctx.clearRect(0, 0, W, H);
+  const r = _cropRect;
+
+  // Oscurecer fuera
+  ctx.fillStyle = 'rgba(0,0,0,0.55)';
+  ctx.fillRect(0, 0, W, r.y);
+  ctx.fillRect(0, r.y, r.x, r.h);
+  ctx.fillRect(r.x+r.w, r.y, W-r.x-r.w, r.h);
+  ctx.fillRect(0, r.y+r.h, W, H-r.y-r.h);
+
+  // Borde dorado
+  ctx.strokeStyle = '#b8860b';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(r.x+1, r.y+1, r.w-2, r.h-2);
+
+  // Regla de tercios (tenue)
+  ctx.strokeStyle = 'rgba(184,134,11,0.25)';
+  ctx.lineWidth = 1;
+  for (let i=1; i<3; i++) {
+    ctx.beginPath(); ctx.moveTo(r.x + r.w*i/3, r.y); ctx.lineTo(r.x + r.w*i/3, r.y+r.h); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(r.x, r.y + r.h*i/3); ctx.lineTo(r.x+r.w, r.y + r.h*i/3); ctx.stroke();
   }
-  const cw = bounds.x1 - bounds.x0, ch = bounds.y1 - bounds.y0;
-  const pct = Math.round((cw * ch) / (_cropSourceCanvas.width * _cropSourceCanvas.height) * 100);
-  info.textContent = `Recorte detectado: ${cw}×${ch}px (${pct}% de la imagen original)`;
-  preview.width = cw; preview.height = ch;
-  preview.getContext('2d').drawImage(_cropSourceCanvas, bounds.x0, bounds.y0, cw, ch, 0, 0, cw, ch);
+
+  // Handles
+  const pts = _getHandlePos(r);
+  for (const h of HANDLES) {
+    if (h === 'c') continue;
+    ctx.fillStyle = '#b8860b';
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(pts[h].x, pts[h].y, HANDLE_R, 0, Math.PI*2);
+    ctx.fill(); ctx.stroke();
+  }
+
+  // Info tamaño
+  const scaleX = _cropNatW / _cropDispW;
+  const scaleY = _cropNatH / _cropDispH;
+  const pw = Math.round(r.w * scaleX), ph = Math.round(r.h * scaleY);
+  ctx.fillStyle = 'rgba(184,134,11,0.9)';
+  ctx.font = '13px Crimson Pro, serif';
+  ctx.fillText(`${pw} × ${ph}px`, r.x + 6, r.y + r.h - 7);
+}
+
+// ── Interacción ─────────────────────────────────────────
+let _drag = null;
+let _dragStart = {};
+
+function _pointerPos(e, el) {
+  const rect = el.getBoundingClientRect();
+  const src = e.touches ? e.touches[0] : e;
+  return { x: src.clientX - rect.left, y: src.clientY - rect.top };
+}
+
+function _clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+const MIN_SIZE = 20;
+
+function _onPointerDown(e) {
+  e.preventDefault();
+  const ov = document.getElementById('cropOverlay');
+  const p = _pointerPos(e, ov);
+  const hit = _hitHandle(p.x, p.y, _cropRect);
+  _drag = hit || null;
+  _dragStart = { p, rect: {..._cropRect} };
+}
+
+function _onPointerMove(e) {
+  if (!_drag) return;
+  e.preventDefault();
+  const ov = document.getElementById('cropOverlay');
+  const p = _pointerPos(e, ov);
+  const dx = p.x - _dragStart.p.x, dy = p.y - _dragStart.p.y;
+  const s = _dragStart.rect;
+  const W = _cropDispW, H = _cropDispH;
+  let {x, y, w, h} = s;
+
+  if (_drag === 'c') {
+    x = _clamp(s.x + dx, 0, W - w);
+    y = _clamp(s.y + dy, 0, H - h);
+  } else {
+    if (_drag.includes('l')) { const nx = _clamp(s.x+dx, 0, s.x+s.w-MIN_SIZE); w = s.w-(nx-s.x); x = nx; }
+    if (_drag.includes('r')) { w = _clamp(s.w+dx, MIN_SIZE, W-s.x); }
+    if (_drag.includes('t')) { const ny = _clamp(s.y+dy, 0, s.y+s.h-MIN_SIZE); h = s.h-(ny-s.y); y = ny; }
+    if (_drag.includes('b')) { h = _clamp(s.h+dy, MIN_SIZE, H-s.y); }
+    if (_drag === 'tm' || _drag === 'bm') x = s.x;
+    if (_drag === 'ml' || _drag === 'mr') y = s.y;
+  }
+  _cropRect = {x, y, w, h};
+  _drawCrop();
+}
+
+function _onPointerUp(e) { _drag = null; }
+
+function _initCropEvents() {
+  const ov = document.getElementById('cropOverlay');
+  // Limpiar listeners previos clonando
+  const fresh = ov.cloneNode(false);
+  ov.parentNode.replaceChild(fresh, ov);
+  fresh.addEventListener('mousedown',  _onPointerDown);
+  fresh.addEventListener('touchstart', _onPointerDown, {passive:false});
+  window.addEventListener('mousemove',  _onPointerMove);
+  window.addEventListener('touchmove',  _onPointerMove, {passive:false});
+  window.addEventListener('mouseup',   _onPointerUp);
+  window.addEventListener('touchend',  _onPointerUp);
+}
+
+function showCropModal(sourceCanvas, callback) {
+  _cropCallback = callback;
+  _cropNatW = sourceCanvas.width;
+  _cropNatH = sourceCanvas.height;
+
+  const img = document.getElementById('cropImg');
+  img.src = sourceCanvas.toDataURL('image/jpeg', 0.92);
+
+  img.onload = () => {
+    _cropDispW = img.offsetWidth  || img.naturalWidth;
+    _cropDispH = img.offsetHeight || img.naturalHeight;
+
+    const ov = document.getElementById('cropOverlay');
+    ov.style.width  = _cropDispW + 'px';
+    ov.style.height = _cropDispH + 'px';
+    ov.width  = _cropDispW;
+    ov.height = _cropDispH;
+
+    // Selección inicial = 80% centrada
+    const pad = 0.10;
+    _cropRect = {
+      x: Math.round(_cropDispW * pad),
+      y: Math.round(_cropDispH * pad),
+      w: Math.round(_cropDispW * (1 - pad*2)),
+      h: Math.round(_cropDispH * (1 - pad*2))
+    };
+    _drawCrop();
+    _initCropEvents();
+  };
+
+  // Guardar canvas para usarlo al confirmar
+  showCropModal._src = sourceCanvas;
+  document.getElementById('cropModal').classList.add('open');
 }
 
 function confirmCrop(doCrop) {
   document.getElementById('cropModal').classList.remove('open');
-  const threshold = parseInt(document.getElementById('cropThreshold').value);
-  let result = _cropSourceCanvas;
-  if (doCrop) {
-    const bounds = computeCropBounds(_cropSourceCanvas, threshold);
-    if (bounds) result = cropCanvasTo(_cropSourceCanvas, bounds);
+  const src = showCropModal._src;
+  let result = src;
+  if (doCrop && src) {
+    const scaleX = _cropNatW / _cropDispW;
+    const scaleY = _cropNatH / _cropDispH;
+    const rx = Math.round(_cropRect.x * scaleX);
+    const ry = Math.round(_cropRect.y * scaleY);
+    const rw = Math.round(_cropRect.w * scaleX);
+    const rh = Math.round(_cropRect.h * scaleY);
+    const out = document.createElement('canvas');
+    out.width = rw; out.height = rh;
+    out.getContext('2d').drawImage(src, rx, ry, rw, rh, 0, 0, rw, rh);
+    result = out;
   }
-  _cropSourceCanvas = null;
+  showCropModal._src = null;
   if (_cropCallback) { _cropCallback(result); _cropCallback = null; }
-}
-
-function showCropModal(canvas, callback) {
-  _cropSourceCanvas = canvas;
-  _cropCallback = callback;
-  const thresh = parseInt(document.getElementById('cropThreshold').value);
-  recomputeCrop(thresh);
-  document.getElementById('cropModal').classList.add('open');
 }
 
 async function handlePhoto(event) {
@@ -869,8 +986,7 @@ async function handlePhoto(event) {
     canvas.width = w; canvas.height = h;
     canvas.getContext('2d').drawImage(img, 0, 0, w, h);
 
-    // Si viene de cámara → mostrar modal de recorte
-    const fromCam = window._fromCamera;
+    // Mostrar recortador siempre (cámara y galería)
     window._fromCamera = false;
 
     const uploadCanvas = async (finalCanvas) => {
@@ -916,11 +1032,7 @@ async function handlePhoto(event) {
     }, 'image/jpeg', 0.88);
     }; // fin uploadCanvas
 
-    if (fromCam) {
-      showCropModal(canvas, uploadCanvas);
-    } else {
-      uploadCanvas(canvas);
-    }
+    showCropModal(canvas, uploadCanvas);
   };
   img.src = objectUrl;
   event.target.value = '';
@@ -986,18 +1098,17 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbo
 loadFromSheets();
 </script>
 
-<!-- Modal autocrop -->
+<!-- Modal recortador manual -->
 <div id="cropModal">
-  <div id="cropInfo">Analizando imagen...</div>
-  <canvas id="cropCanvas"></canvas>
-  <div id="cropControls">
-    <span>Sensibilidad:</span>
-    <input type="range" id="cropThreshold" min="10" max="150" value="40" oninput="recomputeCrop(this.value)">
-    <span id="cropThreshVal">40</span>
+  <div id="cropHeader">Recortar imagen</div>
+  <div id="cropHint">Arrastra los bordes o esquinas para ajustar · Toca dentro para mover</div>
+  <div id="cropWrap">
+    <img id="cropImg" src="" alt="" draggable="false">
+    <canvas id="cropOverlay"></canvas>
   </div>
   <div class="crop-btns">
     <button id="btnCropSkip" onclick="confirmCrop(false)">Sin recortar</button>
-    <button id="btnCropOk" onclick="confirmCrop(true)">✓ Usar recorte</button>
+    <button id="btnCropOk"   onclick="confirmCrop(true)">✓ Recortar</button>
   </div>
 </div>
 </body>
