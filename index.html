@@ -401,7 +401,7 @@ window.addEventListener('load', () => {
       google.accounts.id.initialize({
         client_id: GOOGLE_CLIENT_ID,
         callback: handleGoogleCredential,
-        auto_select: false,
+        auto_select: true,
         cancel_on_tap_outside: true,
       });
       applyAuthUI();
@@ -542,13 +542,19 @@ function getFiltered() {
   const filterColor = document.getElementById('filterColor').value;
   return stamps.filter(s => {
     if (search) {
-      const hay = [s.edifil, s.año, s.descripcion, s.color, s.valor_facial, s.dentado, s.estado, s.notas].join(' ').toLowerCase();
-      if (!hay.includes(search)) return false;
+      // Si es solo número, buscar Edifil exacto
+      if (/^\d+$/.test(search)) {
+        if (String(s.edifil) !== search) return false;
+      } else {
+        const hay = [s.edifil, s.año, s.descripcion, s.color, s.valor_facial, s.dentado, s.estado, s.notas].join(' ').toLowerCase();
+        if (!hay.includes(search)) return false;
+      }
     }
     if (filterYear && String(s.año) !== filterYear) return false;
     if (filterEstado === 'con_estado' && !s.estado) return false;
     if (filterEstado === 'sin_estado' && s.estado) return false;
-    if (filterColor && s.color?.toLowerCase() !== filterColor.toLowerCase()) return false;
+    // Color parcial: "amarillo" encuentra "negro/amarillo"
+    if (filterColor && !s.color?.toLowerCase().includes(filterColor.toLowerCase())) return false;
     return true;
   }).sort((a,b) => {
     let av = a[sortField], bv = b[sortField];
