@@ -741,6 +741,8 @@ function setPhotoSlot(side, src) {
   }
 }
 function triggerPhoto(side) { currentPhotoTarget = side; document.getElementById('fileInput').click(); }
+function triggerPhotoCamera(side) { currentPhotoTarget = side; document.getElementById('fileCamera').click(); }
+function triggerPhotoGallery(side) { currentPhotoTarget = side; document.getElementById('fileGallery').click(); }
 async function handlePhoto(event) {
   const file = event.target.files[0];
   if (!file) return;
