@@ -166,7 +166,7 @@
   .read-only-notice { background: rgba(184,134,11,0.08); border: 1px solid rgba(184,134,11,0.2); color: #a89070; padding: 6px 32px; font-size: 0.78rem; text-align: center; letter-spacing: 0.08em; }
   .edit-only { } /* controlled via JS */
   /* ── Modal recortador manual ── */
-  #cropModal { display:none; position:fixed; inset:0; background:#0d0a06; z-index:950; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:16px; box-sizing:border-box; }
+  #cropModal { display:none; position:fixed; inset:0; background:#0d0a06; z-index:9999; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:16px; box-sizing:border-box; }
   #cropModal.open { display:flex; }
   #cropHeader { color:#c8a96e; font-family:'Playfair Display',serif; font-size:1.1rem; letter-spacing:0.05em; }
   #cropHint { color:#6a5a40; font-family:'Crimson Pro',serif; font-size:0.82rem; letter-spacing:0.06em; }
@@ -947,6 +947,12 @@ function showCropModal(sourceCanvas, callback) {
     h: Math.round(_cropDispH * (1 - pad*2))
   };
 
+  // Ocultar modal del sello mientras se recorta
+  const stampModal = document.getElementById('modalOverlay');
+  const stampWasOpen = stampModal.classList.contains('open');
+  if (stampWasOpen) stampModal.classList.remove('open');
+  showCropModal._stampWasOpen = stampWasOpen;
+
   document.getElementById('cropModal').classList.add('open');
   _drawCrop();
   _initCropEvents();
@@ -954,6 +960,11 @@ function showCropModal(sourceCanvas, callback) {
 
 function confirmCrop(doCrop) {
   document.getElementById('cropModal').classList.remove('open');
+  // Restaurar modal del sello
+  if (showCropModal._stampWasOpen) {
+    document.getElementById('modalOverlay').classList.add('open');
+    showCropModal._stampWasOpen = false;
+  }
   const src = showCropModal._src;
   let result = src;
   if (doCrop && src) {
