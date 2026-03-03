@@ -165,6 +165,17 @@
   .btn-login-google svg { flex-shrink: 0; }
   .read-only-notice { background: rgba(184,134,11,0.08); border: 1px solid rgba(184,134,11,0.2); color: #a89070; padding: 6px 32px; font-size: 0.78rem; text-align: center; letter-spacing: 0.08em; }
   .edit-only { } /* controlled via JS */
+  /* ── Modal recorte autocrop ── */
+  #cropModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.93); z-index:950; flex-direction:column; align-items:center; justify-content:center; gap:14px; padding:20px; }
+  #cropModal.open { display:flex; }
+  #cropCanvas { max-width:88vw; max-height:60vh; border:2px solid #b8860b; display:block; }
+  #cropInfo { color:#a89070; font-family:'Crimson Pro',serif; font-size:0.9rem; letter-spacing:0.07em; text-align:center; }
+  #cropControls { display:flex; align-items:center; gap:10px; color:#a89070; font-family:'Crimson Pro',serif; font-size:0.85rem; }
+  #cropControls input[type=range] { accent-color:#b8860b; width:120px; }
+  .crop-btns { display:flex; gap:12px; }
+  .crop-btns button { padding:10px 26px; font-family:'Crimson Pro',serif; font-size:1rem; font-weight:600; border:none; border-radius:2px; cursor:pointer; }
+  #btnCropOk { background:#b8860b; color:#1a1208; }
+  #btnCropSkip { background:none; border:1px solid rgba(184,134,11,0.35); color:#a89070; }
 </style>
 </head>
 <body>
@@ -759,21 +770,19 @@ function triggerPhotoCamera(side) { currentPhotoTarget = side; window._fromCamer
 function triggerPhotoGallery(side) { currentPhotoTarget = side; window._fromCamera = false; document.getElementById('fileGallery').click(); }
 
 // ==================== AUTOCROP SELLO (FONDO NEGRO) ====================
-function autocropStamp(canvas) {
+let _cropSourceCanvas = null;
+let _cropCallback = null;
+
+function computeCropBounds(canvas, threshold) {
   const ctx = canvas.getContext('2d');
   const { width, height } = canvas;
   const data = ctx.getImageData(0, 0, width, height).data;
-
-  // Pixel "no negro" si cualquier canal > 35
-  const THRESHOLD = 35;
-  // Margen ~1.5% del lado mayor (~2mm aprox)
-  const MARGIN_RATIO = 0.015;
-
+  const MARGIN_RATIO = 0.018;
   let minX = width, maxX = 0, minY = height, maxY = 0;
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
       const i = (y * width + x) * 4;
-      if (data[i] > THRESHOLD || data[i+1] > THRESHOLD || data[i+2] > THRESHOLD) {
+      if (data[i] > threshold || data[i+1] > threshold || data[i+2] > threshold) {
         if (x < minX) minX = x;
         if (x > maxX) maxX = x;
         if (y < minY) minY = y;
@@ -781,21 +790,64 @@ function autocropStamp(canvas) {
       }
     }
   }
-
-  // Si no se detecta sello (imagen toda negra), devolver original
-  if (minX >= maxX || minY >= maxY) return canvas;
-
+  if (minX >= maxX || minY >= maxY) return null;
   const margin = Math.round(Math.max(width, height) * MARGIN_RATIO);
-  const x0 = Math.max(0, minX - margin);
-  const y0 = Math.max(0, minY - margin);
-  const x1 = Math.min(width, maxX + margin);
-  const y1 = Math.min(height, maxY + margin);
+  return {
+    x0: Math.max(0, minX - margin),
+    y0: Math.max(0, minY - margin),
+    x1: Math.min(width, maxX + margin),
+    y1: Math.min(height, maxY + margin)
+  };
+}
 
-  const cropped = document.createElement('canvas');
-  cropped.width = x1 - x0;
-  cropped.height = y1 - y0;
-  cropped.getContext('2d').drawImage(canvas, x0, y0, x1 - x0, y1 - y0, 0, 0, x1 - x0, y1 - y0);
-  return cropped;
+function cropCanvasTo(src, bounds) {
+  const cw = bounds.x1 - bounds.x0, ch = bounds.y1 - bounds.y0;
+  const out = document.createElement('canvas');
+  out.width = cw; out.height = ch;
+  out.getContext('2d').drawImage(src, bounds.x0, bounds.y0, cw, ch, 0, 0, cw, ch);
+  return out;
+}
+
+function recomputeCrop(val) {
+  const threshold = parseInt(val);
+  document.getElementById('cropThreshVal').textContent = threshold;
+  if (!_cropSourceCanvas) return;
+  const bounds = computeCropBounds(_cropSourceCanvas, threshold);
+  const preview = document.getElementById('cropCanvas');
+  const info = document.getElementById('cropInfo');
+  if (!bounds) {
+    info.textContent = 'No se detectó sello — ajusta la sensibilidad';
+    // Mostrar imagen completa
+    preview.width = _cropSourceCanvas.width;
+    preview.height = _cropSourceCanvas.height;
+    preview.getContext('2d').drawImage(_cropSourceCanvas, 0, 0);
+    return;
+  }
+  const cw = bounds.x1 - bounds.x0, ch = bounds.y1 - bounds.y0;
+  const pct = Math.round((cw * ch) / (_cropSourceCanvas.width * _cropSourceCanvas.height) * 100);
+  info.textContent = `Recorte detectado: ${cw}×${ch}px (${pct}% de la imagen original)`;
+  preview.width = cw; preview.height = ch;
+  preview.getContext('2d').drawImage(_cropSourceCanvas, bounds.x0, bounds.y0, cw, ch, 0, 0, cw, ch);
+}
+
+function confirmCrop(doCrop) {
+  document.getElementById('cropModal').classList.remove('open');
+  const threshold = parseInt(document.getElementById('cropThreshold').value);
+  let result = _cropSourceCanvas;
+  if (doCrop) {
+    const bounds = computeCropBounds(_cropSourceCanvas, threshold);
+    if (bounds) result = cropCanvasTo(_cropSourceCanvas, bounds);
+  }
+  _cropSourceCanvas = null;
+  if (_cropCallback) { _cropCallback(result); _cropCallback = null; }
+}
+
+function showCropModal(canvas, callback) {
+  _cropSourceCanvas = canvas;
+  _cropCallback = callback;
+  const thresh = parseInt(document.getElementById('cropThreshold').value);
+  recomputeCrop(thresh);
+  document.getElementById('cropModal').classList.add('open');
 }
 
 async function handlePhoto(event) {
@@ -817,20 +869,17 @@ async function handlePhoto(event) {
     canvas.width = w; canvas.height = h;
     canvas.getContext('2d').drawImage(img, 0, 0, w, h);
 
-    // Recorte automático si viene de cámara (fondo negro)
-    let finalCanvas = canvas;
-    if (window._fromCamera) {
-      showToast('Detectando sello...');
-      finalCanvas = autocropStamp(canvas);
-      window._fromCamera = false;
-    }
+    // Si viene de cámara → mostrar modal de recorte
+    const fromCam = window._fromCamera;
+    window._fromCamera = false;
 
-    const previewSrc = finalCanvas.toDataURL('image/jpeg', 0.85);
-    setPhotoSlot(currentPhotoTarget, previewSrc);
-    showToast('Subiendo foto...');
-    setSyncStatus('syncing', 'Subiendo foto a Cloudinary...');
+    const uploadCanvas = async (finalCanvas) => {
+      const previewSrc = finalCanvas.toDataURL('image/jpeg', 0.85);
+      setPhotoSlot(currentPhotoTarget, previewSrc);
+      showToast('Subiendo foto...');
+      setSyncStatus('syncing', 'Subiendo foto a Cloudinary...');
 
-    finalCanvas.toBlob(async (blob) => {
+      finalCanvas.toBlob(async (blob) => {
       try {
         const formData = new FormData();
         formData.append('file', blob, 'sello.jpg');
@@ -865,6 +914,13 @@ async function handlePhoto(event) {
         showToast('Error: ' + err.message);
       }
     }, 'image/jpeg', 0.88);
+    }; // fin uploadCanvas
+
+    if (fromCam) {
+      showCropModal(canvas, uploadCanvas);
+    } else {
+      uploadCanvas(canvas);
+    }
   };
   img.src = objectUrl;
   event.target.value = '';
@@ -929,5 +985,20 @@ function showToast(msg) {
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
 loadFromSheets();
 </script>
+
+<!-- Modal autocrop -->
+<div id="cropModal">
+  <div id="cropInfo">Analizando imagen...</div>
+  <canvas id="cropCanvas"></canvas>
+  <div id="cropControls">
+    <span>Sensibilidad:</span>
+    <input type="range" id="cropThreshold" min="10" max="150" value="40" oninput="recomputeCrop(this.value)">
+    <span id="cropThreshVal">40</span>
+  </div>
+  <div class="crop-btns">
+    <button id="btnCropSkip" onclick="confirmCrop(false)">Sin recortar</button>
+    <button id="btnCropOk" onclick="confirmCrop(true)">✓ Usar recorte</button>
+  </div>
+</div>
 </body>
 </html>
