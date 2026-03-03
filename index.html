@@ -103,14 +103,18 @@
   .modal-body { padding: 24px 28px; }
 
   .photo-section { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 24px; }
-  .photo-slot { border: 2px dashed rgba(92,61,30,0.25); border-radius: 3px; min-height: 160px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; transition: border-color 0.2s; position: relative; overflow: hidden; background: #ffffff; }
+  .photo-slot { border: 2px dashed rgba(92,61,30,0.25); border-radius: 3px; min-height: 180px; display: flex; flex-direction: column; align-items: stretch; justify-content: flex-start; transition: border-color 0.2s; position: relative; overflow: hidden; background: #ffffff; }
   .photo-slot:hover { border-color: var(--gold); }
-  .photo-slot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; cursor: zoom-in; background: transparent; }
+  .photo-slot-preview { flex: 1; position: relative; display: flex; align-items: center; justify-content: center; min-height: 110px; }
+  .photo-slot-preview img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; cursor: zoom-in; background: transparent; }
   .photo-slot-icon { font-size: 1.5rem; opacity: 0.3; z-index: 1; }
-  .photo-actions { position: absolute; bottom: 0; left: 0; right: 0; display: flex; gap: 1px; opacity: 0; transition: opacity 0.2s; z-index: 3; }
-  .photo-slot:hover .photo-actions { opacity: 1; }
-  .photo-actions button { flex: 1; background: rgba(26,18,8,0.75); color: var(--gold-light); border: none; padding: 5px 4px; font-family: 'Crimson Pro', serif; font-size: 0.72rem; cursor: pointer; font-weight: 600; transition: background 0.15s; }
-  .photo-actions button:hover { background: rgba(26,18,8,0.95); }
+  .photo-actions { display: flex; gap: 0; border-top: 1px solid rgba(92,61,30,0.12); z-index: 3; flex-shrink: 0; }
+  .photo-actions button { flex: 1; background: #faf7f2; color: var(--sepia); border: none; border-right: 1px solid rgba(92,61,30,0.12); padding: 7px 2px; font-family: 'Crimson Pro', serif; font-size: 0.67rem; cursor: pointer; font-weight: 600; transition: background 0.15s, color 0.15s; line-height: 1.3; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .photo-actions button:last-child { border-right: none; }
+  .photo-actions button:hover { background: var(--parchment); color: var(--ink); }
+  .photo-actions button .btn-icon { font-size: 1rem; }
+  .photo-actions button.btn-quitar { color: #c0392b; }
+  .photo-actions button.btn-quitar:hover { background: #fdf0ee; color: #8b3a2a; }
 
   .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   .form-group { display: flex; flex-direction: column; gap: 5px; }
@@ -233,25 +237,32 @@
     </div>
     <div class="modal-body">
       <div class="photo-section">
-        <div class="photo-slot" id="slotReferencia"><span class="photo-slot-icon">🏛️</span></div>
+        <div class="photo-slot" id="slotReferencia">
+          <div class="photo-slot-preview"><span class="photo-slot-icon">🏛️</span></div>
+          <div style="text-align:center;font-size:0.62rem;color:var(--sepia);padding:4px 0 3px;letter-spacing:0.07em;border-top:1px solid rgba(92,61,30,0.1);background:#faf7f2">REFERENCIA</div>
+        </div>
         <div class="photo-slot" id="slotDelante">
-          <span class="photo-slot-icon">📷</span>
+          <div class="photo-slot-preview"><span class="photo-slot-icon">📷</span></div>
+          <div style="text-align:center;font-size:0.62rem;color:var(--sepia);padding:4px 0 3px;letter-spacing:0.07em;border-top:1px solid rgba(92,61,30,0.1);background:#faf7f2">ANVERSO</div>
           <div class="photo-actions edit-only" id="overlayDelante">
-            <button onclick="event.stopPropagation(); triggerPhoto('delante')">📁 Añadir foto</button>
+            <button onclick="event.stopPropagation(); triggerPhotoCamera('delante')"><span class="btn-icon">📷</span><span>Cámara</span></button>
+            <button onclick="event.stopPropagation(); triggerPhotoGallery('delante')"><span class="btn-icon">🖼️</span><span>Galería</span></button>
+            <button class="btn-quitar" onclick="event.stopPropagation(); removePhoto('delante')"><span class="btn-icon">🗑️</span><span>Quitar</span></button>
           </div>
         </div>
         <div class="photo-slot" id="slotDetras">
-          <span class="photo-slot-icon">📷</span>
+          <div class="photo-slot-preview"><span class="photo-slot-icon">📷</span></div>
+          <div style="text-align:center;font-size:0.62rem;color:var(--sepia);padding:4px 0 3px;letter-spacing:0.07em;border-top:1px solid rgba(92,61,30,0.1);background:#faf7f2">REVERSO</div>
           <div class="photo-actions edit-only" id="overlayDetras">
-            <button onclick="event.stopPropagation(); triggerPhoto('detras')">📁 Añadir foto</button>
+            <button onclick="event.stopPropagation(); triggerPhotoCamera('detras')"><span class="btn-icon">📷</span><span>Cámara</span></button>
+            <button onclick="event.stopPropagation(); triggerPhotoGallery('detras')"><span class="btn-icon">🖼️</span><span>Galería</span></button>
+            <button class="btn-quitar" onclick="event.stopPropagation(); removePhoto('detras')"><span class="btn-icon">🗑️</span><span>Quitar</span></button>
           </div>
         </div>
       </div>
-      <!-- Sustituido aquí -->
+      <!-- Inputs ocultos para cámara y galería -->
       <input type="file" id="fileCamera" accept="image/*" capture="environment" onchange="handlePhoto(event)" style="display:none;">
-      <button type="button" class="edit-only" onclick="document.getElementById('fileCamera').click()">📷 Usar cámara</button>
       <input type="file" id="fileGallery" accept="image/*" onchange="handlePhoto(event)" style="display:none;">
-      <button type="button" class="edit-only" onclick="document.getElementById('fileGallery').click()">🖼️ Elegir de galería</button>
       <div class="form-grid">
         <div class="form-group"><label class="form-label">Nº Edifil</label><input class="form-input" type="number" id="fEdifil" placeholder="Ej: 48"></div>
         <div class="form-group"><label class="form-label">Año</label><input class="form-input" type="number" id="fAño" placeholder="Ej: 1856"></div>
@@ -716,7 +727,8 @@ function deleteStamp() {
 function setPhotoSlot(side, src) {
   const slotId = side === 'delante' ? 'slotDelante' : side === 'detras' ? 'slotDetras' : 'slotReferencia';
   const slot = document.getElementById(slotId);
-  const existing = slot.querySelector('img');
+  const preview = slot.querySelector('.photo-slot-preview') || slot;
+  const existing = preview.querySelector('img');
   if (existing) existing.remove();
   slot.classList.remove('has-photo');
   if (src) {
@@ -724,17 +736,8 @@ function setPhotoSlot(side, src) {
     img.src = src;
     const captions = { referencia: 'Imagen de referencia', delante: 'Mi sello · Cara delantera', detras: 'Mi sello · Cara trasera' };
     img.addEventListener('click', (e) => { e.stopPropagation(); openLightbox(src, captions[side]||''); });
-    slot.insertBefore(img, slot.firstChild);
+    preview.insertBefore(img, preview.firstChild);
     slot.classList.add('has-photo');
-    if (side === 'delante' || side === 'detras') {
-      const overlay = document.getElementById(side === 'delante' ? 'overlayDelante' : 'overlayDetras');
-      if (overlay) overlay.innerHTML = `<button onclick="event.stopPropagation();triggerPhoto('${side}')">Cambiar</button><button onclick="event.stopPropagation();removePhoto('${side}')">Quitar</button>`;
-    }
-  } else {
-    if (side === 'delante' || side === 'detras') {
-      const overlay = document.getElementById(side === 'delante' ? 'overlayDelante' : 'overlayDetras');
-      if (overlay) overlay.innerHTML = `<button onclick="event.stopPropagation();triggerPhoto('${side}')">📁 Añadir foto</button>`;
-    }
   }
 }
 function triggerPhoto(side) { currentPhotoTarget = side; document.getElementById('fileInput').click(); }
