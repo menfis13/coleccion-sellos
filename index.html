@@ -361,6 +361,7 @@ function handleGoogleCredential(response) {
     return;
   }
   currentUser = { name: payload.name, email: payload.email, picture: payload.picture };
+  localStorage.setItem('sellos_user', JSON.stringify(currentUser));
   applyAuthUI();
   showToast('✓ Sesión iniciada · ' + payload.name);
 }
@@ -381,12 +382,19 @@ function triggerSignIn() {
 
 function signOut() {
   currentUser = null;
+  localStorage.removeItem('sellos_user');
   google.accounts.id.disableAutoSelect();
   applyAuthUI();
   showToast('Sesión cerrada');
 }
 
 window.addEventListener('load', () => {
+  // Recuperar sesión guardada
+  try {
+    const saved = localStorage.getItem('sellos_user');
+    if (saved) { currentUser = JSON.parse(saved); }
+  } catch(e) {}
+
   const t = setInterval(() => {
     if (window.google && google.accounts) {
       clearInterval(t);
