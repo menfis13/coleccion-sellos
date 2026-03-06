@@ -2,1149 +2,137 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Colección Filatélica · Isabel II</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:wght@300;400;600&display=swap" rel="stylesheet">
-<script src="https://accounts.google.com/gsi/client" async defer></script>
+<title>Catálogo de Sellos</title>
+
 <style>
-  :root {
-    --cream: #f5f0e8;
-    --parchment: #ede5d0;
-    --ink: #1a1208;
-    --sepia: #5c3d1e;
-    --gold: #b8860b;
-    --gold-light: #d4a843;
-    --rust: #8b3a2a;
-    --sage: #4a5e4a;
-    --shadow: rgba(26,18,8,0.15);
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Crimson Pro', Georgia, serif; background: var(--cream); color: var(--ink); min-height: 100vh; }
-  body::before {
-    content: '';
-    position: fixed; inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none; z-index: 1000; opacity: 0.6;
-  }
+body{
+font-family:Arial;
+margin:20px;
+background:#f4f4f4;
+}
 
-  header { background: var(--ink); color: var(--cream); position: relative; overflow: hidden; }
-  header::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--sepia), var(--gold), var(--gold-light), var(--gold), var(--sepia)); }
-  .header-inner { max-width: 1400px; margin: 0 auto; padding: 28px 32px 24px; display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
-  .header-title h1 { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: var(--cream); }
-  .header-title h1 span { color: var(--gold-light); font-style: italic; }
-  .header-subtitle { font-size: 0.85rem; color: #a89070; letter-spacing: 0.15em; text-transform: uppercase; margin-top: 4px; }
-  .header-stats { display: flex; gap: 24px; align-items: center; }
-  .stat-box { text-align: center; border: 1px solid rgba(184,134,11,0.3); padding: 8px 16px; border-radius: 2px; }
-  .stat-num { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--gold-light); display: block; }
-  .stat-label { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: #a89070; }
-  .btn-add-header { background: var(--gold); color: var(--ink); border: none; padding: 10px 20px; font-family: 'Crimson Pro', serif; font-size: 1rem; font-weight: 600; cursor: pointer; border-radius: 2px; transition: background 0.2s; }
-  .btn-add-header:hover { background: var(--gold-light); }
+#grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,120px);
+gap:10px;
+}
 
-  .sync-bar { background: #1e2a1e; color: #7ab87a; padding: 8px 32px; font-size: 0.8rem; letter-spacing: 0.08em; display: flex; align-items: center; gap: 10px; }
-  .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: #7ab87a; animation: pulse 2s infinite; }
-  @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
-  .sync-bar.syncing { color: var(--gold-light); background: #1e1a0e; }
-  .sync-bar.syncing .sync-dot { background: var(--gold-light); }
-  .sync-bar.error { color: #e07070; background: #1e0e0e; }
-  .sync-bar.error .sync-dot { background: #e07070; animation: none; }
+.sello{
+background:white;
+border:1px solid #ccc;
+padding:5px;
+text-align:center;
+cursor:pointer;
+}
 
-  .toolbar { background: var(--parchment); border-bottom: 1px solid rgba(92,61,30,0.2); padding: 14px 32px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; max-width: 1400px; margin: 0 auto; }
-  .search-wrap { position: relative; flex: 1; min-width: 200px; max-width: 340px; }
-  .search-wrap input { width: 100%; padding: 9px 14px 9px 36px; border: 1px solid rgba(92,61,30,0.3); background: var(--cream); font-family: 'Crimson Pro', serif; font-size: 1rem; color: var(--ink); border-radius: 2px; outline: none; transition: border-color 0.2s; }
-  .search-wrap input:focus { border-color: var(--gold); }
-  .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--sepia); font-size: 0.9rem; pointer-events: none; }
-  .filter-select { padding: 9px 14px; border: 1px solid rgba(92,61,30,0.3); background: var(--cream); font-family: 'Crimson Pro', serif; font-size: 0.95rem; color: var(--ink); border-radius: 2px; cursor: pointer; outline: none; }
-  .view-toggle { display: flex; border: 1px solid rgba(92,61,30,0.3); border-radius: 2px; overflow: hidden; margin-left: auto; }
-  .view-btn { padding: 9px 14px; background: var(--cream); border: none; cursor: pointer; color: var(--sepia); font-size: 1rem; transition: all 0.2s; }
-  .view-btn.active { background: var(--ink); color: var(--gold-light); }
+.sello img{
+width:100px;
+height:auto;
+}
 
-  .main { max-width: 1400px; margin: 0 auto; padding: 24px 32px; }
-  .results-info { font-size: 0.85rem; color: var(--sepia); letter-spacing: 0.05em; margin-bottom: 16px; text-transform: uppercase; }
+#editor{
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+background:white;
+padding:20px;
+border:2px solid #333;
+display:none;
+}
 
-  .grid-view { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 20px; }
-  .grid-view.active { display: grid; }
-  .list-view { display: none; }
-  .list-view.active { display: block; }
-
-  .stamp-card { background: white; border: 1px solid rgba(92,61,30,0.15); border-radius: 3px; overflow: hidden; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 2px 8px var(--shadow); position: relative; }
-  .stamp-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px var(--shadow); }
-  .stamp-img-area { position: relative; background: #ffffff; min-height: 160px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-  .stamp-img-area::before, .stamp-img-area::after { content: ''; position: absolute; left: 0; right: 0; height: 10px; background: radial-gradient(circle at 7px center, var(--cream) 5px, transparent 5px); background-size: 14px 10px; background-repeat: repeat-x; z-index: 1; }
-  .stamp-img-area::before { top: 0; }
-  .stamp-img-area::after { bottom: 0; }
-  .stamp-photo { width: 100%; height: 160px; object-fit: contain; display: block; background: #ffffff; transition: filter 0.35s ease, opacity 0.35s ease; }
-  .stamp-photo.no-tengo { filter: grayscale(100%); opacity: 0.55; }
-  .stamp-card:hover .stamp-photo.no-tengo { filter: grayscale(0%); opacity: 1; }
-  .stamp-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 20px; color: rgba(92,61,30,0.4); text-align: center; height: 160px; }
-  .stamp-placeholder-num { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: rgba(92,61,30,0.25); font-weight: 700; }
-  .stamp-info { padding: 12px 14px 14px; }
-  .stamp-edifil { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: 2px; }
-  .stamp-desc { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--ink); margin-bottom: 6px; line-height: 1.3; }
-  .stamp-meta { display: flex; flex-wrap: wrap; gap: 4px; font-size: 0.8rem; color: var(--sepia); }
-  .stamp-tag { background: var(--parchment); padding: 2px 7px; border-radius: 1px; font-size: 0.75rem; display: flex; align-items: center; gap: 4px; }
-  .stamp-color-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; border: 1px solid rgba(0,0,0,0.15); flex-shrink: 0; }
-
-  .list-table { width: 100%; border-collapse: collapse; background: white; border: 1px solid rgba(92,61,30,0.15); border-radius: 3px; overflow: hidden; box-shadow: 0 2px 8px var(--shadow); }
-  .list-table th { background: var(--ink); color: var(--gold-light); font-family: 'Playfair Display', serif; font-weight: 400; font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 12px 16px; text-align: left; cursor: pointer; user-select: none; }
-  .list-table th:hover { background: #2a1f10; }
-  .list-table td { padding: 10px 16px; border-bottom: 1px solid rgba(92,61,30,0.08); font-size: 0.95rem; vertical-align: middle; }
-  .list-table tr:last-child td { border-bottom: none; }
-  .list-table tr:hover td { background: rgba(245,240,232,0.7); cursor: pointer; }
-  .list-table tr:nth-child(even) td { background: rgba(237,229,208,0.2); }
-
-  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(26,18,8,0.75); z-index: 500; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(2px); }
-  .modal-overlay.open { display: flex; }
-  .modal { background: var(--cream); max-width: 680px; width: 100%; max-height: 90vh; overflow-y: auto; border-radius: 3px; box-shadow: 0 24px 80px rgba(0,0,0,0.4); border-top: 4px solid var(--gold); animation: modalIn 0.25s ease; }
-  @keyframes modalIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-  .modal-header { padding: 24px 28px 16px; border-bottom: 1px solid rgba(92,61,30,0.15); display: flex; justify-content: space-between; align-items: flex-start; }
-  .modal-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--ink); }
-  .modal-edifil { font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 2px; }
-  .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--sepia); padding: 0; line-height: 1; }
-  .modal-body { padding: 24px 28px; }
-
-  .photo-section { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 24px; }
-  .photo-slot { border: 2px dashed rgba(92,61,30,0.25); border-radius: 3px; min-height: 180px; display: flex; flex-direction: column; align-items: stretch; justify-content: flex-start; transition: border-color 0.2s; position: relative; overflow: hidden; background: #ffffff; }
-  .photo-slot:hover { border-color: var(--gold); }
-  .photo-slot-preview { flex: 1; position: relative; display: flex; align-items: center; justify-content: center; min-height: 110px; }
-  .photo-slot-preview img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; cursor: zoom-in; background: transparent; }
-  .photo-slot-icon { font-size: 1.5rem; opacity: 0.3; z-index: 1; }
-  .photo-actions { display: flex; gap: 0; border-top: 1px solid rgba(92,61,30,0.12); z-index: 3; flex-shrink: 0; }
-  .photo-actions button { flex: 1; background: #faf7f2; color: var(--sepia); border: none; border-right: 1px solid rgba(92,61,30,0.12); padding: 7px 2px; font-family: 'Crimson Pro', serif; font-size: 0.67rem; cursor: pointer; font-weight: 600; transition: background 0.15s, color 0.15s; line-height: 1.3; display: flex; flex-direction: column; align-items: center; gap: 2px; }
-  .photo-actions button:last-child { border-right: none; }
-  .photo-actions button:hover { background: var(--parchment); color: var(--ink); }
-  .photo-actions button .btn-icon { font-size: 1rem; }
-  .photo-actions button.btn-quitar { color: #c0392b; }
-  .photo-actions button.btn-quitar:hover { background: #fdf0ee; color: #8b3a2a; }
-
-  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .form-group { display: flex; flex-direction: column; gap: 5px; }
-  .form-group.full { grid-column: 1 / -1; }
-  .form-label { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sepia); font-weight: 600; }
-  .form-input, .form-select, .form-textarea { padding: 9px 12px; border: 1px solid rgba(92,61,30,0.25); background: white; font-family: 'Crimson Pro', serif; font-size: 1rem; color: var(--ink); border-radius: 2px; outline: none; transition: border-color 0.2s; }
-  .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--gold); }
-  .form-textarea { min-height: 70px; resize: vertical; }
-
-  .modal-footer { padding: 16px 28px 24px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(92,61,30,0.1); gap: 12px; flex-wrap: wrap; }
-  .btn { padding: 10px 22px; font-family: 'Crimson Pro', serif; font-size: 1rem; font-weight: 600; cursor: pointer; border-radius: 2px; border: none; transition: all 0.2s; }
-  .btn-primary { background: var(--ink); color: var(--gold-light); }
-  .btn-primary:hover { background: var(--sepia); }
-  .btn-danger { background: none; color: var(--rust); border: 1px solid var(--rust); }
-  .btn-danger:hover { background: var(--rust); color: white; }
-  .btn-secondary { background: none; color: var(--sepia); border: 1px solid rgba(92,61,30,0.3); }
-  .btn-secondary:hover { background: var(--parchment); }
-
-  input[type="file"] { display: none; }
-
-  .lightbox { display: none; position: fixed; inset: 0; background: rgba(10,7,3,0.93); z-index: 900; align-items: center; justify-content: center; cursor: zoom-out; backdrop-filter: blur(4px); }
-  .lightbox.open { display: flex; }
-  .lightbox img { max-width: 92vw; max-height: 88vh; object-fit: contain; border-radius: 3px; box-shadow: 0 32px 100px rgba(0,0,0,0.8); animation: lbIn 0.2s ease; cursor: default; }
-  @keyframes lbIn { from { transform: scale(0.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-  .lightbox-caption { position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.5); font-family: 'Crimson Pro', serif; font-size: 0.9rem; letter-spacing: 0.12em; text-transform: uppercase; pointer-events: none; white-space: nowrap; }
-  .lightbox-close { position: absolute; top: 20px; right: 24px; background: none; border: none; color: rgba(255,255,255,0.4); font-size: 2rem; cursor: pointer; line-height: 1; transition: color 0.2s; z-index: 10; }
-  .lightbox-close:hover { color: white; }
-
-  .color-negro { background: #222; } .color-lila, .color-violeta { background: #9b59b6; } .color-rojo { background: #c0392b; } .color-azul { background: #2980b9; } .color-verde { background: #27ae60; } .color-naranja { background: #e67e22; } .color-rosa { background: #e91e8c; } .color-amarillo { background: #f1c40f; } .color-gris { background: #95a5a6; } .color-castaño { background: #795548; } .color-cobre { background: #b87333; } .color-default { background: var(--sepia); }
-
-  .saving-toast { position: fixed; bottom: 24px; right: 24px; background: var(--ink); color: var(--gold-light); padding: 12px 20px; border-radius: 3px; font-family: 'Crimson Pro', serif; font-size: 0.9rem; z-index: 800; transform: translateY(80px); transition: transform 0.3s; box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
-  .saving-toast.show { transform: translateY(0); }
-
-  @media (max-width: 640px) {
-    .header-inner { padding: 20px 16px; } .toolbar { padding: 12px 16px; } .main { padding: 16px; }
-    .form-grid { grid-template-columns: 1fr; } .photo-section { grid-template-columns: 1fr; }
-  }
-
-  /* AUTH */
-  .auth-area { display: flex; align-items: center; gap: 12px; }
-  .auth-user { display: flex; align-items: center; gap: 10px; }
-  .auth-avatar { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--gold); object-fit: cover; }
-  .auth-name { font-size: 0.85rem; color: #a89070; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .btn-logout { background: none; border: 1px solid rgba(184,134,11,0.3); color: #a89070; padding: 5px 12px; font-family: 'Crimson Pro', serif; font-size: 0.8rem; cursor: pointer; border-radius: 2px; transition: all 0.2s; }
-  .btn-logout:hover { border-color: var(--rust); color: var(--rust); }
-  .btn-login-google { background: white; color: #444; border: none; padding: 8px 16px; font-family: 'Crimson Pro', serif; font-size: 0.9rem; font-weight: 600; cursor: pointer; border-radius: 2px; display: flex; align-items: center; gap: 8px; transition: box-shadow 0.2s; }
-  .btn-login-google:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
-  .btn-login-google svg { flex-shrink: 0; }
-  .read-only-notice { background: rgba(184,134,11,0.08); border: 1px solid rgba(184,134,11,0.2); color: #a89070; padding: 6px 32px; font-size: 0.78rem; text-align: center; letter-spacing: 0.08em; }
-  .edit-only { } /* controlled via JS */
-  /* ── Modal recortador manual ── */
-  #cropModal { display:none; position:fixed; inset:0; background:#0d0a06; z-index:9999; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:16px; box-sizing:border-box; }
-  #cropModal.open { display:flex; }
-  #cropHeader { color:#c8a96e; font-family:'Playfair Display',serif; font-size:1.1rem; letter-spacing:0.05em; }
-  #cropHint { color:#6a5a40; font-family:'Crimson Pro',serif; font-size:0.82rem; letter-spacing:0.06em; }
-  #cropWrap { position:relative; flex-shrink:1; overflow:visible; touch-action:none; display:inline-block; }
-  #cropBg { display:block; max-width:90vw; max-height:62vh; }
-  #cropOverlay { position:absolute; top:0; left:0; cursor:crosshair; touch-action:none; }
-  .crop-btns { display:flex; gap:12px; flex-shrink:0; }
-  .crop-btns button { padding:11px 28px; font-family:'Crimson Pro',serif; font-size:1rem; font-weight:600; border:none; border-radius:2px; cursor:pointer; letter-spacing:0.04em; }
-  #btnCropOk  { background:#b8860b; color:#1a1208; }
-  #btnCropSkip{ background:none; border:1px solid rgba(184,134,11,0.35); color:#7a6040; }
+.photo{
+width:200px;
+border:1px solid #aaa;
+margin:10px;
+}
 </style>
 </head>
+
 <body>
 
-<header>
-  <div class="header-inner">
-    <div class="header-title">
-      <div class="header-subtitle">Colección Filatélica Española</div>
-      <h1>♛ <span>Isabel II</span></h1>
-    </div>
-    <div class="header-stats">
-      <div class="stat-box"><span class="stat-num" id="stat-total">—</span><span class="stat-label">Total</span></div>
-      <div class="stat-box"><span class="stat-num" id="stat-tengo">—</span><span class="stat-label">En colección</span></div>
-      <div class="stat-box"><span class="stat-num" id="stat-fotos">—</span><span class="stat-label">Con foto</span></div>
-    </div>
-    <div class="auth-area" id="authArea">
-      <!-- Se rellena por JS -->
-    </div>
-  </div>
-</header>
+<h2>Catálogo de Sellos</h2>
 
-<div id="syncBar" class="sync-bar">
-  <div class="sync-dot"></div>
-  <span id="syncMsg">Conectando con Google Sheets...</span>
-</div>
-<div class="read-only-notice" id="readOnlyNotice" style="display:none">
-  🔒 Modo solo lectura — inicia sesión con tu cuenta de Google para editar la colección
-</div>
+<div id="grid"></div>
 
-<div style="max-width:1400px;margin:0 auto;">
-  <div class="toolbar">
-    <div class="search-wrap">
-      <span class="search-icon">🔍</span>
-      <input type="text" id="searchInput" placeholder="Buscar por Edifil, color, año..." oninput="renderStamps()">
-    </div>
-    <select class="filter-select" id="filterYear" onchange="renderStamps()"><option value="">Todos los años</option></select>
-    <select class="filter-select" id="filterEstado" onchange="renderStamps()">
-      <option value="">Todos los estados</option>
-      <option value="con_estado">Con estado registrado</option>
-      <option value="sin_estado">Sin estado</option>
-    </select>
-    <select class="filter-select" id="filterColor" onchange="renderStamps()"><option value="">Todos los colores</option></select>
-    <div class="view-toggle">
-      <button class="view-btn active" id="btnGrid" onclick="setView('grid')" title="Cuadrícula">⊞</button>
-      <button class="view-btn" id="btnList" onclick="setView('list')" title="Lista">☰</button>
-    </div>
-  </div>
-</div>
+<div id="editor">
+<h3 id="titulo"></h3>
 
-<div class="main">
-  <div class="results-info" id="resultsInfo"></div>
-  <div class="grid-view active" id="gridView"></div>
-  <div class="list-view" id="listView">
-    <table class="list-table">
-      <thead><tr>
-        <th onclick="sortBy('edifil')">Edifil ↕</th>
-        <th onclick="sortBy('año')">Año ↕</th>
-        <th>Descripción</th><th>Color</th><th>Valor Facial</th><th>Dentado</th><th>Estado</th><th>Foto</th>
-      </tr></thead>
-      <tbody id="listBody"></tbody>
-    </table>
-  </div>
-</div>
+<img id="imgFront" class="photo">
+<input type="file" id="fileFront"><br>
 
-<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
-  <div class="modal" id="modal">
-    <div class="modal-header">
-      <div><div class="modal-edifil" id="mEdifil"></div><div class="modal-title" id="mTitle"></div></div>
-      <button class="modal-close" onclick="closeModal()">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="photo-section">
-        <div class="photo-slot" id="slotReferencia">
-          <div class="photo-slot-preview"><span class="photo-slot-icon">🏛️</span></div>
-          <div style="text-align:center;font-size:0.62rem;color:var(--sepia);padding:4px 0 3px;letter-spacing:0.07em;border-top:1px solid rgba(92,61,30,0.1);background:#faf7f2">REFERENCIA</div>
-        </div>
-        <div class="photo-slot" id="slotDelante">
-          <div class="photo-slot-preview"><span class="photo-slot-icon">📷</span></div>
-          <div style="text-align:center;font-size:0.62rem;color:var(--sepia);padding:4px 0 3px;letter-spacing:0.07em;border-top:1px solid rgba(92,61,30,0.1);background:#faf7f2">ANVERSO</div>
-          <div class="photo-actions edit-only" id="overlayDelante">
-            <button onclick="event.stopPropagation(); triggerPhotoCamera('delante')"><span class="btn-icon">📷</span><span>Cámara</span></button>
-            <button onclick="event.stopPropagation(); triggerPhotoGallery('delante')"><span class="btn-icon">🖼️</span><span>Galería</span></button>
-            <button class="btn-quitar" onclick="event.stopPropagation(); removePhoto('delante')"><span class="btn-icon">🗑️</span><span>Quitar</span></button>
-          </div>
-        </div>
-        <div class="photo-slot" id="slotDetras">
-          <div class="photo-slot-preview"><span class="photo-slot-icon">📷</span></div>
-          <div style="text-align:center;font-size:0.62rem;color:var(--sepia);padding:4px 0 3px;letter-spacing:0.07em;border-top:1px solid rgba(92,61,30,0.1);background:#faf7f2">REVERSO</div>
-          <div class="photo-actions edit-only" id="overlayDetras">
-            <button onclick="event.stopPropagation(); triggerPhotoCamera('detras')"><span class="btn-icon">📷</span><span>Cámara</span></button>
-            <button onclick="event.stopPropagation(); triggerPhotoGallery('detras')"><span class="btn-icon">🖼️</span><span>Galería</span></button>
-            <button class="btn-quitar" onclick="event.stopPropagation(); removePhoto('detras')"><span class="btn-icon">🗑️</span><span>Quitar</span></button>
-          </div>
-        </div>
-      </div>
-      <!-- Inputs ocultos para cámara y galería -->
-      <input type="file" id="fileCamera" accept="image/*" capture="environment" onchange="handlePhoto(event)" style="display:none;">
-      <input type="file" id="fileGallery" accept="image/*" onchange="handlePhoto(event)" style="display:none;">
-      <div class="form-grid">
-        <div class="form-group"><label class="form-label">Nº Edifil</label><input class="form-input" type="number" id="fEdifil" placeholder="Ej: 48"></div>
-        <div class="form-group"><label class="form-label">Año</label><input class="form-input" type="number" id="fAño" placeholder="Ej: 1856"></div>
-        <div class="form-group full"><label class="form-label">Descripción</label><input class="form-input" type="text" id="fDesc" placeholder="Ej: Isabel II"></div>
-        <div class="form-group"><label class="form-label">Color</label><input class="form-input" type="text" id="fColor" placeholder="Ej: azul"></div>
-        <div class="form-group"><label class="form-label">Valor Facial</label><input class="form-input" type="text" id="fValor" placeholder="Ej: 4 cuartos"></div>
-        <div class="form-group"><label class="form-label">Dentado</label>
-          <select class="form-select" id="fDentado">
-            <option value="">-- Seleccionar --</option>
-            <option value="Sin dentar">Sin dentar</option>
-            <option value="Dentado 14">Dentado 14</option>
-            <option value="Dentado 11½">Dentado 11½</option>
-            <option value="Dentado 14x13½">Dentado 14x13½</option>
-          </select>
-        </div>
-        <div class="form-group"><label class="form-label">Estado en tu colección</label>
-          <select class="form-select" id="fEstado">
-            <option value="">-- No tengo este sello --</option>
-            <option value="Nuevo">Nuevo / Mint</option>
-            <option value="Usado">Usado</option>
-            <option value="Usado Fijasello">Usado con Fijasello</option>
-            <option value="Con charnela">Con charnela</option>
-            <option value="Fragmento">Fragmento</option>
-          </select>
-        </div>
-        <div class="form-group full"><label class="form-label">Notas personales</label><textarea class="form-textarea" id="fNotas" placeholder="Observaciones, procedencia, valor estimado..."></textarea></div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-danger edit-only" id="btnDelete" onclick="deleteStamp()">🗑 Eliminar</button>
-      <div style="display:flex;gap:8px;">
-        <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
-        <button class="btn btn-primary edit-only" onclick="saveStamp()">Guardar sello</button>
-      </div>
-    </div>
-  </div>
-</div>
+<img id="imgBack" class="photo">
+<input type="file" id="fileBack"><br><br>
 
-<div class="lightbox" id="lightbox" onclick="if(!lbDrag.active && lbScale<=1) closeLightbox()">
-  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
-  <img id="lightboxImg" src="" alt="">
-  <div class="lightbox-caption" id="lightboxCaption"></div>
-  <div style="position:absolute;top:20px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,0.3);font-family:'Crimson Pro',serif;font-size:0.75rem;letter-spacing:0.1em;pointer-events:none">Rueda del ratón para zoom · Arrastrar para mover</div>
-</div>
-
-<div class="saving-toast" id="toast"></div>
-
-<script>
-const SHEET_ID = '1KKTKamweQ0HQ85P9g8hy-CG4irFrJC_97_5qrEFmZ5E';
-const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Hoja1`;
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzI2IsZKIM9yPSK6Ut9JJ0EMZVBXOQ_CXRhHYnmTAsQaCS-hcN3yT108Df3yEVZSE7i/exec';
-const CLOUDINARY_CLOUD = 'do4ltpfbo';
-const CLOUDINARY_PRESET = 'sellos_upload';
-
-// ==================== AUTENTICACIÓN GOOGLE ====================
-const AUTHORIZED_EMAIL = 'menfis13@gmail.com';
-// ⚠️ REEMPLAZA con tu Google OAuth Client ID
-// Ve a https://console.cloud.google.com → APIs y servicios → Credenciales
-// Crea "ID de cliente OAuth 2.0" → tipo "Aplicación web"
-// Añade https://menfis13.github.io en "Orígenes autorizados de JavaScript"
-const GOOGLE_CLIENT_ID = '759568975578-srig0ulta1quiep6h3il89q5e2dhjvu8.apps.googleusercontent.com';
-
-let currentUser = null;
-
-function isEditor() {
-  return currentUser && currentUser.email === AUTHORIZED_EMAIL;
-}
-
-function applyAuthUI() {
-  const area = document.getElementById('authArea');
-  const notice = document.getElementById('readOnlyNotice');
-  if (isEditor()) {
-    notice.style.display = 'none';
-    area.innerHTML = `
-      <div class="auth-user">
-        <img class="auth-avatar" src="${currentUser.picture}" alt="">
-        <span class="auth-name">${currentUser.name}</span>
-      </div>
-      <button class="btn-logout" onclick="signOut()">Cerrar sesión</button>
-      <button class="btn-add-header" onclick="openNew()">＋ Añadir sello</button>`;
-  } else {
-    notice.style.display = 'block';
-    area.innerHTML = `
-      <button class="btn-login-google" onclick="triggerSignIn()">
-        <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/><path fill="#FBBC05" d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707s.102-1.167.282-1.707V4.961H.957C.347 6.175 0 7.55 0 9s.348 2.825.957 4.039l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.961L3.964 7.293C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
-        Iniciar sesión
-      </button>`;
-  }
-  document.querySelectorAll('.edit-only').forEach(el => { el.style.display = isEditor() ? '' : 'none'; });
-}
-
-function handleGoogleCredential(response) {
-  const payload = JSON.parse(atob(response.credential.split('.')[1]));
-  if (payload.email !== AUTHORIZED_EMAIL) {
-    showToast('⛔ Esta cuenta no tiene permisos de edición');
-    return;
-  }
-  currentUser = { name: payload.name, email: payload.email, picture: payload.picture };
-  localStorage.setItem('sellos_user', JSON.stringify(currentUser));
-  applyAuthUI();
-  showToast('✓ Sesión iniciada · ' + payload.name);
-}
-
-function triggerSignIn() {
-  if (!window.google || !google.accounts) { showToast('Cargando...'); return; }
-  google.accounts.id.prompt((n) => {
-    if (n.isNotDisplayed() || n.isSkippedMoment()) {
-      const d = document.createElement('div');
-      d.style.cssText = 'position:fixed;top:80px;right:20px;z-index:9999;background:white;padding:8px;border-radius:4px;box-shadow:0 4px 20px rgba(0,0,0,0.3);';
-      d.innerHTML = '<div id="gsiBtn"></div>';
-      document.body.appendChild(d);
-      google.accounts.id.renderButton(document.getElementById('gsiBtn'), { theme: 'outline', size: 'large', width: 240 });
-      setTimeout(() => d.remove(), 8000);
-    }
-  });
-}
-
-function signOut() {
-  currentUser = null;
-  localStorage.removeItem('sellos_user');
-  google.accounts.id.disableAutoSelect();
-  applyAuthUI();
-  showToast('Sesión cerrada');
-}
-
-window.addEventListener('load', () => {
-  // Recuperar sesión guardada
-  try {
-    const saved = localStorage.getItem('sellos_user');
-    if (saved) { currentUser = JSON.parse(saved); }
-  } catch(e) {}
-
-  const t = setInterval(() => {
-    if (window.google && google.accounts) {
-      clearInterval(t);
-      google.accounts.id.initialize({
-        client_id: GOOGLE_CLIENT_ID,
-        callback: handleGoogleCredential,
-        auto_select: true,
-        cancel_on_tap_outside: true,
-      });
-      applyAuthUI();
-    }
-  }, 200);
-});
-
-// Datos de referencia con imágenes base64 (solo para mostrar la imagen original del sello)
-const REFERENCE_DATA = [{"edifil": 1, "año": 1850, "descripcion": "Isabel II", "color": "negro", "valor_facial": "6 cuartos", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_001.jpg", "delante": null, "detras": null}, {"edifil": 2, "año": 1850, "descripcion": "Isabel II", "color": "lila", "valor_facial": "12 cuartos", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_002.jpg", "delante": null, "detras": null}, {"edifil": 3, "año": 1850, "descripcion": "Isabel II", "color": "rojo", "valor_facial": "5 reales", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_003.jpg", "delante": null, "detras": null}, {"edifil": 4, "año": 1850, "descripcion": "Isabel II", "color": "azul", "valor_facial": "6 reales", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_004.jpg", "delante": null, "detras": null}, {"edifil": 5, "año": 1850, "descripcion": "Isabel II", "color": "verde", "valor_facial": "10 reales", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_005.jpg", "delante": null, "detras": null}, {"edifil": 6, "año": 1851, "descripcion": "Isabel II", "color": "negro", "valor_facial": "6 cuartos", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_006.jpg", "delante": null, "detras": null}, {"edifil": 7, "año": 1851, "descripcion": "Isabel II", "color": "lila", "valor_facial": "12 cuartos", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_007.jpg", "delante": null, "detras": null}, {"edifil": 8, "año": 1851, "descripcion": "Isabel II", "color": "naranja", "valor_facial": "2 reales", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_008.jpg", "delante": null, "detras": null}, {"edifil": 9, "año": 1851, "descripcion": "Isabel II", "color": "rosa", "valor_facial": "5 reales", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_009.jpg", "delante": null, "detras": null}, {"edifil": 10, "año": 1851, "descripcion": "Isabel II", "color": "azul", "valor_facial": "6 reales", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_010.jpg", "delante": null, "detras": null}, {"edifil": 11, "año": 1851, "descripcion": "Isabel II", "color": "verde", "valor_facial": "10 reales", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_011.jpg", "delante": null, "detras": null}, {"edifil": 12, "año": 1852, "descripcion": "Isabel II", "color": "rosa", "valor_facial": "6 cuartos", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_012.jpg", "delante": null, "detras": null}, {"edifil": 13, "año": 1852, "descripcion": "Isabel II", "color": "lila", "valor_facial": "12 cuartos", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_013.jpg", "delante": null, "detras": null}, {"edifil": 14, "año": 1852, "descripcion": "Isabel II", "color": "naranja pálido", "valor_facial": "2 reales", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_014.jpg", "delante": null, "detras": null}, {"edifil": 15, "año": 1852, "descripcion": "Isabel II", "color": "verde", "valor_facial": "5 reales", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_015.jpg", "delante": null, "detras": null}, {"edifil": 16, "año": 1852, "descripcion": "Isabel II", "color": "azul verdoso", "valor_facial": "6 reales", "dentado": "Sin dentar", "estado": "2089", "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_016.jpg", "delante": null, "detras": null}, {"edifil": 17, "año": 1853, "descripcion": "Isabel II", "color": "rosa", "valor_facial": "6 cuartos", "dentado": "Sin dentar", "estado": "TRABAJADOR", "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_017.jpg", "delante": null, "detras": null}, {"edifil": 18, "año": 1853, "descripcion": "Isabel II", "color": "violeta", "valor_facial": "12 cuartos", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_018.jpg", "delante": null, "detras": null}, {"edifil": 19, "año": 1853, "descripcion": "Isabel II", "color": "bermellón", "valor_facial": "2 reales", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_019.jpg", "delante": null, "detras": null}, {"edifil": 20, "año": 1853, "descripcion": "Isabel II", "color": "verde", "valor_facial": "5 reales", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_020.jpg", "delante": null, "detras": null}, {"edifil": 21, "año": 1853, "descripcion": "Isabel II", "color": "azul", "valor_facial": "6 reales", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_021.jpg", "delante": null, "detras": null}, {"edifil": 22, "año": 1853, "descripcion": "Escudo de Madrid", "color": "bronce", "valor_facial": "1 cuarto", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_022.jpg", "delante": null, "detras": null}, {"edifil": 23, "año": 1853, "descripcion": "Escudo de Madrid", "color": "bronce", "valor_facial": "3 cuartos", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_023.jpg", "delante": null, "detras": null}, {"edifil": 24, "año": 1854, "descripcion": "Escudo de España", "color": "carmín", "valor_facial": "6 cuartos", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_024.jpg", "delante": null, "detras": null}, {"edifil": 25, "año": 1854, "descripcion": "Escudo de España", "color": "rojo", "valor_facial": "2 reales", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_025.jpg", "delante": null, "detras": null}, {"edifil": 26, "año": 1854, "descripcion": "Escudo de España", "color": "verde", "valor_facial": "5 reales", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_026.jpg", "delante": null, "detras": null}, {"edifil": 27, "año": 1854, "descripcion": "Escudo de España", "color": "azul", "valor_facial": "6 reales", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_027.jpg", "delante": null, "detras": null}, {"edifil": 28, "año": 1854, "descripcion": "Escudo de España", "color": "negro s/ amarillo", "valor_facial": "1/2 onza", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_028.jpg", "delante": null, "detras": null}, {"edifil": 29, "año": 1854, "descripcion": "Escudo de España", "color": "negro s/ rosa", "valor_facial": "1 onza", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_029.jpg", "delante": null, "detras": null}, {"edifil": 30, "año": 1854, "descripcion": "Escudo de España", "color": "negro s/ verde", "valor_facial": "4 onzas", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_030.jpg", "delante": null, "detras": null}, {"edifil": 31, "año": 1854, "descripcion": "Escudo de España", "color": "negro s/ azul", "valor_facial": "1 libra", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_031.jpg", "delante": null, "detras": null}, {"edifil": 32, "año": 1854, "descripcion": "Escudo de España", "color": "verde", "valor_facial": "2 cuartos", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_032.jpg", "delante": null, "detras": null}, {"edifil": 33, "año": 1854, "descripcion": "Escudo de España", "color": "carmín", "valor_facial": "4 cuartos", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_033.jpg", "delante": null, "detras": null}, {"edifil": 34, "año": 1854, "descripcion": "Escudo de España", "color": "azul oscuro", "valor_facial": "1 real", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_034.jpg", "delante": null, "detras": null}, {"edifil": 35, "año": 1855, "descripcion": "Escudo de España", "color": "negro s/ amarillo", "valor_facial": "1/2 onza", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_035.jpg", "delante": null, "detras": null}, {"edifil": 36, "año": 1855, "descripcion": "Escudo de España", "color": "negro s/ rosa", "valor_facial": "1 onza", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_036.jpg", "delante": null, "detras": null}, {"edifil": 37, "año": 1855, "descripcion": "Escudo de España", "color": "negro s/ verde", "valor_facial": "4 onzas", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_037.jpg", "delante": null, "detras": null}, {"edifil": 38, "año": 1855, "descripcion": "Escudo de España", "color": "negro s/ azul", "valor_facial": "1 libra", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_038.jpg", "delante": null, "detras": null}, {"edifil": 39, "año": 1855, "descripcion": "Isabel II", "color": "verde", "valor_facial": "2 cuartos", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_039.jpg", "delante": null, "detras": null}, {"edifil": 40, "año": 1855, "descripcion": "Isabel II", "color": "rojo", "valor_facial": "4 cuartos", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_040.jpg", "delante": null, "detras": null}, {"edifil": 41, "año": 1855, "descripcion": "Isabel II", "color": "azul verdoso", "valor_facial": "1 real", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_041.jpg", "delante": null, "detras": null}, {"edifil": 42, "año": 1855, "descripcion": "Isabel II", "color": "violeta", "valor_facial": "2 reales", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_042.jpg", "delante": null, "detras": null}, {"edifil": 43, "año": 1856, "descripcion": "Isabel II", "color": "verde", "valor_facial": "2 cuartos", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_043.jpg", "delante": null, "detras": null}, {"edifil": 44, "año": 1856, "descripcion": "Isabel II", "color": "rojo", "valor_facial": "4 cuartos", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_044.jpg", "delante": null, "detras": null}, {"edifil": 45, "año": 1856, "descripcion": "Isabel II", "color": "azul verdoso", "valor_facial": "1 real", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_045.jpg", "delante": null, "detras": null}, {"edifil": 46, "año": 1856, "descripcion": "Isabel II", "color": "violeta", "valor_facial": "2 reales", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_046.jpg", "delante": null, "detras": null}, {"edifil": 47, "año": 1856, "descripcion": "Isabel II", "color": "verde", "valor_facial": "2 cuartos", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_047.jpg", "delante": null, "detras": null}, {"edifil": 48, "año": 1856, "descripcion": "Isabel II", "color": "rojo", "valor_facial": "4 cuartos", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_048.jpg", "delante": null, "detras": null}, {"edifil": 49, "año": 1856, "descripcion": "Isabel II", "color": "azul", "valor_facial": "1 real", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_049.jpg", "delante": null, "detras": null}, {"edifil": 50, "año": 1856, "descripcion": "Isabel II", "color": "violeta", "valor_facial": "2 reales", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_050.jpg", "delante": null, "detras": null}, {"edifil": 51, "año": 1860, "descripcion": "Isabel II", "color": "verde s/ verde", "valor_facial": "2 cuartos", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_051.jpg", "delante": null, "detras": null}, {"edifil": 52, "año": 1860, "descripcion": "Isabel II", "color": "naranja s/ verde", "valor_facial": "4 cuartos", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_052.jpg", "delante": null, "detras": null}, {"edifil": 53, "año": 1860, "descripcion": "Isabel II", "color": "carmín", "valor_facial": "12 cuartos", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_053.jpg", "delante": null, "detras": null}, {"edifil": 54, "año": 1860, "descripcion": "Isabel II", "color": "castaño", "valor_facial": "19 cuartos", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_054.jpg", "delante": null, "detras": null}, {"edifil": 55, "año": 1860, "descripcion": "Isabel II", "color": "azul", "valor_facial": "1 real", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_055.jpg", "delante": null, "detras": null}, {"edifil": 56, "año": 1860, "descripcion": "Isabel II", "color": "lila s/ malva", "valor_facial": "2 reales", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_056.jpg", "delante": null, "detras": null}, {"edifil": 57, "año": 1862, "descripcion": "Isabel II", "color": "azul s/ amarillo", "valor_facial": "2 cuartos", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_057.jpg", "delante": null, "detras": null}, {"edifil": 58, "año": 1862, "descripcion": "Isabel II", "color": "castaño s/ anteado", "valor_facial": "4 cuartos", "dentado": "Sin dentar", "estado": "Usado Fijasello", "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_058.jpg", "delante": null, "detras": null}, {"edifil": 59, "año": 1862, "descripcion": "Isabel II", "color": "azul s/ rosa", "valor_facial": "12 cuartos", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_059.jpg", "delante": null, "detras": null}, {"edifil": 60, "año": 1862, "descripcion": "Isabel II", "color": "rosa s/ gris", "valor_facial": "19 cuartos", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_060.jpg", "delante": null, "detras": null}, {"edifil": 61, "año": 1862, "descripcion": "Isabel II", "color": "castaño s/ amarillo", "valor_facial": "1 real", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_061.jpg", "delante": null, "detras": null}, {"edifil": 62, "año": 1862, "descripcion": "Isabel II", "color": "verde s/ rosa", "valor_facial": "2 reales", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_062.jpg", "delante": null, "detras": null}, {"edifil": 63, "año": 1864, "descripcion": "Isabel II", "color": "azul s/ rosa", "valor_facial": "2 cuartos", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_063.jpg", "delante": null, "detras": null}, {"edifil": 64, "año": 1864, "descripcion": "Isabel II", "color": "rojo s/ salmón", "valor_facial": "4 cuartos", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_064.jpg", "delante": null, "detras": null}, {"edifil": 65, "año": 1864, "descripcion": "Isabel II", "color": "verde s/ rosa", "valor_facial": "12 cuartos", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_065.jpg", "delante": null, "detras": null}, {"edifil": 66, "año": 1864, "descripcion": "Isabel II", "color": "violeta s/ lila", "valor_facial": "19 cuartos", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_066.jpg", "delante": null, "detras": null}, {"edifil": 67, "año": 1864, "descripcion": "Isabel II", "color": "castaño s/ verde", "valor_facial": "1 real", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_067.jpg", "delante": null, "detras": null}, {"edifil": 68, "año": 1864, "descripcion": "Isabel II", "color": "azul s/ rosa", "valor_facial": "2 reales", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_068.jpg", "delante": null, "detras": null}, {"edifil": 69, "año": 1865, "descripcion": "Isabel II", "color": "carmín", "valor_facial": "2 cuartos", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_069.jpg", "delante": null, "detras": null}, {"edifil": 70, "año": 1865, "descripcion": "Isabel II", "color": "azul y rosa", "valor_facial": "12 cuartos", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_070.jpg", "delante": null, "detras": null}, {"edifil": 71, "año": 1865, "descripcion": "Isabel II", "color": "castaño y rosa", "valor_facial": "19 cuartos", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_071.jpg", "delante": null, "detras": null}, {"edifil": 72, "año": 1865, "descripcion": "Isabel II", "color": "verde", "valor_facial": "1 real", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_072.jpg", "delante": null, "detras": null}, {"edifil": 73, "año": 1865, "descripcion": "Isabel II", "color": "lila", "valor_facial": "2 reales", "dentado": "Sin dentar", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_073.jpg", "delante": null, "detras": null}, {"edifil": 74, "año": 1865, "descripcion": "Isabel II", "color": "rosa rojizo", "valor_facial": "2 cuartos", "dentado": "14 de peine", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_074.jpg", "delante": null, "detras": null}, {"edifil": 75, "año": 1865, "descripcion": "Isabel II", "color": "azul", "valor_facial": "4 cuartos", "dentado": "14 de peine", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_075.jpg", "delante": null, "detras": null}, {"edifil": 76, "año": 1865, "descripcion": "Isabel II", "color": "azul y rosa", "valor_facial": "12 cuartos", "dentado": "14 de peine", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_076.jpg", "delante": null, "detras": null}, {"edifil": 77, "año": 1865, "descripcion": "Isabel II", "color": "castaño y rosa", "valor_facial": "19 cuartos", "dentado": "14 de peine", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_077.jpg", "delante": null, "detras": null}, {"edifil": 78, "año": 1865, "descripcion": "Isabel II", "color": "verde", "valor_facial": "1 real", "dentado": "14 de peine", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_078.jpg", "delante": null, "detras": null}, {"edifil": 79, "año": 1865, "descripcion": "Isabel II", "color": "violeta", "valor_facial": "2 reales", "dentado": "14 de peine", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_079.jpg", "delante": null, "detras": null}, {"edifil": 80, "año": 1866, "descripcion": "Isabel II", "color": "rosa", "valor_facial": "2 cuartos", "dentado": "14 de peine", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_080.jpg", "delante": null, "detras": null}, {"edifil": 81, "año": 1866, "descripcion": "Isabel II", "color": "azul", "valor_facial": "4 cuartos", "dentado": "14 de peine", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_081.jpg", "delante": null, "detras": null}, {"edifil": 82, "año": 1866, "descripcion": "Isabel II", "color": "naranja", "valor_facial": "12 cuartos", "dentado": "14 de peine", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_082.jpg", "delante": null, "detras": null}, {"edifil": 83, "año": 1866, "descripcion": "Isabel II", "color": "castaño", "valor_facial": "19 cuartos", "dentado": "14 de peine", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_083.jpg", "delante": null, "detras": null}, {"edifil": 84, "año": 1866, "descripcion": "Isabel II", "color": "verde", "valor_facial": "10 céntimos de escudo", "dentado": "14 de peine", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_084.jpg", "delante": null, "detras": null}, {"edifil": 85, "año": 1866, "descripcion": "Isabel II", "color": "lila", "valor_facial": "20 céntimos de escudo", "dentado": "14 de peine", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_085.jpg", "delante": null, "detras": null}, {"edifil": 86, "año": 1866, "descripcion": "Isabel II", "color": "lila", "valor_facial": "20 céntimos de escudo", "dentado": "14 de peine", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_086.jpg", "delante": null, "detras": null}, {"edifil": 87, "año": 1867, "descripcion": "Isabel II", "color": "castaño", "valor_facial": "2 cuartos", "dentado": "14 de línea", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_087.jpg", "delante": null, "detras": null}, {"edifil": 88, "año": 1867, "descripcion": "Isabel II", "color": "azul", "valor_facial": "4 cuartos", "dentado": "14 de línea", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_088.jpg", "delante": null, "detras": null}, {"edifil": 89, "año": 1867, "descripcion": "Isabel II", "color": "amarillo", "valor_facial": "12 cuartos", "dentado": "14 de línea", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_089.jpg", "delante": null, "detras": null}, {"edifil": 90, "año": 1867, "descripcion": "Isabel II", "color": "rosa", "valor_facial": "19 cuartos", "dentado": "14 de línea", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_090.jpg", "delante": null, "detras": null}, {"edifil": 91, "año": 1867, "descripcion": "Isabel II", "color": "verde", "valor_facial": "10 céntimos de escudo", "dentado": "14 de línea", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_091.jpg", "delante": null, "detras": null}, {"edifil": 92, "año": 1867, "descripcion": "Isabel II", "color": "lila", "valor_facial": "20 céntimos de escudo", "dentado": "14 de línea", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_092.jpg", "delante": null, "detras": null}, {"edifil": 93, "año": 1867, "descripcion": "Cifras", "color": "verde", "valor_facial": "5 milésimas de escudo", "dentado": "14 de peine", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_093.jpg", "delante": null, "detras": null}, {"edifil": 94, "año": 1867, "descripcion": "Cifras", "color": "castaño", "valor_facial": "10 milésimas de escudo", "dentado": "14 de peine", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_094.jpg", "delante": null, "detras": null}, {"edifil": 95, "año": 1867, "descripcion": "Isabel II", "color": "azul y rosa", "valor_facial": "25 milésimas de escudo", "dentado": "14 de peine", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_095.jpg", "delante": null, "detras": null}, {"edifil": 96, "año": 1867, "descripcion": "Isabel II", "color": "castaño amarillo", "valor_facial": "50 milésimas de escudo", "dentado": "14 de peine", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_096.jpg", "delante": null, "detras": null}, {"edifil": 97, "año": 1869, "descripcion": "Isabel II", "color": "azul", "valor_facial": "25 milésimas de escudo", "dentado": "14 de peine", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_097.jpg", "delante": null, "detras": null}, {"edifil": 98, "año": 1869, "descripcion": "Isabel II", "color": "violeta", "valor_facial": "50 milésimas de escudo", "dentado": "14 de peine", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_098.jpg", "delante": null, "detras": null}, {"edifil": 99, "año": 1869, "descripcion": "Isabel II", "color": "castaño", "valor_facial": "100 milésimas de escudo", "dentado": "14 de peine", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_099.jpg", "delante": null, "detras": null}, {"edifil": 100, "año": 1869, "descripcion": "Isabel II", "color": "verde", "valor_facial": "200 milésimas de escudo", "dentado": "14 de peine", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_100.jpg", "delante": null, "detras": null}, {"edifil": 101, "año": 1869, "descripcion": "Isabel II", "color": "castaño", "valor_facial": "19 cuartos", "dentado": "14 de peine", "estado": null, "notas": "", "referencia": "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_101.jpg", "delante": null, "detras": null}];
-
-// Estado
-let stamps = [];
-let currentView = 'grid';
-let sortField = 'edifil';
-let sortDir = 1;
-let currentStampId = null;
-let currentPhotoTarget = null;
-
-// ==================== GOOGLE SHEETS SYNC ====================
-function setSyncStatus(status, msg) {
-  const bar = document.getElementById('syncBar');
-  const msgEl = document.getElementById('syncMsg');
-  bar.className = 'sync-bar ' + status;
-  msgEl.textContent = msg;
-}
-
-async function loadFromSheets() {
-  setSyncStatus('syncing', 'Cargando datos desde Google Sheets...');
-  try {
-    const res = await fetch(SHEET_URL);
-    const text = await res.text();
-    // Google wraps JSON in /*O_o*/ google.visualization.Query.setResponse(...)
-    const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\((.*)\);?$/s)[1]);
-    const rows = json.table.rows;
-    const cols = json.table.cols.map(c => c.label);
-
-    if (!rows || rows.length === 0) {
-      // Hoja vacía — cargar datos iniciales de referencia
-      stamps = REFERENCE_DATA.map(r => ({...r}));
-      setSyncStatus('', 'Google Sheets vacío — mostrando datos locales. Guarda un sello para sincronizar.');
-    } else {
-      // Mapear filas de Sheets
-      const sheetsData = {};
-      rows.forEach(row => {
-        if (!row.c || !row.c[0] || !row.c[0].v) return;
-        const edifil = row.c[0].v;
-        sheetsData[edifil] = {
-          edifil: edifil,
-          año: row.c[1]?.v || null,
-          descripcion: row.c[2]?.v || '',
-          color: row.c[3]?.v || '',
-          valor_facial: row.c[4]?.v || '',
-          dentado: row.c[5]?.v || '',
-          estado: row.c[6]?.v || null,
-          notas: row.c[7]?.v || '',
-          delante: row.c[9]?.v || null,
-          detras: row.c[10]?.v || null,
-        };
-      });
-
-      // Combinar: datos de Sheets + imagen de referencia local
-      stamps = REFERENCE_DATA.map(ref => {
-        const sheetsRow = sheetsData[ref.edifil];
-        if (sheetsRow) {
-          return { ...sheetsRow, referencia: ref.referencia };
-        } else {
-          return { ...ref };
-        }
-      });
-
-      // Añadir sellos que estén en Sheets pero no en referencia
-      Object.values(sheetsData).forEach(s => {
-        if (!stamps.find(x => x.edifil === s.edifil)) {
-          stamps.push(s);
-        }
-      });
-
-      setSyncStatus('', `Sincronizado con Google Sheets — ${rows.length} registros`);
-    }
-  } catch(e) {
-    console.error(e);
-    stamps = REFERENCE_DATA.map(r => ({...r}));
-    setSyncStatus('error', 'Sin conexión con Sheets — mostrando datos locales');
-  }
-  populateFilters();
-  renderStamps();
-}
-
-async function saveToSheets(stamp) {
-  setSyncStatus('syncing', 'Guardando en Google Sheets...');
-  saveLocal();
-  try {
-    const payload = { ...stamp };
-    delete payload.referencia;
-    // Solo borrar si son base64 (muy largas), no si son URLs de Cloudinary
-    if (payload.delante && payload.delante.startsWith('data:')) delete payload.delante;
-    if (payload.detras && payload.detras.startsWith('data:')) delete payload.detras;
-    const url = SCRIPT_URL + '?action=save&payload=' + encodeURIComponent(JSON.stringify(payload));
-    const res = await fetch(url);
-    const json = await res.json();
-    if (json.status === 'ok') {
-      setSyncStatus('', 'Guardado en Google Sheets ✓');
-      showToast('Sello guardado en Sheets ✓');
-    } else {
-      throw new Error(json.message);
-    }
-  } catch(e) {
-    console.error(e);
-    setSyncStatus('error', 'Error al guardar en Sheets — guardado localmente');
-    showToast('Guardado localmente (sin conexión a Sheets)');
-  }
-}
-
-async function deleteFromSheets(edifil) {
-  try {
-    const url = SCRIPT_URL + '?action=delete&edifil=' + edifil;
-    await fetch(url);
-  } catch(e) {
-    console.error('Error eliminando de Sheets:', e);
-  }
-}
-
-function saveLocal() {
-  try {
-    const toSave = stamps.map(s => {
-      const {referencia, ...rest} = s;
-      return rest;
-    });
-    localStorage.setItem('sellos_sheets_backup', JSON.stringify(toSave));
-  } catch(e) {}
-}
-
-// ==================== FILTERS ====================
-function getFiltered() {
-  const search = document.getElementById('searchInput').value.toLowerCase().trim();
-  const filterYear = document.getElementById('filterYear').value;
-  const filterEstado = document.getElementById('filterEstado').value;
-  const filterColor = document.getElementById('filterColor').value;
-  return stamps.filter(s => {
-    if (search) {
-      // Si es solo número, buscar Edifil exacto
-      if (/^\d+$/.test(search)) {
-        if (String(s.edifil) !== search) return false;
-      } else {
-        const hay = [s.edifil, s.año, s.descripcion, s.color, s.valor_facial, s.dentado, s.estado, s.notas].join(' ').toLowerCase();
-        if (!hay.includes(search)) return false;
-      }
-    }
-    if (filterYear && String(s.año) !== filterYear) return false;
-    if (filterEstado === 'con_estado' && !s.estado) return false;
-    if (filterEstado === 'sin_estado' && s.estado) return false;
-    // Color parcial: "amarillo" encuentra "negro/amarillo"
-    if (filterColor && !s.color?.toLowerCase().includes(filterColor.toLowerCase())) return false;
-    return true;
-  }).sort((a,b) => {
-    let av = a[sortField], bv = b[sortField];
-    if (av == null) av = ''; if (bv == null) bv = '';
-    if (typeof av === 'string') av = av.toLowerCase();
-    if (typeof bv === 'string') bv = bv.toLowerCase();
-    return av < bv ? -sortDir : av > bv ? sortDir : 0;
-  });
-}
-
-function populateFilters() {
-  const years = [...new Set(stamps.map(s => s.año).filter(Boolean))].sort();
-  const yearSel = document.getElementById('filterYear');
-  yearSel.innerHTML = '<option value="">Todos los años</option>';
-  years.forEach(y => { const o = document.createElement('option'); o.value = y; o.textContent = y; yearSel.appendChild(o); });
-  const colors = [...new Set(stamps.map(s => s.color).filter(Boolean))].sort();
-  const colorSel = document.getElementById('filterColor');
-  colorSel.innerHTML = '<option value="">Todos los colores</option>';
-  colors.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c.charAt(0).toUpperCase() + c.slice(1); colorSel.appendChild(o); });
-}
-
-// ==================== RENDER ====================
-function colorClass(color) {
-  if (!color) return 'color-default';
-  const c = color.toLowerCase();
-  const map = {negro:'negro',lila:'lila',rojo:'rojo',azul:'azul',verde:'verde',naranja:'naranja',rosa:'rosa',amarillo:'amarillo',gris:'gris',castaño:'castaño',violeta:'lila',cobre:'cobre'};
-  for (const [k,v] of Object.entries(map)) { if (c.includes(k)) return 'color-'+v; }
-  return 'color-default';
-}
-
-function renderStamps() {
-  const filtered = getFiltered();
-  const withEstado = stamps.filter(s => s.estado).length;
-  const withPhoto = stamps.filter(s => s.delante).length;
-  document.getElementById('stat-total').textContent = stamps.length;
-  document.getElementById('stat-tengo').textContent = withEstado;
-  document.getElementById('stat-fotos').textContent = withPhoto;
-  document.getElementById('resultsInfo').textContent = `Mostrando ${filtered.length} de ${stamps.length} sellos`;
-  if (currentView === 'grid') renderGrid(filtered);
-  else renderList(filtered);
-}
-
-function renderGrid(filtered) {
-  const container = document.getElementById('gridView');
-  if (!filtered.length) { container.innerHTML = '<div style="text-align:center;padding:80px;color:var(--sepia);opacity:0.5"><h3 style="font-family:Playfair Display,serif">Sin resultados</h3></div>'; return; }
-  container.innerHTML = filtered.map(s => {
-    const noTengo = !s.delante;
-    const imgArea = s.referencia
-      ? `<img class="stamp-photo${noTengo ? ' no-tengo' : ''}" src="${s.referencia}" alt="Sello ${s.edifil}">`
-      : `<div class="stamp-placeholder"><div class="stamp-placeholder-num">${s.edifil}</div></div>`;
-    return `<div class="stamp-card" onclick="openStamp(${s.edifil})">
-      <div class="stamp-img-area">${imgArea}</div>
-      <div class="stamp-info">
-        <div class="stamp-edifil">Edifil nº ${s.edifil}</div>
-        <div class="stamp-desc">${s.descripcion || '—'}</div>
-        <div class="stamp-meta">
-          <span class="stamp-tag"><span class="stamp-color-dot ${colorClass(s.color)}"></span>${s.color || '—'}</span>
-          <span class="stamp-tag">📅 ${s.año || '—'}</span>
-          <span class="stamp-tag">${s.valor_facial || '—'}</span>
-          ${s.dentado ? `<span class="stamp-tag">${s.dentado}</span>` : ''}
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function renderList(filtered) {
-  const tbody = document.getElementById('listBody');
-  if (!filtered.length) { tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--sepia)">Sin resultados</td></tr>'; return; }
-  tbody.innerHTML = filtered.map(s => `
-    <tr onclick="openStamp(${s.edifil})">
-      <td><strong>${s.edifil}</strong></td><td>${s.año||'—'}</td><td>${s.descripcion||'—'}</td>
-      <td><span style="display:flex;align-items:center;gap:6px"><span class="stamp-color-dot ${colorClass(s.color)}"></span>${s.color||'—'}</span></td>
-      <td>${s.valor_facial||'—'}</td><td>${s.dentado||'—'}</td>
-      <td>${s.estado ? `<span style="background:var(--sage);color:white;padding:2px 8px;border-radius:1px;font-size:0.75rem">${s.estado}</span>` : '<span style="color:#aaa">—</span>'}</td>
-      <td>${s.delante ? '📷' : '—'}</td>
-    </tr>`).join('');
-}
-
-function sortBy(field) {
-  if (sortField === field) sortDir *= -1; else { sortField = field; sortDir = 1; }
-  renderStamps();
-}
-function setView(v) {
-  currentView = v;
-  document.getElementById('gridView').classList.toggle('active', v==='grid');
-  document.getElementById('listView').classList.toggle('active', v==='list');
-  document.getElementById('btnGrid').classList.toggle('active', v==='grid');
-  document.getElementById('btnList').classList.toggle('active', v==='list');
-  renderStamps();
-}
-
-// ==================== MODAL ====================
-function openStamp(edifil) {
-  const s = stamps.find(x => x.edifil === edifil);
-  if (!s) return;
-  currentStampId = edifil;
-  fillModal(s);
-  document.getElementById('btnDelete').style.display = '';
-  document.getElementById('modalOverlay').classList.add('open');
-  // Aplicar readonly si no es editor
-  const formInputs = document.querySelectorAll('#modal .form-input, #modal .form-select, #modal .form-textarea');
-  formInputs.forEach(el => { el.readOnly = !isEditor(); el.style.pointerEvents = isEditor() ? '' : 'none'; el.style.background = isEditor() ? '' : '#f5f0e8'; });
-  applyAuthUI();
-}
-function openNew() {
-  if (!isEditor()) { showToast('🔒 Inicia sesión para añadir sellos'); return; }
-  currentStampId = null;
-  fillModal({edifil:'',año:'',descripcion:'',color:'',valor_facial:'',dentado:'',estado:'',delante:null,detras:null,referencia:null,notas:''});
-  document.getElementById('btnDelete').style.display = 'none';
-  document.getElementById('modalOverlay').classList.add('open');
-}
-function fillModal(s) {
-  document.getElementById('mEdifil').textContent = s.edifil ? `Edifil nº ${s.edifil}` : 'Nuevo sello';
-  document.getElementById('mTitle').textContent = s.descripcion || 'Nuevo sello';
-  document.getElementById('fEdifil').value = s.edifil || '';
-  document.getElementById('fAño').value = s.año || '';
-  document.getElementById('fDesc').value = s.descripcion || '';
-  document.getElementById('fColor').value = s.color || '';
-  document.getElementById('fValor').value = s.valor_facial || '';
-  document.getElementById('fNotas').value = s.notas || '';
-  const dSel = document.getElementById('fDentado');
-  dSel.value = s.dentado || '';
-  if (s.dentado && !Array.from(dSel.options).some(o => o.value === s.dentado)) {
-    const o = document.createElement('option'); o.value = s.dentado; o.textContent = s.dentado; dSel.appendChild(o);
-  }
-  dSel.value = s.dentado || '';
-  const eSel = document.getElementById('fEstado');
-  if (s.estado && !Array.from(eSel.options).some(o => o.value === s.estado)) {
-    const o = document.createElement('option'); o.value = s.estado; o.textContent = s.estado; eSel.appendChild(o);
-  }
-  eSel.value = s.estado || '';
-  setPhotoSlot('referencia', s.referencia);
-  setPhotoSlot('delante', s.delante);
-  setPhotoSlot('detras', s.detras);
-}
-function closeModal(e) {
-  if (e && e.target !== document.getElementById('modalOverlay')) return;
-  document.getElementById('modalOverlay').classList.remove('open');
-  currentStampId = null;
-}
-function saveStamp() {
-  if (!isEditor()) { showToast('🔒 Sin permisos de edición'); return; }
-  const edifil = parseInt(document.getElementById('fEdifil').value);
-  if (!edifil) { alert('El número Edifil es obligatorio'); return; }
-  const data = {
-    edifil, año: parseInt(document.getElementById('fAño').value)||null,
-    descripcion: document.getElementById('fDesc').value.trim(),
-    color: document.getElementById('fColor').value.trim(),
-    valor_facial: document.getElementById('fValor').value.trim(),
-    dentado: document.getElementById('fDentado').value,
-    estado: document.getElementById('fEstado').value || null,
-    notas: document.getElementById('fNotas').value.trim(),
-    delante: null, detras: null
-  };
-  const existing = stamps.find(s => s.edifil === (currentStampId || edifil));
-  if (existing) { data.delante = existing.delante; data.detras = existing.detras; data.referencia = existing.referencia; }
-  if (currentStampId) {
-    const idx = stamps.findIndex(s => s.edifil === currentStampId);
-    if (idx >= 0) stamps[idx] = {...stamps[idx], ...data};
-  } else {
-    if (stamps.some(s => s.edifil === edifil)) { alert('Ya existe un sello con ese número Edifil'); return; }
-    stamps.push(data);
-    stamps.sort((a,b) => a.edifil - b.edifil);
-  }
-  saveToSheets(data);
-  renderStamps();
-  document.getElementById('modalOverlay').classList.remove('open');
-}
-function deleteStamp() {
-  if (!isEditor()) { showToast('🔒 Sin permisos de edición'); return; }
-  if (!currentStampId) return;
-  if (!confirm(`¿Eliminar el sello Edifil nº ${currentStampId}?`)) return;
-  const edifil = currentStampId;
-  stamps = stamps.filter(s => s.edifil !== edifil);
-  saveLocal();
-  deleteFromSheets(edifil);
-  renderStamps();
-  document.getElementById('modalOverlay').classList.remove('open');
-  showToast('Sello eliminado');
-}
-
-// ==================== PHOTOS ====================
-function setPhotoSlot(side, src) {
-  const slotId = side === 'delante' ? 'slotDelante' : side === 'detras' ? 'slotDetras' : 'slotReferencia';
-  const slot = document.getElementById(slotId);
-  const preview = slot.querySelector('.photo-slot-preview') || slot;
-  const existing = preview.querySelector('img');
-  if (existing) existing.remove();
-  slot.classList.remove('has-photo');
-  if (src) {
-    const img = document.createElement('img');
-    img.src = src;
-    const captions = { referencia: 'Imagen de referencia', delante: 'Mi sello · Cara delantera', detras: 'Mi sello · Cara trasera' };
-    img.addEventListener('click', (e) => { e.stopPropagation(); openLightbox(src, captions[side]||''); });
-    preview.insertBefore(img, preview.firstChild);
-    slot.classList.add('has-photo');
-  }
-}
-function triggerPhoto(side) { currentPhotoTarget = side; document.getElementById('fileInput').click(); }
-function triggerPhotoCamera(side) { currentPhotoTarget = side; window._fromCamera = true; document.getElementById('fileCamera').click(); }
-function triggerPhotoGallery(side) { currentPhotoTarget = side; window._fromCamera = false; document.getElementById('fileGallery').click(); }
-
-// ==================== RECORTADOR MANUAL ====================
-let _cropCallback = null;
-let _cropNatW = 1, _cropNatH = 1;   // tamaño real imagen
-let _cropDispW = 1, _cropDispH = 1; // tamaño display
-let _cropRect = { x:0, y:0, w:1, h:1 }; // en coords display
-
-const HANDLE_R = 10; // radio handles touch
-const HANDLES = ['tl','tm','tr','ml','mr','bl','bm','br','c'];
-
-function _getHandlePos(r) {
-  return {
-    tl:{ x:r.x,           y:r.y           },
-    tm:{ x:r.x+r.w/2,     y:r.y           },
-    tr:{ x:r.x+r.w,       y:r.y           },
-    ml:{ x:r.x,           y:r.y+r.h/2     },
-    mr:{ x:r.x+r.w,       y:r.y+r.h/2     },
-    bl:{ x:r.x,           y:r.y+r.h       },
-    bm:{ x:r.x+r.w/2,     y:r.y+r.h       },
-    br:{ x:r.x+r.w,       y:r.y+r.h       },
-    c: { x:r.x+r.w/2,     y:r.y+r.h/2     }
-  };
-}
-
-function _hitHandle(px, py, r) {
-  const pts = _getHandlePos(r);
-  for (const h of HANDLES) {
-    const d = Math.hypot(px - pts[h].x, py - pts[h].y);
-    if (d <= HANDLE_R + 4) return h;
-  }
-  return null;
-}
-
-function _drawCrop() {
-  const ov = document.getElementById('cropOverlay');
-  const ctx = ov.getContext('2d');
-  const W = ov.width, H = ov.height;
-  ctx.clearRect(0, 0, W, H);
-  const r = _cropRect;
-
-  // Oscurecer fuera
-  ctx.fillStyle = 'rgba(0,0,0,0.55)';
-  ctx.fillRect(0, 0, W, r.y);
-  ctx.fillRect(0, r.y, r.x, r.h);
-  ctx.fillRect(r.x+r.w, r.y, W-r.x-r.w, r.h);
-  ctx.fillRect(0, r.y+r.h, W, H-r.y-r.h);
-
-  // Borde dorado
-  ctx.strokeStyle = '#b8860b';
-  ctx.lineWidth = 2;
-  ctx.strokeRect(r.x+1, r.y+1, r.w-2, r.h-2);
-
-  // Regla de tercios (tenue)
-  ctx.strokeStyle = 'rgba(184,134,11,0.25)';
-  ctx.lineWidth = 1;
-  for (let i=1; i<3; i++) {
-    ctx.beginPath(); ctx.moveTo(r.x + r.w*i/3, r.y); ctx.lineTo(r.x + r.w*i/3, r.y+r.h); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(r.x, r.y + r.h*i/3); ctx.lineTo(r.x+r.w, r.y + r.h*i/3); ctx.stroke();
-  }
-
-  // Handles
-  const pts = _getHandlePos(r);
-  for (const h of HANDLES) {
-    if (h === 'c') continue;
-    ctx.fillStyle = '#b8860b';
-    ctx.strokeStyle = '#fff';
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.arc(pts[h].x, pts[h].y, HANDLE_R, 0, Math.PI*2);
-    ctx.fill(); ctx.stroke();
-  }
-
-  // Info tamaño
-  const scaleX = _cropNatW / _cropDispW;
-  const scaleY = _cropNatH / _cropDispH;
-  const pw = Math.round(r.w * scaleX), ph = Math.round(r.h * scaleY);
-  ctx.fillStyle = 'rgba(184,134,11,0.9)';
-  ctx.font = '13px Crimson Pro, serif';
-  ctx.fillText(`${pw} × ${ph}px`, r.x + 6, r.y + r.h - 7);
-}
-
-// ── Interacción ─────────────────────────────────────────
-let _drag = null;
-let _dragStart = {};
-
-function _pointerPos(e, el) {
-  const rect = el.getBoundingClientRect();
-  const src = e.touches ? e.touches[0] : e;
-  return { x: src.clientX - rect.left, y: src.clientY - rect.top };
-}
-
-function _clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
-const MIN_SIZE = 20;
-
-function _onPointerDown(e) {
-  e.preventDefault();
-  const ov = document.getElementById('cropOverlay');
-  const p = _pointerPos(e, ov);
-  const hit = _hitHandle(p.x, p.y, _cropRect);
-  _drag = hit || null;
-  _dragStart = { p, rect: {..._cropRect} };
-}
-
-function _onPointerMove(e) {
-  if (!_drag) return;
-  e.preventDefault();
-  const ov = document.getElementById('cropOverlay');
-  const p = _pointerPos(e, ov);
-  const dx = p.x - _dragStart.p.x, dy = p.y - _dragStart.p.y;
-  const s = _dragStart.rect;
-  const W = _cropDispW, H = _cropDispH;
-  let {x, y, w, h} = s;
-
-  if (_drag === 'c') {
-    x = _clamp(s.x + dx, 0, W - w);
-    y = _clamp(s.y + dy, 0, H - h);
-  } else {
-    if (_drag.includes('l')) { const nx = _clamp(s.x+dx, 0, s.x+s.w-MIN_SIZE); w = s.w-(nx-s.x); x = nx; }
-    if (_drag.includes('r')) { w = _clamp(s.w+dx, MIN_SIZE, W-s.x); }
-    if (_drag.includes('t')) { const ny = _clamp(s.y+dy, 0, s.y+s.h-MIN_SIZE); h = s.h-(ny-s.y); y = ny; }
-    if (_drag.includes('b')) { h = _clamp(s.h+dy, MIN_SIZE, H-s.y); }
-    if (_drag === 'tm' || _drag === 'bm') x = s.x;
-    if (_drag === 'ml' || _drag === 'mr') y = s.y;
-  }
-  _cropRect = {x, y, w, h};
-  _drawCrop();
-}
-
-function _onPointerUp(e) { _drag = null; }
-
-function _initCropEvents() {
-  const ov = document.getElementById('cropOverlay');
-  // Limpiar listeners previos clonando
-  const fresh = ov.cloneNode(false);
-  ov.parentNode.replaceChild(fresh, ov);
-  fresh.addEventListener('mousedown',  _onPointerDown);
-  fresh.addEventListener('touchstart', _onPointerDown, {passive:false});
-  window.addEventListener('mousemove',  _onPointerMove);
-  window.addEventListener('touchmove',  _onPointerMove, {passive:false});
-  window.addEventListener('mouseup',   _onPointerUp);
-  window.addEventListener('touchend',  _onPointerUp);
-}
-
-function showCropModal(sourceCanvas, callback) {
-  _cropCallback = callback;
-  _cropNatW = sourceCanvas.width;
-  _cropNatH = sourceCanvas.height;
-  showCropModal._src = sourceCanvas;
-
-  // Calcular tamaño display respetando max-width:90vw / max-height:62vh
-  const maxW = Math.floor(window.innerWidth  * 0.90);
-  const maxH = Math.floor(window.innerHeight * 0.62);
-  const scale = Math.min(1, maxW / _cropNatW, maxH / _cropNatH);
-  _cropDispW = Math.round(_cropNatW * scale);
-  _cropDispH = Math.round(_cropNatH * scale);
-
-  // Dibujar imagen en canvas de fondo (sin img.onload)
-  const bg = document.getElementById('cropBg');
-  bg.width  = _cropDispW;
-  bg.height = _cropDispH;
-  bg.getContext('2d').drawImage(sourceCanvas, 0, 0, _cropDispW, _cropDispH);
-
-  // Canvas overlay encima
-  const ov = document.getElementById('cropOverlay');
-  ov.width  = _cropDispW;
-  ov.height = _cropDispH;
-  ov.style.width  = _cropDispW + 'px';
-  ov.style.height = _cropDispH + 'px';
-
-  // Selección inicial = 80% centrada
-  const pad = 0.10;
-  _cropRect = {
-    x: Math.round(_cropDispW * pad),
-    y: Math.round(_cropDispH * pad),
-    w: Math.round(_cropDispW * (1 - pad*2)),
-    h: Math.round(_cropDispH * (1 - pad*2))
-  };
-
-  // Ocultar modal del sello mientras se recorta
-  const stampModal = document.getElementById('modalOverlay');
-  const stampWasOpen = stampModal.classList.contains('open');
-  if (stampWasOpen) stampModal.classList.remove('open');
-  showCropModal._stampWasOpen = stampWasOpen;
-
-  document.getElementById('cropModal').classList.add('open');
-  _initCropEvents();  // primero inicializar (clona el canvas)
-  requestAnimationFrame(() => { _drawCrop(); }); // dibujar tras render visible
-}
-
-function confirmCrop(doCrop) {
-  document.getElementById('cropModal').classList.remove('open');
-  // Restaurar modal del sello
-  if (showCropModal._stampWasOpen) {
-    document.getElementById('modalOverlay').classList.add('open');
-    showCropModal._stampWasOpen = false;
-  }
-  const src = showCropModal._src;
-  let result = src;
-  if (doCrop && src) {
-    const scaleX = _cropNatW / _cropDispW;
-    const scaleY = _cropNatH / _cropDispH;
-    const rx = Math.round(_cropRect.x * scaleX);
-    const ry = Math.round(_cropRect.y * scaleY);
-    const rw = Math.round(_cropRect.w * scaleX);
-    const rh = Math.round(_cropRect.h * scaleY);
-    const out = document.createElement('canvas');
-    out.width = rw; out.height = rh;
-    out.getContext('2d').drawImage(src, rx, ry, rw, rh, 0, 0, rw, rh);
-    result = out;
-  }
-  showCropModal._src = null;
-  if (_cropCallback) { _cropCallback(result); _cropCallback = null; }
-}
-
-async function handlePhoto(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-
-  const canvas = document.createElement('canvas');
-  const img = new Image();
-  const objectUrl = URL.createObjectURL(file);
-
-  img.onload = async () => {
-    URL.revokeObjectURL(objectUrl);
-    const MAX = 1400;
-    let w = img.width, h = img.height;
-    if (w > MAX || h > MAX) {
-      if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
-      else { w = Math.round(w * MAX / h); h = MAX; }
-    }
-    canvas.width = w; canvas.height = h;
-    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-
-    // Mostrar recortador siempre (cámara y galería)
-    window._fromCamera = false;
-
-    const uploadCanvas = async (finalCanvas) => {
-      const previewSrc = finalCanvas.toDataURL('image/jpeg', 0.85);
-      setPhotoSlot(currentPhotoTarget, previewSrc);
-      showToast('Subiendo foto...');
-      setSyncStatus('syncing', 'Subiendo foto a Cloudinary...');
-
-      finalCanvas.toBlob(async (blob) => {
-      try {
-        const formData = new FormData();
-        formData.append('file', blob, 'sello.jpg');
-        formData.append('upload_preset', CLOUDINARY_PRESET);
-
-        const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, {
-          method: 'POST',
-          body: formData
-        });
-        const json = await res.json();
-
-        if (json.secure_url) {
-          const idx = stamps.findIndex(s => s.edifil === currentStampId);
-          if (idx >= 0) {
-            stamps[idx][currentPhotoTarget] = json.secure_url;
-            setPhotoSlot(currentPhotoTarget, json.secure_url);
-            await saveToSheets(stamps[idx]);
-            saveLocal();
-          }
-          setSyncStatus('', 'Foto guardada en Cloudinary ✓');
-          showToast('Foto guardada ✓');
-        } else {
-          console.error('Cloudinary error:', json);
-          throw new Error(json.error?.message || 'Error en Cloudinary');
-        }
-      } catch(err) {
-        console.error(err);
-        const idx = stamps.findIndex(s => s.edifil === currentStampId);
-        if (idx >= 0) { stamps[idx][currentPhotoTarget] = previewSrc; saveLocal(); renderStamps(); }
-        setSyncStatus('error', 'Error subiendo foto — guardada localmente');
-        showToast('Error: ' + err.message);
-      }
-    }, 'image/jpeg', 0.88);
-    }; // fin uploadCanvas
-
-    showCropModal(canvas, uploadCanvas);
-  };
-  img.src = objectUrl;
-  event.target.value = '';
-}
-function removePhoto(side) {
-  setPhotoSlot(side, null);
-  const idx = stamps.findIndex(s => s.edifil === currentStampId);
-  if (idx >= 0) {
-    stamps[idx][side] = null;
-    saveLocal();
-    saveToSheets(stamps[idx]);
-  }
-}
-}
-
-// ==================== LIGHTBOX ====================
-let lbScale = 1;
-let lbDrag = { active:false, startX:0, startY:0, curTx:0, curTy:0 };
-function openLightbox(src, caption) {
-  lbScale = 1; lbDrag = { active:false, startX:0, startY:0, curTx:0, curTy:0 };
-  const img = document.getElementById('lightboxImg');
-  img.src = src; img.style.transform = 'scale(1) translate(0,0)';
-  document.getElementById('lightboxCaption').textContent = caption;
-  document.getElementById('lightbox').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-function closeLightbox() {
-  document.getElementById('lightbox').classList.remove('open');
-  document.getElementById('lightboxImg').src = '';
-  document.body.style.overflow = ''; lbScale = 1;
-}
-document.addEventListener('wheel', (e) => {
-  const lb = document.getElementById('lightbox');
-  if (!lb.classList.contains('open')) return;
-  e.preventDefault();
-  const img = document.getElementById('lightboxImg');
-  lbScale = Math.min(5, Math.max(1, lbScale - e.deltaY * 0.002));
-  img.style.transform = `scale(${lbScale}) translate(${lbDrag.curTx}px, ${lbDrag.curTy}px)`;
-  img.style.cursor = lbScale > 1 ? 'grab' : 'default';
-}, { passive: false });
-(function() {
-  const img = document.getElementById('lightboxImg');
-  img.addEventListener('mousedown', (e) => {
-    if (lbScale <= 1) return; e.preventDefault();
-    lbDrag.active = true; lbDrag.startX = e.clientX - lbDrag.curTx; lbDrag.startY = e.clientY - lbDrag.curTy;
-    img.style.cursor = 'grabbing';
-  });
-  document.addEventListener('mousemove', (e) => {
-    if (!lbDrag.active) return;
-    lbDrag.curTx = e.clientX - lbDrag.startX; lbDrag.curTy = e.clientY - lbDrag.startY;
-    img.style.transform = `scale(${lbScale}) translate(${lbDrag.curTx}px, ${lbDrag.curTy}px)`;
-  });
-  document.addEventListener('mouseup', () => {
-    if (!lbDrag.active) return; lbDrag.active = false;
-    document.getElementById('lightboxImg').style.cursor = lbScale > 1 ? 'grab' : 'default';
-  });
-})();
-
-// ==================== TOAST ====================
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2500);
-}
-
-// ==================== INIT ====================
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
-
-</script>
-
-<!-- Modal recortador manual -->
-<div id="cropModal">
-  <div id="cropHeader">Recortar imagen</div>
-  <div id="cropHint">Arrastra los bordes o esquinas para ajustar · Toca dentro para mover</div>
-  <div id="cropWrap">
-    <canvas id="cropBg"></canvas>
-    <canvas id="cropOverlay"></canvas>
-  </div>
-  <div class="crop-btns">
-    <button id="btnCropSkip" onclick="confirmCrop(false)">Sin recortar</button>
-    <button id="btnCropOk"   onclick="confirmCrop(true)">✓ Recortar</button>
-  </div>
+<button onclick="closeEditor()">Cerrar</button>
 </div>
 
 <script>
-const CLOUD_BASE="https://res.cloudinary.com/do4ltpfbo/image/upload/sellos/imagenes/";
-function pad(n){return String(n).padStart(3,'0');}
-function cloudImg(edifil){
-  return CLOUD_BASE+"sello_"+pad(edifil)+".jpg";
+
+const CLOUD =
+"https://res.cloudinary.com/do4ltpfbo/image/upload/sellos/imagenes/";
+
+const TOTAL_SELLOS = 500;
+
+let current = null;
+
+function pad(n){
+return n.toString().padStart(3,'0');
 }
-document.addEventListener("DOMContentLoaded",()=>{
-  document.querySelectorAll("[data-edifil]").forEach(el=>{
-    const id=el.getAttribute("data-edifil");
-    const img=el.querySelector("img");
-    if(img){img.src=cloudImg(id);}
-  });
-});
+
+function imgURL(n){
+return CLOUD+"sello_"+pad(n)+".jpg";
+}
+
+function createGrid(){
+
+const grid = document.getElementById("grid");
+
+for(let i=1;i<=TOTAL_SELLOS;i++){
+
+const div=document.createElement("div");
+div.className="sello";
+
+const img=document.createElement("img");
+
+img.src=imgURL(i);
+
+img.onerror=function(){
+this.style.opacity=0.2;
+};
+
+div.appendChild(img);
+
+div.onclick=function(){
+openEditor(i);
+};
+
+grid.appendChild(div);
+
+}
+
+}
+
+function openEditor(n){
+
+current=n;
+
+document.getElementById("titulo").innerText="Sello "+pad(n);
+
+document.getElementById("imgFront").src=imgURL(n);
+
+document.getElementById("imgBack").src=imgURL(n);
+
+document.getElementById("editor").style.display="block";
+
+}
+
+function closeEditor(){
+document.getElementById("editor").style.display="none";
+}
+
+createGrid();
+
 </script>
 
 </body>
