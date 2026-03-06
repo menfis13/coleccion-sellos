@@ -1030,7 +1030,6 @@ async function handlePhoto(event) {
             setPhotoSlot(currentPhotoTarget, json.secure_url);
             await saveToSheets(stamps[idx]);
             saveLocal();
-            renderStamps();
           }
           setSyncStatus('', 'Foto guardada en Cloudinary ✓');
           showToast('Foto guardada ✓');
@@ -1056,7 +1055,12 @@ async function handlePhoto(event) {
 function removePhoto(side) {
   setPhotoSlot(side, null);
   const idx = stamps.findIndex(s => s.edifil === currentStampId);
-  if (idx >= 0) { stamps[idx][side] = null; saveLocal(); renderStamps(); }
+  if (idx >= 0) {
+    stamps[idx][side] = null;
+    saveLocal();
+    saveToSheets(stamps[idx]);
+  }
+}
 }
 
 // ==================== LIGHTBOX ====================
