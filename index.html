@@ -1017,6 +1017,7 @@ async function handlePhoto(event) {
         const uniqueName = 'sello_' + currentStampId + '_' + currentPhotoTarget + '_' + Date.now() + '.jpg';
         formData.append('file', blob, uniqueName);
         formData.append('upload_preset', CLOUDINARY_PRESET);
+        formData.append('folder', 'sellos/isabel2/mios');
 
         const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, {
           method: 'POST',
