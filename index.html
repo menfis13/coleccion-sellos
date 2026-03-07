@@ -1054,34 +1054,35 @@ async function handlePhoto(event) {
   event.target.value = '';
 }
 async function removePhoto(side) {
+  if (!isEditor()) { showToast('🔒 Sin permisos de edición'); return; }
   const idx = stamps.findIndex(s => s.edifil === currentStampId);
-  const photoUrl = idx >= 0 ? stamps[idx][side] : null;
+  const photoUrl = (idx >= 0) ? stamps[idx][side] : null;
 
-  // Eliminar de Cloudinary si la imagen está alojada allí
-  if (photoUrl && photoUrl.includes('cloudinary.com')) {
-    try {
-      // Extraer el public_id de la URL de Cloudinary
-      // Formato: https://res.cloudinary.com/<cloud>/image/upload/<transformations>/<public_id>.ext
-      const match = photoUrl.match(/\/image\/upload\/(?:v\d+\/)?(.+)\.[a-zA-Z]+$/);
-      if (match) {
-        const publicId = match[1];
-        // Llamar al Google Apps Script para que gestione el borrado con firma
-        const delUrl = SCRIPT_URL + '?action=deleteCloudinary&publicId=' + encodeURIComponent(publicId);
-        const res = await fetch(delUrl);
-        const json = await res.json().catch(() => ({}));
+  // --- Eliminar de Cloudinary si la URL apunta allí ---
+  if (photoUrl && photoUrl.includes('res.cloudinary.com')) {
+    // Extraer el public_id: todo lo que hay entre /upload/ (y versión opcional v123/) y la extensión
+    const m = photoUrl.match(/\/upload\/(?:v\d+\/)?(.+)\.[a-zA-Z0-9]+$/);
+    if (m) {
+      const publicId = m[1]; // ej: "isabel2/sello_040" o "sellos/abc123"
+      setSyncStatus('syncing', 'Eliminando imagen de Cloudinary...');
+      try {
+        const url = SCRIPT_URL + '?action=deleteCloudinary&publicId=' + encodeURIComponent(publicId);
+        const res = await fetch(url);
+        const json = await res.json();
         if (json.status === 'ok') {
           showToast('Imagen eliminada de Cloudinary ✓');
         } else {
-          console.warn('Cloudinary delete response:', json);
-          showToast('Imagen eliminada localmente (Cloudinary: ' + (json.message || 'sin respuesta') + ')');
+          console.warn('Cloudinary delete:', json);
+          showToast('Aviso Cloudinary: ' + (json.message || 'respuesta desconocida'));
         }
+      } catch (err) {
+        console.error('Error al eliminar de Cloudinary:', err);
+        showToast('No se pudo contactar con el servidor para borrar de Cloudinary');
       }
-    } catch(err) {
-      console.error('Error eliminando de Cloudinary:', err);
-      showToast('Eliminada localmente — error al contactar Cloudinary');
     }
   }
 
+  // --- Limpiar en local, Sheets y UI ---
   setPhotoSlot(side, null);
   if (idx >= 0) {
     stamps[idx][side] = null;
@@ -1089,6 +1090,7 @@ async function removePhoto(side) {
     saveLocal();
     renderStamps();
   }
+  setSyncStatus('', 'Imagen eliminada ✓');
 }
 
 // ==================== LIGHTBOX ====================
