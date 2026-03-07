@@ -201,7 +201,7 @@
   .portada-card-img { width:80px; height:80px; object-fit:contain; float:right; margin:-8px -4px 0 16px; opacity:0.85; border-radius:2px; }
   .portada-card-sellos { font-size:0.78rem; color:#8a7050; border-top:1px solid rgba(184,134,11,0.12); padding-top:14px; margin-top:14px; display:flex; gap:16px; }
   .portada-card-sellos strong { color:var(--gold-light); font-size:1rem; font-family:'Playfair Display',serif; display:block; }
-  .portada-entrar { display:inline-flex; align-items:center; gap:8px; background:var(--gold); color:var(--ink); border:none; padding:14px 36px; font-family:'Crimson Pro',serif; font-size:1.05rem; font-weight:600; cursor:pointer; border-radius:2px; letter-spacing:0.05em; transition:all 0.2s; margin-top:8px; }
+  
   .portada-entrar:hover { background:var(--gold-light); transform:translateY(-1px); }
   .portada-footer { font-size:0.72rem; color:#3a3020; letter-spacing:0.1em; text-transform:uppercase; margin-top:48px; }
 </style>
@@ -213,12 +213,11 @@
   <div class="portada-bg"></div>
   <div class="portada-inner">
     <div class="portada-corona">♛</div>
-    <div class="portada-titulo">Colección Filatélica<span>Española</span></div>
+    <div class="portada-titulo">Colección Filatélica<span>de Menfis</span></div>
     <div class="portada-sub">Sellos de España · Catálogo Edifil</div>
     <div class="portada-divisor"></div>
     <div class="portada-epocas" id="portadaEpocas"></div>
-    <button class="portada-entrar" onclick="entrarColeccion()">Entrar a la colección →</button>
-    <div class="portada-footer">Haz clic en una época para seleccionarla · Luego pulsa Entrar</div>
+    <div class="portada-footer">Haz clic en una época para entrar directamente</div>
   </div>
 </div>
 
@@ -1195,7 +1194,7 @@ function showPortada() {
 
   const container = document.getElementById('portadaEpocas');
   container.innerHTML = Object.values(EPOCAS).map(ep => `
-    <div class="portada-card${ep.id === currentEpoca ? ' active' : ''}" data-epoca="${ep.id}" onclick="selectEpocaPortada('${ep.id}')">
+    <div class="portada-card${ep.id === currentEpoca ? ' active' : ''}" data-epoca="${ep.id}" onclick="entrarEpoca('${ep.id}')">
       <img class="portada-card-img" src="${ep.sello_ref}" onerror="this.style.display='none'" alt="">
       <div class="portada-card-fecha">${ep.titulo.match(/\(.*?\)/)?.[0] || ''}</div>
       <div class="portada-card-nombre">${ep.titulo.replace(/\(.*?\)\s*/,'')}</div>
@@ -1208,7 +1207,7 @@ function showPortada() {
   `).join('');
 }
 
-function selectEpocaPortada(epocaId) {
+function entrarEpoca(epocaId) {
   currentEpoca = epocaId;
   document.querySelectorAll('.portada-card').forEach(c => c.classList.remove('active'));
   document.querySelector(`.portada-card[data-epoca="${epocaId}"]`).classList.add('active');
