@@ -214,7 +214,7 @@
   <div class="portada-inner">
     <div class="portada-corona">♛</div>
     <div class="portada-titulo">Colección Filatélica<span>de Menfis</span></div>
-    <div class="portada-sub">Sellos de España · Catálogo Edifil</div>
+    <div class="portada-sub">Sellos de España</div>
     <div class="portada-divisor"></div>
     <div class="portada-epocas" id="portadaEpocas"></div>
     <div class="portada-footer">Haz clic en una época para entrar directamente</div>
@@ -1209,8 +1209,9 @@ function showPortada() {
 
 function entrarEpoca(epocaId) {
   currentEpoca = epocaId;
-  document.querySelectorAll('.portada-card').forEach(c => c.classList.remove('active'));
-  document.querySelector(`.portada-card[data-epoca="${epocaId}"]`).classList.add('active');
+  document.getElementById('portada').classList.remove('open');
+  document.body.style.overflow = '';
+  switchEpoca(epocaId);
 }
 
 function entrarColeccion() {
