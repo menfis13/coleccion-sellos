@@ -234,8 +234,11 @@
       <div class="stat-box"><span class="stat-num" id="stat-tengo">—</span><span class="stat-label">En colección</span></div>
       <div class="stat-box"><span class="stat-num" id="stat-fotos">—</span><span class="stat-label">Con foto</span></div>
     </div>
-    <div class="auth-area" id="authArea">
-      <!-- Se rellena por JS -->
+    <div style="display:flex;align-items:center;gap:10px">
+      <button onclick="showPortada()" style="background:transparent;border:1px solid rgba(184,134,11,0.5);color:var(--gold-light);padding:8px 16px;font-family:'Crimson Pro',serif;font-size:0.9rem;font-weight:600;cursor:pointer;border-radius:2px;transition:all 0.2s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(184,134,11,0.5)'">◀ Épocas</button>
+      <div class="auth-area" id="authArea">
+        <!-- Se rellena por JS -->
+      </div>
     </div>
   </div>
 </header>
