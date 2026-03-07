@@ -1014,7 +1014,8 @@ async function handlePhoto(event) {
       finalCanvas.toBlob(async (blob) => {
       try {
         const formData = new FormData();
-        formData.append('file', blob, 'sello.jpg');
+        const uniqueName = 'sello_' + currentStampId + '_' + currentPhotoTarget + '_' + Date.now() + '.jpg';
+        formData.append('file', blob, uniqueName);
         formData.append('upload_preset', CLOUDINARY_PRESET);
 
         const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, {
@@ -1057,16 +1058,10 @@ async function removePhoto(side) {
   if (!isEditor()) { showToast('🔒 Sin permisos de edición'); return; }
   const idx = stamps.findIndex(s => s.edifil === currentStampId);
   if (idx < 0) return;
-
-  // Limpiar visualmente de inmediato
   setPhotoSlot(side, null);
   stamps[idx][side] = null;
-
-  // Guardar en local primero
   saveLocal();
   renderStamps();
-
-  // Guardar en Sheets
   try {
     await saveToSheets(stamps[idx]);
     showToast('Imagen eliminada ✓');
