@@ -1292,33 +1292,25 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbo
 // Historia del navegador — botón atrás del móvil
 window.addEventListener('popstate', function(e) {
   const state = e.state || {};
-  if (document.getElementById('modalOverlay').classList.contains('open')) {
-    document.getElementById('modalOverlay').classList.remove('open');
-    return;
-  }
+  // Cerrar lightbox si está abierto
   if (document.getElementById('lightbox').classList.contains('open')) {
     closeLightbox();
     return;
   }
-  if (!document.getElementById('portada').classList.contains('open')) {
-    const portada = document.getElementById('portada');
-    portada.classList.add('open');
-    document.body.style.overflow = 'hidden';
-    const container = document.getElementById('portadaEpocas');
-    container.innerHTML = Object.values(EPOCAS).map(ep => `
-    <div class="portada-card${ep.id === currentEpoca ? ' active' : ''}" data-epoca="${ep.id}" onclick="entrarEpoca('${ep.id}')">
-      <img class="portada-card-img" src="${ep.sello_ref}" onerror="this.style.display='none'" alt="">
-      <div class="portada-card-fecha">${ep.titulo.match(/\(.*?\)/)?.[0] || ''}</div>
-      <div class="portada-card-nombre">${ep.titulo.replace(/\(.*?\)\s*/,'')}</div>
-      <div class="portada-card-sub">${ep.subtitulo}</div>
-      <div class="portada-card-sellos">
-        <div><strong>${ep.data.length}</strong>sellos</div>
-        <div><strong>${ep.data.filter(s=>s.estado).length || '0'}</strong>en colección</div>
-      </div>
-    </div>
-  `).join('');
-    applyAuthUI();
+  // Cerrar modal sello si está abierto
+  if (document.getElementById('modalOverlay').classList.contains('open')) {
+    document.getElementById('modalOverlay').classList.remove('open');
     return;
+  }
+  // Si el estado destino es 'epoca' o 'sello', quedarse en la época (no ir a portada)
+  if (state.view === 'epoca' || state.view === 'sello') {
+    document.getElementById('portada').classList.remove('open');
+    document.body.style.overflow = '';
+    return;
+  }
+  // En cualquier otro caso, mostrar portada
+  if (!document.getElementById('portada').classList.contains('open')) {
+    showPortada();
   }
 });
 
