@@ -1285,10 +1285,13 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbo
 window.addEventListener('popstate', function(e) {
   if (document.getElementById('modalOverlay').classList.contains('open')) {
     document.getElementById('modalOverlay').classList.remove('open');
+    // Volver a época — añadir entrada para que el siguiente atrás vaya a portada
+    history.pushState({ view: 'epoca', epocaId: currentEpoca }, '', '');
     return;
   }
   if (document.getElementById('lightbox').classList.contains('open')) {
     closeLightbox();
+    history.pushState({ view: 'epoca', epocaId: currentEpoca }, '', '');
     return;
   }
   if (!document.getElementById('portada').classList.contains('open')) {
