@@ -47,8 +47,7 @@
   body.dark-mode .view-btn.active { background: #e0b84a !important; color: #13110d !important; }
   /* Tarjetas de sellos */
   body.dark-mode .stamp-card { background: #1e1a12 !important; border-color: rgba(184,134,11,0.18) !important; }
-  body.dark-mode .stamp-card.no-tengo { border-color: rgba(120,120,120,0.25) !important; }
-  body.dark-mode .stamp-card.no-tengo::after { border-color: transparent #6a6a6a transparent transparent !important; }
+  body.dark-mode .stamp-card.tengo::after { border-color: transparent #c8960f transparent transparent !important; filter: drop-shadow(-2px 2px 3px rgba(184,134,11,0.4)) !important; }
   body.dark-mode .stamp-img-area { background: #1e1a12 !important; }
   body.dark-mode .stamp-photo { background: #1e1a12 !important; }
   body.dark-mode .stamp-tag { background: #2a2318 !important; }
@@ -76,34 +75,37 @@
   body.dark-mode .btn-secondary:hover { background: #2a2318 !important; }
 
   /* ══════════════════════════════════
-     BOTÓN MODO OSCURO (en el header, junto a Épocas)
+     BOTÓN MODO OSCURO (esquina superior derecha del header, fuera del grupo de botones)
   ══════════════════════════════════ */
   #darkModeBtn {
-    position: relative;
-    width: 36px;
-    height: 36px;
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
-    border: 1px solid rgba(184,134,11,0.45);
+    border: 1px solid rgba(184,134,11,0.35);
     background: transparent;
-    color: #d4a843;
-    font-size: 1rem;
+    color: #a89070;
+    font-size: 0.9rem;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s, background 0.2s;
+    transition: transform 0.2s, border-color 0.2s, color 0.2s, background 0.2s;
   }
+  header { position: relative; }
   #darkModeBtn:hover {
     transform: scale(1.12);
-    border-color: #b8860b;
-    background: rgba(184,134,11,0.1);
+    border-color: var(--gold);
+    color: var(--gold-light);
+    background: rgba(184,134,11,0.08);
   }
   #darkModeBtn .dm-tip {
     position: absolute;
     top: calc(100% + 8px);
-    left: 50%;
-    transform: translateX(-50%);
+    right: 0;
     background: #1a1208;
     color: #d4a843;
     font-family: 'Crimson Pro', serif;
@@ -172,19 +174,18 @@
   .stamp-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px var(--shadow); }
   .stamp-img-area { position: relative; background: #ffffff; min-height: 160px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
   .stamp-photo { width: 100%; height: 160px; object-fit: contain; display: block; background: #ffffff; }
-  /* Sellos no poseídos: esquina doblada estilo álbum */
-  .stamp-card.no-tengo::after {
+  /* Sellos poseídos: esquina doblada dorada estilo álbum */
+  .stamp-card.tengo::after {
     content: '';
     position: absolute;
     top: 0; right: 0;
     width: 0; height: 0;
     border-style: solid;
-    border-width: 0 28px 28px 0;
-    border-color: transparent #9a9a9a transparent transparent;
+    border-width: 0 32px 32px 0;
+    border-color: transparent #b8860b transparent transparent;
     z-index: 5;
-    filter: drop-shadow(-2px 2px 2px rgba(0,0,0,0.18));
+    filter: drop-shadow(-2px 2px 3px rgba(184,134,11,0.35));
   }
-  .stamp-card.no-tengo { border-color: rgba(150,150,150,0.3); }
   .stamp-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 20px; color: rgba(92,61,30,0.4); text-align: center; height: 160px; }
   .stamp-placeholder-num { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: rgba(92,61,30,0.25); font-weight: 700; }
   .stamp-info { padding: 12px 14px 14px; }
@@ -371,12 +372,12 @@
     </div>
     <div style="display:flex;align-items:center;gap:10px">
       <button onclick="showPortada()" style="background:transparent;border:1px solid rgba(184,134,11,0.5);color:var(--gold-light);padding:8px 16px;font-family:'Crimson Pro',serif;font-size:0.9rem;font-weight:600;cursor:pointer;border-radius:2px;transition:all 0.2s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(184,134,11,0.5)'">◀ Épocas</button>
-      <button id="darkModeBtn" onclick="toggleDarkMode()" title="Cambiar modo claro/oscuro">
-        <span id="darkModeIcon">🌙</span>
-        <span class="dm-tip" id="darkModeTip">Modo oscuro</span>
-      </button>
       <div id="authArea"></div>
     </div>
+    <button id="darkModeBtn" onclick="toggleDarkMode()" title="Cambiar modo claro/oscuro">
+      <span id="darkModeIcon">🌙</span>
+      <span class="dm-tip" id="darkModeTip">Modo oscuro</span>
+    </button>
   </div>
 </header>
 
@@ -879,7 +880,7 @@ function renderGrid(filtered) {
     const imgArea = s.referencia
       ? `<img class="stamp-photo" src="${s.referencia}" alt="Sello ${s.edifil}">`
       : `<div class="stamp-placeholder"><div class="stamp-placeholder-num">${s.edifil}</div></div>`;
-    return `<div class="stamp-card${noTengo ? ' no-tengo' : ''}" onclick="openStamp(${s.edifil})">
+    return `<div class="stamp-card${noTengo ? '' : ' tengo'}" onclick="openStamp(${s.edifil})">
       <div class="stamp-img-area">${imgArea}</div>
       <div class="stamp-info">
         <div class="stamp-edifil">Edifil nº ${s.edifil}</div>
