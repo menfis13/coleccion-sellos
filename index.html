@@ -19,7 +19,9 @@
     --shadow: rgba(26,18,8,0.15);
   }
 
-  /* ── MODO OSCURO ── */
+  /* ══════════════════════════════════
+     MODO OSCURO
+  ══════════════════════════════════ */
   body.dark-mode {
     --cream: #1a1610;
     --parchment: #221e16;
@@ -31,89 +33,93 @@
     --sage: #7a9a7a;
     --shadow: rgba(0,0,0,0.5);
   }
-  body.dark-mode { background: #13110d; color: var(--ink); }
-  body.dark-mode header { background: #0d0b07; }
-  body.dark-mode .toolbar { background: #1e1a12; border-bottom-color: rgba(184,134,11,0.2); }
+  body.dark-mode { background: #13110d !important; color: var(--ink); }
+  body.dark-mode header { background: #0d0b07 !important; }
+  body.dark-mode .sync-bar { background: #0d150d !important; }
+  body.dark-mode .sync-bar.syncing { background: #120f06 !important; }
+  body.dark-mode .sync-bar.error  { background: #150a0a !important; }
+  body.dark-mode .read-only-notice { background: rgba(184,134,11,0.06) !important; border-color: rgba(184,134,11,0.15) !important; }
+  body.dark-mode .toolbar { background: #1e1a12 !important; border-bottom-color: rgba(184,134,11,0.2) !important; }
   body.dark-mode .search-wrap input,
-  body.dark-mode .filter-select { background: #13110d; color: var(--ink); border-color: rgba(184,134,11,0.25); }
+  body.dark-mode .filter-select { background: #13110d !important; color: var(--ink) !important; border-color: rgba(184,134,11,0.25) !important; }
   body.dark-mode .search-wrap input::placeholder { color: #6a5a40; }
-  body.dark-mode .view-btn { background: #13110d; color: #c4a882; }
-  body.dark-mode .view-btn.active { background: #e0b84a; color: #13110d; }
-  body.dark-mode .stamp-card { background: #1e1a12; border-color: rgba(184,134,11,0.15); }
-  body.dark-mode .stamp-img-area { background: #151210; }
-  body.dark-mode .stamp-img-area::before,
-  body.dark-mode .stamp-img-area::after { background: radial-gradient(circle at 7px center, #13110d 5px, transparent 5px); background-size: 14px 10px; background-repeat: repeat-x; }
-  body.dark-mode .stamp-photo { background: #151210; }
-  body.dark-mode .stamp-tag { background: #2a2318; }
-  body.dark-mode .list-table { background: #1e1a12; border-color: rgba(184,134,11,0.15); }
-  body.dark-mode .list-table th { background: #0d0b07; }
-  body.dark-mode .list-table th:hover { background: #151210; }
-  body.dark-mode .list-table td { border-bottom-color: rgba(184,134,11,0.08); }
-  body.dark-mode .list-table tr:hover td { background: rgba(30,26,18,0.9); }
-  body.dark-mode .list-table tr:nth-child(even) td { background: rgba(34,30,22,0.5); }
-  body.dark-mode .modal { background: #1a1610; border-top-color: var(--gold); }
-  body.dark-mode .modal-header { border-bottom-color: rgba(184,134,11,0.15); }
-  body.dark-mode .modal-footer { border-top-color: rgba(184,134,11,0.1); }
+  body.dark-mode .view-btn { background: #13110d !important; color: #c4a882 !important; }
+  body.dark-mode .view-btn.active { background: #e0b84a !important; color: #13110d !important; }
+  /* Tarjetas de sellos */
+  body.dark-mode .stamp-card { background: #1e1a12 !important; border-color: rgba(184,134,11,0.18) !important; }
+  body.dark-mode .stamp-img-area { background: #1e1a12 !important; }
+  body.dark-mode .stamp-img-area::before { background-image: radial-gradient(circle at 7px 10px, #1e1a12 5px, transparent 5px) !important; }
+  body.dark-mode .stamp-img-area::after  { background-image: radial-gradient(circle at 7px 0px,  #1e1a12 5px, transparent 5px) !important; }
+  body.dark-mode .stamp-photo { background: #1e1a12 !important; }
+  body.dark-mode .stamp-tag { background: #2a2318 !important; }
+  /* Tabla lista */
+  body.dark-mode .list-table { background: #1e1a12 !important; border-color: rgba(184,134,11,0.15) !important; }
+  body.dark-mode .list-table th { background: #0d0b07 !important; }
+  body.dark-mode .list-table th:hover { background: #151210 !important; }
+  body.dark-mode .list-table td { border-bottom-color: rgba(184,134,11,0.08) !important; }
+  body.dark-mode .list-table tr:hover td { background: rgba(30,26,18,0.9) !important; }
+  body.dark-mode .list-table tr:nth-child(even) td { background: rgba(34,30,22,0.5) !important; }
+  /* Modal */
+  body.dark-mode .modal { background: #1a1610 !important; }
+  body.dark-mode .modal-header { border-bottom-color: rgba(184,134,11,0.15) !important; }
+  body.dark-mode .modal-footer { border-top-color: rgba(184,134,11,0.1) !important; }
   body.dark-mode .form-input,
   body.dark-mode .form-select,
-  body.dark-mode .form-textarea { background: #13110d; color: var(--ink); border-color: rgba(184,134,11,0.25); }
-  body.dark-mode .photo-slot { border-color: rgba(184,134,11,0.2); background: #13110d; }
-  body.dark-mode .photo-actions button { background: #1e1a12; color: #c4a882; border-color: rgba(184,134,11,0.12); }
-  body.dark-mode .photo-actions button:hover { background: #2a2318; }
-  body.dark-mode .sync-bar { background: #0d150d; }
-  body.dark-mode .sync-bar.syncing { background: #120f06; }
-  body.dark-mode .sync-bar.error { background: #150a0a; }
-  body.dark-mode .read-only-notice { background: rgba(184,134,11,0.06); border-color: rgba(184,134,11,0.15); }
-  body.dark-mode .btn-secondary { border-color: rgba(184,134,11,0.3); color: #c4a882; }
-  body.dark-mode .btn-secondary:hover { background: #2a2318; }
-  body.dark-mode .btn-primary { background: #c8960f; color: #0d0b07; }
-  body.dark-mode .btn-primary:hover { background: #e0b84a; }
-  body.dark-mode [style*="background:#faf7f2"] { background: #1e1a12 !important; }
-  body.dark-mode .photo-slot [style*="background:#faf7f2"] { background: #1a1610 !important; }
+  body.dark-mode .form-textarea { background: #13110d !important; color: var(--ink) !important; border-color: rgba(184,134,11,0.25) !important; }
+  body.dark-mode .photo-slot { border-color: rgba(184,134,11,0.2) !important; background: #13110d !important; }
+  body.dark-mode .photo-actions button { background: #1e1a12 !important; color: #c4a882 !important; }
+  body.dark-mode .photo-actions button:hover { background: #2a2318 !important; }
+  /* Botones */
+  body.dark-mode .btn-primary { background: #c8960f !important; color: #0d0b07 !important; }
+  body.dark-mode .btn-primary:hover { background: #e0b84a !important; }
+  body.dark-mode .btn-secondary { border-color: rgba(184,134,11,0.3) !important; color: #c4a882 !important; }
+  body.dark-mode .btn-secondary:hover { background: #2a2318 !important; }
 
-  /* ── BOTÓN MODO OSCURO ── */
+  /* ══════════════════════════════════
+     BOTÓN MODO OSCURO (fijo, esquina inferior izquierda)
+  ══════════════════════════════════ */
   #darkModeBtn {
     position: fixed;
     bottom: 24px;
     left: 24px;
-    z-index: 700;
-    width: 44px;
-    height: 44px;
+    z-index: 9990;
+    width: 46px;
+    height: 46px;
     border-radius: 50%;
-    border: 1px solid rgba(184,134,11,0.4);
-    background: var(--ink);
-    color: var(--gold-light);
-    font-size: 1.1rem;
+    border: 1px solid rgba(184,134,11,0.45);
+    background: #1a1208;
+    color: #d4a843;
+    font-size: 1.2rem;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
-    transition: all 0.25s ease;
-    backdrop-filter: blur(4px);
+    box-shadow: 0 4px 18px rgba(0,0,0,0.35);
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
   }
   #darkModeBtn:hover {
-    transform: scale(1.1);
-    border-color: var(--gold);
-    box-shadow: 0 6px 20px rgba(184,134,11,0.25);
+    transform: scale(1.12);
+    border-color: #b8860b;
+    box-shadow: 0 6px 22px rgba(184,134,11,0.3);
   }
-  #darkModeBtn .dm-tooltip {
+  #darkModeBtn .dm-tip {
     position: absolute;
-    left: 56px;
-    background: var(--ink);
-    color: var(--gold-light);
+    left: 54px;
+    background: #1a1208;
+    color: #d4a843;
     font-family: 'Crimson Pro', serif;
     font-size: 0.78rem;
     letter-spacing: 0.08em;
     white-space: nowrap;
-    padding: 5px 10px;
+    padding: 5px 11px;
     border-radius: 2px;
-    border: 1px solid rgba(184,134,11,0.2);
+    border: 1px solid rgba(184,134,11,0.25);
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.2s;
+    transition: opacity 0.18s;
   }
-  #darkModeBtn:hover .dm-tooltip { opacity: 1; }
+  #darkModeBtn:hover .dm-tip { opacity: 1; }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Crimson Pro', Georgia, serif; background: var(--cream); color: var(--ink); min-height: 100vh; }
   body::before {
@@ -165,9 +171,9 @@
   .stamp-card { background: white; border: 1px solid rgba(92,61,30,0.15); border-radius: 3px; overflow: hidden; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 2px 8px var(--shadow); position: relative; }
   .stamp-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px var(--shadow); }
   .stamp-img-area { position: relative; background: #ffffff; min-height: 160px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-  .stamp-img-area::before, .stamp-img-area::after { content: ''; position: absolute; left: 0; right: 0; height: 10px; background: radial-gradient(circle at 7px center, var(--cream) 5px, transparent 5px); background-size: 14px 10px; background-repeat: repeat-x; z-index: 1; }
-  .stamp-img-area::before { top: 0; }
-  .stamp-img-area::after { bottom: 0; }
+  .stamp-img-area::before, .stamp-img-area::after { content: ''; position: absolute; left: 0; right: 0; height: 10px; background-size: 14px 10px; background-repeat: repeat-x; z-index: 2; }
+  .stamp-img-area::before { top: 0;    background-image: radial-gradient(circle at 7px 10px, white 5px, transparent 5px); }
+  .stamp-img-area::after  { bottom: 0; background-image: radial-gradient(circle at 7px 0px,  white 5px, transparent 5px); }
   .stamp-photo { width: 100%; height: 160px; object-fit: contain; display: block; background: #ffffff; transition: filter 0.35s ease, opacity 0.35s ease; }
   .stamp-photo.no-tengo { filter: grayscale(100%); opacity: 0.55; }
   .stamp-card:hover .stamp-photo.no-tengo { filter: grayscale(0%); opacity: 1; }
@@ -328,10 +334,10 @@
 <body>
 
 
-<!-- Botón modo oscuro -->
+<!-- ── Botón modo oscuro ── -->
 <button id="darkModeBtn" onclick="toggleDarkMode()" title="Cambiar modo claro/oscuro">
   <span id="darkModeIcon">🌙</span>
-  <span class="dm-tooltip" id="darkModeTooltip">Modo oscuro</span>
+  <span class="dm-tip" id="darkModeTip">Modo oscuro</span>
 </button>
 
 <div id="portada">
@@ -1475,29 +1481,24 @@ function switchEpoca(epocaId) {
 // Mostrar portada al inicio
 showPortada();
 
-// ── MODO OSCURO ──
+/* ── MODO OSCURO ── */
 function toggleDarkMode() {
   const isDark = document.body.classList.toggle('dark-mode');
-  const icon = document.getElementById('darkModeIcon');
-  const tooltip = document.getElementById('darkModeTooltip');
-  icon.textContent = isDark ? '☀️' : '🌙';
-  tooltip.textContent = isDark ? 'Modo claro' : 'Modo oscuro';
-  try { localStorage.setItem('darkMode', isDark ? '1' : '0'); } catch(e) {}
+  document.getElementById('darkModeIcon').textContent = isDark ? '☀️' : '🌙';
+  document.getElementById('darkModeTip').textContent  = isDark ? 'Modo claro' : 'Modo oscuro';
+  try { localStorage.setItem('menfis_dark', isDark ? '1' : '0'); } catch(e) {}
 }
-// Restaurar preferencia guardada
-(function() {
-  let pref = null;
-  try { pref = localStorage.getItem('darkMode'); } catch(e) {}
-  if (pref === null) {
-    // Detectar preferencia del sistema
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) pref = '1';
-  }
-  if (pref === '1') {
+// Restaurar preferencia al cargar
+(function initDark() {
+  let saved = null;
+  try { saved = localStorage.getItem('menfis_dark'); } catch(e) {}
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  if (saved === '1' || (saved === null && prefersDark)) {
     document.body.classList.add('dark-mode');
     const icon = document.getElementById('darkModeIcon');
-    const tooltip = document.getElementById('darkModeTooltip');
+    const tip  = document.getElementById('darkModeTip');
     if (icon) icon.textContent = '☀️';
-    if (tooltip) tooltip.textContent = 'Modo claro';
+    if (tip)  tip.textContent  = 'Modo claro';
   }
 })();
 
