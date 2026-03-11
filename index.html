@@ -349,31 +349,108 @@
   <div class="portada-bg"></div>
   <div class="portada-inner">
     <div class="portada-corona">
-      <svg width="64" height="44" viewBox="0 0 64 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg width="120" height="96" viewBox="0 0 120 96" fill="none" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <linearGradient id="crownGrad" x1="0" y1="0" x2="64" y2="44" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stop-color="#f0c040"/>
-            <stop offset="50%" stop-color="#b8860b"/>
-            <stop offset="100%" stop-color="#e0a820"/>
+          <linearGradient id="cg1" x1="0" y1="0" x2="0" y2="96" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#fce97a"/>
+            <stop offset="40%" stop-color="#d4a017"/>
+            <stop offset="100%" stop-color="#8a5e00"/>
           </linearGradient>
+          <linearGradient id="cg2" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ffe566"/>
+            <stop offset="100%" stop-color="#b8860b"/>
+          </linearGradient>
+          <linearGradient id="cg3" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#8a5e00"/>
+            <stop offset="50%" stop-color="#fce97a"/>
+            <stop offset="100%" stop-color="#8a5e00"/>
+          </linearGradient>
+          <radialGradient id="gem1" cx="50%" cy="30%" r="60%">
+            <stop offset="0%" stop-color="#fff" stop-opacity="0.95"/>
+            <stop offset="100%" stop-color="#c00020"/>
+          </radialGradient>
+          <radialGradient id="gem2" cx="50%" cy="30%" r="60%">
+            <stop offset="0%" stop-color="#fff" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#1a3a8a"/>
+          </radialGradient>
+          <radialGradient id="gem3" cx="50%" cy="30%" r="60%">
+            <stop offset="0%" stop-color="#fff" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#006620"/>
+          </radialGradient>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="1.5" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
         </defs>
-        <!-- Base de la corona -->
-        <rect x="8" y="28" width="48" height="10" rx="2" fill="url(#crownGrad)"/>
-        <!-- Banda central -->
-        <rect x="8" y="26" width="48" height="4" rx="1" fill="#c8960f"/>
-        <!-- Puntas de la corona -->
-        <polygon points="8,26 16,6 24,18 32,2 40,18 48,6 56,26" fill="url(#crownGrad)"/>
-        <!-- Gemas -->
-        <circle cx="32" cy="10" r="3" fill="#fff" opacity="0.9"/>
-        <circle cx="32" cy="10" r="1.5" fill="#f0c040"/>
-        <circle cx="16" cy="20" r="2" fill="#fff" opacity="0.7"/>
-        <circle cx="48" cy="20" r="2" fill="#fff" opacity="0.7"/>
-        <!-- Perlas base -->
-        <circle cx="14" cy="33" r="2.5" fill="#f5e090" opacity="0.8"/>
-        <circle cx="24" cy="33" r="2.5" fill="#f5e090" opacity="0.8"/>
-        <circle cx="32" cy="33" r="2.5" fill="#f5e090" opacity="0.8"/>
-        <circle cx="40" cy="33" r="2.5" fill="#f5e090" opacity="0.8"/>
-        <circle cx="50" cy="33" r="2.5" fill="#f5e090" opacity="0.8"/>
+
+        <!-- ── Arcos superiores (florón central y laterales) ── -->
+        <!-- Arco derecho -->
+        <path d="M60,8 Q90,4 105,32" stroke="url(#cg1)" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+        <!-- Arco izquierdo -->
+        <path d="M60,8 Q30,4 15,32" stroke="url(#cg1)" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+        <!-- Decoración arcos: perlas pequeñas -->
+        <circle cx="74" cy="7"  r="2.2" fill="#fce97a" opacity="0.9"/>
+        <circle cx="87" cy="12" r="2"   fill="#fce97a" opacity="0.85"/>
+        <circle cx="97" cy="21" r="2"   fill="#fce97a" opacity="0.8"/>
+        <circle cx="46" cy="7"  r="2.2" fill="#fce97a" opacity="0.9"/>
+        <circle cx="33" cy="12" r="2"   fill="#fce97a" opacity="0.85"/>
+        <circle cx="23" cy="21" r="2"   fill="#fce97a" opacity="0.8"/>
+
+        <!-- ── Florón central (cruz + orbe) ── -->
+        <circle cx="60" cy="6" r="7" fill="url(#cg1)" filter="url(#glow)"/>
+        <rect x="57.5" y="1" width="5" height="10" rx="1" fill="#ffe566"/>
+        <rect x="55"   y="4" width="10" height="4" rx="1" fill="#ffe566"/>
+        <circle cx="60" cy="6" r="2.5" fill="url(#gem1)"/>
+
+        <!-- ── Florones laterales ── -->
+        <circle cx="15" cy="32" r="5.5" fill="url(#cg1)" filter="url(#glow)"/>
+        <rect x="13" y="27.5" width="4" height="9" rx="1" fill="#ffe566"/>
+        <rect x="11" y="30"   width="8" height="4" rx="1" fill="#ffe566"/>
+        <circle cx="15" cy="32" r="2" fill="url(#gem2)"/>
+
+        <circle cx="105" cy="32" r="5.5" fill="url(#cg1)" filter="url(#glow)"/>
+        <rect x="103" y="27.5" width="4" height="9" rx="1" fill="#ffe566"/>
+        <rect x="101" y="30"   width="8" height="4" rx="1" fill="#ffe566"/>
+        <circle cx="105" cy="32" r="2" fill="url(#gem3)"/>
+
+        <!-- ── Cuerpo principal de la corona ── -->
+        <!-- Puntas dentadas -->
+        <polygon points="18,62 18,40 28,52 38,36 48,52 60,32 72,52 82,36 92,52 102,40 102,62"
+                 fill="url(#cg1)" stroke="#8a5e00" stroke-width="0.8"/>
+        <!-- Puntas: adorno superior de cada punta -->
+        <circle cx="28" cy="52" r="3"   fill="#d4a017"/>
+        <circle cx="48" cy="52" r="3"   fill="#d4a017"/>
+        <circle cx="72" cy="52" r="3"   fill="#d4a017"/>
+        <circle cx="92" cy="52" r="3"   fill="#d4a017"/>
+        <!-- Gema central grande (punta central) -->
+        <circle cx="60" cy="36" r="5"   fill="url(#gem1)" filter="url(#glow)"/>
+        <circle cx="60" cy="36" r="2"   fill="#fff" opacity="0.6"/>
+        <!-- Gemas en puntas secundarias -->
+        <circle cx="38" cy="40" r="3.5" fill="url(#gem2)"/>
+        <circle cx="82" cy="40" r="3.5" fill="url(#gem3)"/>
+        <circle cx="18" cy="44" r="2.5" fill="url(#gem1)" opacity="0.8"/>
+        <circle cx="102" cy="44" r="2.5" fill="url(#gem2)" opacity="0.8"/>
+
+        <!-- ── Banda de terciopelo (interior) ── -->
+        <rect x="18" y="60" width="84" height="20" rx="3" fill="#8B0000" opacity="0.85"/>
+        <rect x="18" y="60" width="84" height="5" rx="0" fill="#6a0000" opacity="0.6"/>
+
+        <!-- ── Aro base ── -->
+        <rect x="14" y="58" width="92" height="9" rx="4" fill="url(#cg3)" stroke="#8a5e00" stroke-width="0.5"/>
+        <!-- Perlas del aro -->
+        <circle cx="23"  cy="62.5" r="3" fill="#fdf6c0" stroke="#c8960f" stroke-width="0.5"/>
+        <circle cx="33"  cy="62.5" r="3" fill="#fdf6c0" stroke="#c8960f" stroke-width="0.5"/>
+        <circle cx="43"  cy="62.5" r="3" fill="#fdf6c0" stroke="#c8960f" stroke-width="0.5"/>
+        <circle cx="53"  cy="62.5" r="3" fill="#fdf6c0" stroke="#c8960f" stroke-width="0.5"/>
+        <circle cx="60"  cy="62.5" r="3.5" fill="#fff" stroke="#c8960f" stroke-width="0.5"/>
+        <circle cx="67"  cy="62.5" r="3" fill="#fdf6c0" stroke="#c8960f" stroke-width="0.5"/>
+        <circle cx="77"  cy="62.5" r="3" fill="#fdf6c0" stroke="#c8960f" stroke-width="0.5"/>
+        <circle cx="87"  cy="62.5" r="3" fill="#fdf6c0" stroke="#c8960f" stroke-width="0.5"/>
+        <circle cx="97"  cy="62.5" r="3" fill="#fdf6c0" stroke="#c8960f" stroke-width="0.5"/>
+
+        <!-- ── Reflejo metálico sobre el cuerpo ── -->
+        <polygon points="18,62 18,46 38,36 60,32 82,36 102,46 102,62"
+                 fill="url(#cg2)" opacity="0.18"/>
       </svg>
     </div>
     <div class="portada-titulo">Colección Filatélica<span>de Menfis</span></div>
@@ -389,7 +466,7 @@
   <div class="header-inner">
     <div class="header-title">
       <div class="header-subtitle">Colección Filatélica de Menfis</div>
-      <h1 id="header-epoca-titulo" style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--cream)"><span style="color:var(--gold-light);font-style:italic">(1850-1870) Isabel II</span></h1>
+      <h1 id="header-epoca-titulo" style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:#f0e8d8"><span style="color:#e0b84a;font-style:italic">(1850-1870) Isabel II</span></h1>
       <div class="header-subtitle" id="header-epoca-sub" style="margin-top:2px">Primera época de la filatelia española</div>
     </div>
     <div class="header-stats">
@@ -1612,7 +1689,7 @@ function switchEpoca(epocaId) {
   const ep = EPOCAS[epocaId];
   // Actualizar header
   const tituloEl = document.getElementById('header-epoca-titulo');
-  tituloEl.innerHTML = '\u2655 <span style="color:var(--gold-light);font-style:italic">' + ep.titulo + '</span>';
+  tituloEl.innerHTML = '<span style="color:#e0b84a;font-style:italic">' + ep.titulo + '</span>';
   document.getElementById('header-epoca-sub').textContent = ep.subtitulo;
   // Reemplazar REFERENCE_DATA global
   window._currentRefData = ep.data;
