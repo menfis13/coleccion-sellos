@@ -349,109 +349,150 @@
   <div class="portada-bg"></div>
   <div class="portada-inner">
     <div class="portada-corona">
-      <svg width="120" height="96" viewBox="0 0 120 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg width="160" height="140" viewBox="0 0 160 140" fill="none" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <linearGradient id="cg1" x1="0" y1="0" x2="0" y2="96" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stop-color="#fce97a"/>
-            <stop offset="40%" stop-color="#d4a017"/>
-            <stop offset="100%" stop-color="#8a5e00"/>
+          <linearGradient id="gold1" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stop-color="#fff5a0"/>
+            <stop offset="30%"  stop-color="#e8b820"/>
+            <stop offset="70%"  stop-color="#b8860b"/>
+            <stop offset="100%" stop-color="#7a5500"/>
           </linearGradient>
-          <linearGradient id="cg2" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#ffe566"/>
-            <stop offset="100%" stop-color="#b8860b"/>
+          <linearGradient id="gold2" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stop-color="#ffe87a"/>
+            <stop offset="100%" stop-color="#c8960f"/>
           </linearGradient>
-          <linearGradient id="cg3" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stop-color="#8a5e00"/>
-            <stop offset="50%" stop-color="#fce97a"/>
-            <stop offset="100%" stop-color="#8a5e00"/>
+          <linearGradient id="gold3" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%"   stop-color="#7a5500"/>
+            <stop offset="25%"  stop-color="#e8b820"/>
+            <stop offset="50%"  stop-color="#fff5a0"/>
+            <stop offset="75%"  stop-color="#e8b820"/>
+            <stop offset="100%" stop-color="#7a5500"/>
           </linearGradient>
-          <radialGradient id="gem1" cx="50%" cy="30%" r="60%">
-            <stop offset="0%" stop-color="#fff" stop-opacity="0.95"/>
-            <stop offset="100%" stop-color="#c00020"/>
-          </radialGradient>
-          <radialGradient id="gem2" cx="50%" cy="30%" r="60%">
-            <stop offset="0%" stop-color="#fff" stop-opacity="0.9"/>
-            <stop offset="100%" stop-color="#1a3a8a"/>
-          </radialGradient>
-          <radialGradient id="gem3" cx="50%" cy="30%" r="60%">
-            <stop offset="0%" stop-color="#fff" stop-opacity="0.9"/>
-            <stop offset="100%" stop-color="#006620"/>
-          </radialGradient>
-          <filter id="glow">
-            <feGaussianBlur stdDeviation="1.5" result="blur"/>
-            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          <filter id="gs" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="1.8" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
           </filter>
         </defs>
 
-        <!-- ── Arcos superiores (florón central y laterales) ── -->
-        <!-- Arco derecho -->
-        <path d="M60,8 Q90,4 105,32" stroke="url(#cg1)" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+        <!-- ══ CRUZ SUPERIOR ══ -->
+        <rect x="77" y="2"  width="6"  height="18" rx="1.5" fill="url(#gold1)"/>
+        <rect x="71" y="8"  width="18" height="6"  rx="1.5" fill="url(#gold1)"/>
+        <!-- orbe bajo la cruz -->
+        <circle cx="80" cy="22" r="5.5" fill="url(#gold1)" stroke="#c8960f" stroke-width="0.8"/>
+        <circle cx="80" cy="22" r="2.5" fill="#fff5a0" opacity="0.7"/>
+
+        <!-- ══ ARCOS DE PERLAS (2 arcos, izq y der) ══ -->
         <!-- Arco izquierdo -->
-        <path d="M60,8 Q30,4 15,32" stroke="url(#cg1)" stroke-width="4.5" fill="none" stroke-linecap="round"/>
-        <!-- Decoración arcos: perlas pequeñas -->
-        <circle cx="74" cy="7"  r="2.2" fill="#fce97a" opacity="0.9"/>
-        <circle cx="87" cy="12" r="2"   fill="#fce97a" opacity="0.85"/>
-        <circle cx="97" cy="21" r="2"   fill="#fce97a" opacity="0.8"/>
-        <circle cx="46" cy="7"  r="2.2" fill="#fce97a" opacity="0.9"/>
-        <circle cx="33" cy="12" r="2"   fill="#fce97a" opacity="0.85"/>
-        <circle cx="23" cy="21" r="2"   fill="#fce97a" opacity="0.8"/>
+        <path d="M80,26 Q52,20 28,48" stroke="#c8960f" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <!-- Perlas arco izquierdo -->
+        <circle cx="69" cy="22.5" r="2.8" fill="url(#gold2)" stroke="#8a5e00" stroke-width="0.5"/>
+        <circle cx="59" cy="21"   r="2.8" fill="url(#gold2)" stroke="#8a5e00" stroke-width="0.5"/>
+        <circle cx="50" cy="23"   r="2.8" fill="url(#gold2)" stroke="#8a5e00" stroke-width="0.5"/>
+        <circle cx="42" cy="28"   r="2.8" fill="url(#gold2)" stroke="#8a5e00" stroke-width="0.5"/>
+        <circle cx="35" cy="35"   r="2.8" fill="url(#gold2)" stroke="#8a5e00" stroke-width="0.5"/>
+        <circle cx="29" cy="43"   r="2.8" fill="url(#gold2)" stroke="#8a5e00" stroke-width="0.5"/>
 
-        <!-- ── Florón central (cruz + orbe) ── -->
-        <circle cx="60" cy="6" r="7" fill="url(#cg1)" filter="url(#glow)"/>
-        <rect x="57.5" y="1" width="5" height="10" rx="1" fill="#ffe566"/>
-        <rect x="55"   y="4" width="10" height="4" rx="1" fill="#ffe566"/>
-        <circle cx="60" cy="6" r="2.5" fill="url(#gem1)"/>
+        <!-- Arco derecho -->
+        <path d="M80,26 Q108,20 132,48" stroke="#c8960f" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <!-- Perlas arco derecho -->
+        <circle cx="91"  cy="22.5" r="2.8" fill="url(#gold2)" stroke="#8a5e00" stroke-width="0.5"/>
+        <circle cx="101" cy="21"   r="2.8" fill="url(#gold2)" stroke="#8a5e00" stroke-width="0.5"/>
+        <circle cx="110" cy="23"   r="2.8" fill="url(#gold2)" stroke="#8a5e00" stroke-width="0.5"/>
+        <circle cx="118" cy="28"   r="2.8" fill="url(#gold2)" stroke="#8a5e00" stroke-width="0.5"/>
+        <circle cx="125" cy="35"   r="2.8" fill="url(#gold2)" stroke="#8a5e00" stroke-width="0.5"/>
+        <circle cx="131" cy="43"   r="2.8" fill="url(#gold2)" stroke="#8a5e00" stroke-width="0.5"/>
 
-        <!-- ── Florones laterales ── -->
-        <circle cx="15" cy="32" r="5.5" fill="url(#cg1)" filter="url(#glow)"/>
-        <rect x="13" y="27.5" width="4" height="9" rx="1" fill="#ffe566"/>
-        <rect x="11" y="30"   width="8" height="4" rx="1" fill="#ffe566"/>
-        <circle cx="15" cy="32" r="2" fill="url(#gem2)"/>
+        <!-- ══ PUNTAS HEXAGONALES (5 puntas) ══ -->
+        <!-- Punta central (la más alta) -->
+        <polygon points="80,26 74,44 86,44" fill="url(#gold1)" stroke="#8a5e00" stroke-width="0.7"/>
+        <!-- rombo en punta central -->
+        <polygon points="80,30 76.5,38 80,42 83.5,38" fill="#e8b820" stroke="#7a5500" stroke-width="0.5"/>
+        <circle  cx="80" cy="36" r="2.5" fill="#fff5a0" opacity="0.8"/>
 
-        <circle cx="105" cy="32" r="5.5" fill="url(#cg1)" filter="url(#glow)"/>
-        <rect x="103" y="27.5" width="4" height="9" rx="1" fill="#ffe566"/>
-        <rect x="101" y="30"   width="8" height="4" rx="1" fill="#ffe566"/>
-        <circle cx="105" cy="32" r="2" fill="url(#gem3)"/>
+        <!-- Punta izquierda-centro -->
+        <polygon points="52,38 46,54 58,54" fill="url(#gold1)" stroke="#8a5e00" stroke-width="0.7"/>
+        <polygon points="52,42 49,49 52,53 55,49" fill="#e8b820" stroke="#7a5500" stroke-width="0.5"/>
+        <circle  cx="52" cy="48" r="2" fill="#fff5a0" opacity="0.7"/>
 
-        <!-- ── Cuerpo principal de la corona ── -->
-        <!-- Puntas dentadas -->
-        <polygon points="18,62 18,40 28,52 38,36 48,52 60,32 72,52 82,36 92,52 102,40 102,62"
-                 fill="url(#cg1)" stroke="#8a5e00" stroke-width="0.8"/>
-        <!-- Puntas: adorno superior de cada punta -->
-        <circle cx="28" cy="52" r="3"   fill="#d4a017"/>
-        <circle cx="48" cy="52" r="3"   fill="#d4a017"/>
-        <circle cx="72" cy="52" r="3"   fill="#d4a017"/>
-        <circle cx="92" cy="52" r="3"   fill="#d4a017"/>
-        <!-- Gema central grande (punta central) -->
-        <circle cx="60" cy="36" r="5"   fill="url(#gem1)" filter="url(#glow)"/>
-        <circle cx="60" cy="36" r="2"   fill="#fff" opacity="0.6"/>
-        <!-- Gemas en puntas secundarias -->
-        <circle cx="38" cy="40" r="3.5" fill="url(#gem2)"/>
-        <circle cx="82" cy="40" r="3.5" fill="url(#gem3)"/>
-        <circle cx="18" cy="44" r="2.5" fill="url(#gem1)" opacity="0.8"/>
-        <circle cx="102" cy="44" r="2.5" fill="url(#gem2)" opacity="0.8"/>
+        <!-- Punta derecha-centro -->
+        <polygon points="108,38 102,54 114,54" fill="url(#gold1)" stroke="#8a5e00" stroke-width="0.7"/>
+        <polygon points="108,42 105,49 108,53 111,49" fill="#e8b820" stroke="#7a5500" stroke-width="0.5"/>
+        <circle  cx="108" cy="48" r="2" fill="#fff5a0" opacity="0.7"/>
 
-        <!-- ── Banda de terciopelo (interior) ── -->
-        <rect x="18" y="60" width="84" height="20" rx="3" fill="#8B0000" opacity="0.85"/>
-        <rect x="18" y="60" width="84" height="5" rx="0" fill="#6a0000" opacity="0.6"/>
+        <!-- Punta extremo izquierdo -->
+        <polygon points="28,48 22,62 34,62" fill="url(#gold1)" stroke="#8a5e00" stroke-width="0.7"/>
+        <polygon points="28,52 25,58 28,61 31,58" fill="#e8b820" stroke="#7a5500" stroke-width="0.5"/>
 
-        <!-- ── Aro base ── -->
-        <rect x="14" y="58" width="92" height="9" rx="4" fill="url(#cg3)" stroke="#8a5e00" stroke-width="0.5"/>
-        <!-- Perlas del aro -->
-        <circle cx="23"  cy="62.5" r="3" fill="#fdf6c0" stroke="#c8960f" stroke-width="0.5"/>
-        <circle cx="33"  cy="62.5" r="3" fill="#fdf6c0" stroke="#c8960f" stroke-width="0.5"/>
-        <circle cx="43"  cy="62.5" r="3" fill="#fdf6c0" stroke="#c8960f" stroke-width="0.5"/>
-        <circle cx="53"  cy="62.5" r="3" fill="#fdf6c0" stroke="#c8960f" stroke-width="0.5"/>
-        <circle cx="60"  cy="62.5" r="3.5" fill="#fff" stroke="#c8960f" stroke-width="0.5"/>
-        <circle cx="67"  cy="62.5" r="3" fill="#fdf6c0" stroke="#c8960f" stroke-width="0.5"/>
-        <circle cx="77"  cy="62.5" r="3" fill="#fdf6c0" stroke="#c8960f" stroke-width="0.5"/>
-        <circle cx="87"  cy="62.5" r="3" fill="#fdf6c0" stroke="#c8960f" stroke-width="0.5"/>
-        <circle cx="97"  cy="62.5" r="3" fill="#fdf6c0" stroke="#c8960f" stroke-width="0.5"/>
+        <!-- Punta extremo derecho -->
+        <polygon points="132,48 126,62 138,62" fill="url(#gold1)" stroke="#8a5e00" stroke-width="0.7"/>
+        <polygon points="132,52 129,58 132,61 135,58" fill="#e8b820" stroke="#7a5500" stroke-width="0.5"/>
 
-        <!-- ── Reflejo metálico sobre el cuerpo ── -->
-        <polygon points="18,62 18,46 38,36 60,32 82,36 102,46 102,62"
-                 fill="url(#cg2)" opacity="0.18"/>
+        <!-- ══ CUERPO PRINCIPAL ══ -->
+        <!-- Relleno cuerpo -->
+        <path d="M22,62 L22,100 Q80,108 138,100 L138,62 Z" fill="url(#gold1)" stroke="#8a5e00" stroke-width="0.8"/>
+
+        <!-- Líneas divisoras verticales interiores del cuerpo -->
+        <line x1="45"  y1="62" x2="45"  y2="99" stroke="#8a5e00" stroke-width="0.8" opacity="0.6"/>
+        <line x1="68"  y1="62" x2="68"  y2="101" stroke="#8a5e00" stroke-width="0.8" opacity="0.6"/>
+        <line x1="92"  y1="62" x2="92"  y2="101" stroke="#8a5e00" stroke-width="0.8" opacity="0.6"/>
+        <line x1="115" y1="62" x2="115" y2="99"  stroke="#8a5e00" stroke-width="0.8" opacity="0.6"/>
+
+        <!-- Ventanas rectangulares en el cuerpo (5 secciones) -->
+        <rect x="26"  y="70" width="15" height="16" rx="2" fill="none" stroke="#8a5e00" stroke-width="1.2"/>
+        <rect x="28"  y="72" width="11" height="12" rx="1" fill="#b8860b" opacity="0.25"/>
+        <rect x="49"  y="70" width="15" height="16" rx="2" fill="none" stroke="#8a5e00" stroke-width="1.2"/>
+        <rect x="51"  y="72" width="11" height="12" rx="1" fill="#b8860b" opacity="0.25"/>
+        <rect x="72.5" y="69" width="15" height="17" rx="2" fill="none" stroke="#8a5e00" stroke-width="1.2"/>
+        <rect x="74.5" y="71" width="11" height="13" rx="1" fill="#b8860b" opacity="0.3"/>
+        <rect x="96"  y="70" width="15" height="16" rx="2" fill="none" stroke="#8a5e00" stroke-width="1.2"/>
+        <rect x="98"  y="72" width="11" height="12" rx="1" fill="#b8860b" opacity="0.25"/>
+        <rect x="119" y="70" width="15" height="16" rx="2" fill="none" stroke="#8a5e00" stroke-width="1.2"/>
+        <rect x="121" y="72" width="11" height="12" rx="1" fill="#b8860b" opacity="0.25"/>
+
+        <!-- Fila superior de decoración geométrica -->
+        <rect x="22" y="62" width="116" height="6" rx="0" fill="url(#gold3)" opacity="0.6"/>
+        <!-- Pequeños rombos decorativos en friso superior -->
+        <polygon points="34,62 37,65 34,68 31,65"  fill="#ffe87a" opacity="0.8"/>
+        <polygon points="57,62 60,65 57,68 54,65"  fill="#ffe87a" opacity="0.8"/>
+        <polygon points="80,62 83,65 80,68 77,65"  fill="#ffe87a" opacity="0.8"/>
+        <polygon points="103,62 106,65 103,68 100,65" fill="#ffe87a" opacity="0.8"/>
+        <polygon points="126,62 129,65 126,68 123,65" fill="#ffe87a" opacity="0.8"/>
+
+        <!-- ══ ARO DE PERLAS SUPERIOR (rodea el cuerpo por arriba) ══ -->
+        <!-- Fila de perlas borde superior cuerpo -->
+        <circle cx="22"  cy="62" r="3"   fill="#fdf6c0" stroke="#b8860b" stroke-width="0.6"/>
+        <circle cx="31"  cy="62" r="2.5" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.6"/>
+        <circle cx="40"  cy="62" r="2.5" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.6"/>
+        <circle cx="49"  cy="62" r="2.5" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.6"/>
+        <circle cx="58"  cy="62" r="2.5" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.6"/>
+        <circle cx="67"  cy="62" r="2.5" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.6"/>
+        <circle cx="80"  cy="61" r="3.2" fill="#fff"    stroke="#b8860b" stroke-width="0.6"/>
+        <circle cx="93"  cy="62" r="2.5" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.6"/>
+        <circle cx="102" cy="62" r="2.5" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.6"/>
+        <circle cx="111" cy="62" r="2.5" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.6"/>
+        <circle cx="120" cy="62" r="2.5" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.6"/>
+        <circle cx="129" cy="62" r="2.5" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.6"/>
+        <circle cx="138" cy="62" r="3"   fill="#fdf6c0" stroke="#b8860b" stroke-width="0.6"/>
+
+        <!-- ══ BASE OVALADA ══ -->
+        <ellipse cx="80" cy="104" rx="60" ry="10" fill="url(#gold1)" stroke="#8a5e00" stroke-width="1"/>
+        <!-- ribete interior oval -->
+        <ellipse cx="80" cy="104" rx="54" ry="7"  fill="none" stroke="#e8b820" stroke-width="0.7" opacity="0.6"/>
+        <!-- Perlas base oval -->
+        <circle cx="28"  cy="104" r="2.5" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.5"/>
+        <circle cx="38"  cy="107" r="2.2" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.5"/>
+        <circle cx="49"  cy="109" r="2.2" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.5"/>
+        <circle cx="62"  cy="111" r="2.2" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.5"/>
+        <circle cx="80"  cy="112" r="2.8" fill="#fff"    stroke="#b8860b" stroke-width="0.5"/>
+        <circle cx="98"  cy="111" r="2.2" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.5"/>
+        <circle cx="111" cy="109" r="2.2" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.5"/>
+        <circle cx="122" cy="107" r="2.2" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.5"/>
+        <circle cx="132" cy="104" r="2.5" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.5"/>
+
+        <!-- ══ REFLEJO / LUZ ══ -->
+        <path d="M22,62 Q80,56 138,62 L138,72 Q80,66 22,72 Z" fill="#fff5a0" opacity="0.12"/>
       </svg>
+    </div>
     </div>
     <div class="portada-titulo">Colección Filatélica<span>de Menfis</span></div>
     <div class="portada-sub">Sellos de España</div>
