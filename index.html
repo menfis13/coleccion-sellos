@@ -1370,14 +1370,6 @@ async function removePhoto(side) {
 let lbScale = 1;
 let lbDrag = { active:false, startX:0, startY:0, curTx:0, curTy:0 };
 
-function lbApplyTransform(instant) {
-  const img = document.getElementById('lightboxImg');
-  if (instant) img.style.transition = 'none';
-  else img.style.transition = 'transform 0.12s cubic-bezier(0.25,0.46,0.45,0.94)';
-  img.style.transform = `scale(${lbScale}) translate(${lbDrag.curTx}px,${lbDrag.curTy}px)`;
-  img.style.cursor = lbScale > 1 ? 'grab' : 'default';
-}
-
 function openLightbox(src, caption) {
   lbScale = 1; lbDrag = { active:false, startX:0, startY:0, curTx:0, curTy:0 };
   const img = document.getElementById('lightboxImg');
@@ -1395,15 +1387,30 @@ function closeLightbox() {
   lbScale = 1; lbDrag = { active:false, startX:0, startY:0, curTx:0, curTy:0 };
 }
 
-// Zoom con rueda — CSS transition hace el suavizado
+// Zoom con rueda — acumula destino, transición solo al soltar
+let lbWheelTimer = null;
 document.addEventListener('wheel', (e) => {
   const lb = document.getElementById('lightbox');
   if (!lb.classList.contains('open')) return;
   e.preventDefault();
-  const factor = e.deltaY < 0 ? 1.12 : 0.89;
+
+  const img = document.getElementById('lightboxImg');
+
+  // Mientras llegan eventos de rueda: sin transición, actualización directa
+  img.style.transition = 'none';
+
+  const factor = e.deltaY < 0 ? 1.1 : 0.91;
   lbScale = Math.min(5, Math.max(1, lbScale * factor));
   if (lbScale <= 1) { lbScale = 1; lbDrag.curTx = 0; lbDrag.curTy = 0; }
-  lbApplyTransform(false);
+  img.style.transform = `scale(${lbScale}) translate(${lbDrag.curTx}px,${lbDrag.curTy}px)`;
+  img.style.cursor = lbScale > 1 ? 'grab' : 'default';
+
+  // Al dejar de girar la rueda, pequeña transición de asentamiento
+  clearTimeout(lbWheelTimer);
+  lbWheelTimer = setTimeout(() => {
+    img.style.transition = 'transform 0.2s cubic-bezier(0.22,1,0.36,1)';
+    img.style.transform = `scale(${lbScale}) translate(${lbDrag.curTx}px,${lbDrag.curTy}px)`;
+  }, 80);
 }, { passive: false });
 
 // Arrastrar con ratón
@@ -1421,7 +1428,9 @@ document.addEventListener('wheel', (e) => {
     if (!lbDrag.active) return;
     lbDrag.curTx = e.clientX - lbDrag.startX;
     lbDrag.curTy = e.clientY - lbDrag.startY;
-    lbApplyTransform(true); // instantáneo al arrastrar
+    const img = document.getElementById('lightboxImg');
+    img.style.transition = 'none';
+    img.style.transform = `scale(${lbScale}) translate(${lbDrag.curTx}px,${lbDrag.curTy}px)`;
   });
   document.addEventListener('mouseup', () => {
     if (!lbDrag.active) return;
