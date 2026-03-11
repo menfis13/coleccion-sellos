@@ -76,19 +76,17 @@
   body.dark-mode .btn-secondary:hover { background: #2a2318 !important; }
 
   /* ══════════════════════════════════
-     BOTÓN MODO OSCURO (esquina superior derecha del header, fuera del grupo de botones)
+     BOTÓN MODO OSCURO (inline, tras Añadir sello)
   ══════════════════════════════════ */
   #darkModeBtn {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    width: 32px;
-    height: 32px;
+    position: relative;
+    width: 34px;
+    height: 34px;
     border-radius: 50%;
     border: 1px solid rgba(184,134,11,0.35);
     background: transparent;
     color: #a89070;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -96,7 +94,6 @@
     flex-shrink: 0;
     transition: transform 0.2s, border-color 0.2s, color 0.2s, background 0.2s;
   }
-  header { position: relative; }
   #darkModeBtn:hover {
     transform: scale(1.12);
     border-color: var(--gold);
@@ -321,8 +318,8 @@
   .portada-inner { max-width:900px; width:100%; padding:60px 32px; text-align:center; position:relative; z-index:1; }
   .portada-corona { font-size:3rem; margin-bottom:16px; animation: flotar 3s ease-in-out infinite; }
   @keyframes flotar { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
-  .portada-titulo { font-family:'Playfair Display',serif; font-size:clamp(2rem,5vw,3.5rem); color:#f0e8d8; font-weight:700; line-height:1.15; margin-bottom:8px; }
-  .portada-titulo span { color:#e0b84a; font-style:italic; display:block; }
+  .portada-titulo { font-family:'Playfair Display',serif; font-size:clamp(2rem,5vw,3.5rem); color:#f0e8d8; font-weight:700; line-height:1.15; margin-bottom:8px; text-align:center; width:100%; }
+  .portada-titulo span { color:#e0b84a; font-style:italic; display:block; text-align:center; width:100%; }
   .portada-sub { font-size:0.85rem; letter-spacing:0.2em; text-transform:uppercase; color:#8a7a5a; margin-bottom:60px; }
   .portada-divisor { width:120px; height:1px; background:linear-gradient(90deg,transparent,#b8860b,transparent); margin:0 auto 60px; }
   .portada-epocas { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:24px; margin-bottom:48px; }
@@ -350,150 +347,136 @@
   <div class="portada-bg"></div>
   <div class="portada-inner">
     <div class="portada-corona">
-      <svg width="160" height="140" viewBox="0 0 160 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg width="110" height="160" viewBox="0 0 110 160" fill="none" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <linearGradient id="gold1" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%"   stop-color="#fff5a0"/>
-            <stop offset="30%"  stop-color="#e8b820"/>
-            <stop offset="70%"  stop-color="#b8860b"/>
-            <stop offset="100%" stop-color="#7a5500"/>
+          <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stop-color="#fff9b0"/>
+            <stop offset="35%"  stop-color="#e8b820"/>
+            <stop offset="75%"  stop-color="#b8860b"/>
+            <stop offset="100%" stop-color="#7a5200"/>
           </linearGradient>
-          <linearGradient id="gold2" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%"   stop-color="#ffe87a"/>
+          <linearGradient id="g2" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%"   stop-color="#7a5200"/>
+            <stop offset="30%"  stop-color="#e8b820"/>
+            <stop offset="50%"  stop-color="#fff9b0"/>
+            <stop offset="70%"  stop-color="#e8b820"/>
+            <stop offset="100%" stop-color="#7a5200"/>
+          </linearGradient>
+          <linearGradient id="g3" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stop-color="#ffe566"/>
             <stop offset="100%" stop-color="#c8960f"/>
           </linearGradient>
-          <linearGradient id="gold3" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%"   stop-color="#7a5500"/>
-            <stop offset="25%"  stop-color="#e8b820"/>
-            <stop offset="50%"  stop-color="#fff5a0"/>
-            <stop offset="75%"  stop-color="#e8b820"/>
-            <stop offset="100%" stop-color="#7a5500"/>
-          </linearGradient>
-          <filter id="gs" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="1.8" result="b"/>
+          <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="1.2" result="b"/>
             <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
           </filter>
         </defs>
 
-        <!-- ══ CRUZ SUPERIOR ══ -->
-        <rect x="77" y="2"  width="6"  height="18" rx="1.5" fill="url(#gold1)"/>
-        <rect x="71" y="8"  width="18" height="6"  rx="1.5" fill="url(#gold1)"/>
-        <!-- orbe bajo la cruz -->
-        <circle cx="80" cy="22" r="5.5" fill="url(#gold1)" stroke="#c8960f" stroke-width="0.8"/>
-        <circle cx="80" cy="22" r="2.5" fill="#fff5a0" opacity="0.7"/>
+        <!-- CRUZ -->
+        <rect x="52.5" y="2"  width="5"  height="16" rx="1.5" fill="url(#g1)"/>
+        <rect x="47"   y="7"  width="16" height="5"  rx="1.5" fill="url(#g1)"/>
+        <!-- orbe -->
+        <circle cx="55" cy="21" r="5" fill="url(#g1)" stroke="#c8960f" stroke-width="0.7" filter="url(#glow)"/>
+        <circle cx="55" cy="21" r="2" fill="#fff9b0" opacity="0.7"/>
 
-        <!-- ══ ARCOS DE PERLAS (2 arcos, izq y der) ══ -->
-        <!-- Arco izquierdo -->
-        <path d="M80,26 Q52,20 28,48" stroke="#c8960f" stroke-width="3" fill="none" stroke-linecap="round"/>
-        <!-- Perlas arco izquierdo -->
-        <circle cx="69" cy="22.5" r="2.8" fill="url(#gold2)" stroke="#8a5e00" stroke-width="0.5"/>
-        <circle cx="59" cy="21"   r="2.8" fill="url(#gold2)" stroke="#8a5e00" stroke-width="0.5"/>
-        <circle cx="50" cy="23"   r="2.8" fill="url(#gold2)" stroke="#8a5e00" stroke-width="0.5"/>
-        <circle cx="42" cy="28"   r="2.8" fill="url(#gold2)" stroke="#8a5e00" stroke-width="0.5"/>
-        <circle cx="35" cy="35"   r="2.8" fill="url(#gold2)" stroke="#8a5e00" stroke-width="0.5"/>
-        <circle cx="29" cy="43"   r="2.8" fill="url(#gold2)" stroke="#8a5e00" stroke-width="0.5"/>
+        <!-- ARCO IZQUIERDO con perlas -->
+        <path d="M55,25 Q35,20 18,52" stroke="#b8860b" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <circle cx="47" cy="21.5" r="2.4" fill="url(#g3)" stroke="#7a5200" stroke-width="0.4"/>
+        <circle cx="39" cy="21"   r="2.4" fill="url(#g3)" stroke="#7a5200" stroke-width="0.4"/>
+        <circle cx="32" cy="24"   r="2.4" fill="url(#g3)" stroke="#7a5200" stroke-width="0.4"/>
+        <circle cx="26" cy="30"   r="2.4" fill="url(#g3)" stroke="#7a5200" stroke-width="0.4"/>
+        <circle cx="21" cy="38"   r="2.4" fill="url(#g3)" stroke="#7a5200" stroke-width="0.4"/>
+        <circle cx="18" cy="47"   r="2.4" fill="url(#g3)" stroke="#7a5200" stroke-width="0.4"/>
 
-        <!-- Arco derecho -->
-        <path d="M80,26 Q108,20 132,48" stroke="#c8960f" stroke-width="3" fill="none" stroke-linecap="round"/>
-        <!-- Perlas arco derecho -->
-        <circle cx="91"  cy="22.5" r="2.8" fill="url(#gold2)" stroke="#8a5e00" stroke-width="0.5"/>
-        <circle cx="101" cy="21"   r="2.8" fill="url(#gold2)" stroke="#8a5e00" stroke-width="0.5"/>
-        <circle cx="110" cy="23"   r="2.8" fill="url(#gold2)" stroke="#8a5e00" stroke-width="0.5"/>
-        <circle cx="118" cy="28"   r="2.8" fill="url(#gold2)" stroke="#8a5e00" stroke-width="0.5"/>
-        <circle cx="125" cy="35"   r="2.8" fill="url(#gold2)" stroke="#8a5e00" stroke-width="0.5"/>
-        <circle cx="131" cy="43"   r="2.8" fill="url(#gold2)" stroke="#8a5e00" stroke-width="0.5"/>
+        <!-- ARCO DERECHO con perlas -->
+        <path d="M55,25 Q75,20 92,52" stroke="#b8860b" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <circle cx="63" cy="21.5" r="2.4" fill="url(#g3)" stroke="#7a5200" stroke-width="0.4"/>
+        <circle cx="71" cy="21"   r="2.4" fill="url(#g3)" stroke="#7a5200" stroke-width="0.4"/>
+        <circle cx="78" cy="24"   r="2.4" fill="url(#g3)" stroke="#7a5200" stroke-width="0.4"/>
+        <circle cx="84" cy="30"   r="2.4" fill="url(#g3)" stroke="#7a5200" stroke-width="0.4"/>
+        <circle cx="89" cy="38"   r="2.4" fill="url(#g3)" stroke="#7a5200" stroke-width="0.4"/>
+        <circle cx="92" cy="47"   r="2.4" fill="url(#g3)" stroke="#7a5200" stroke-width="0.4"/>
 
-        <!-- ══ PUNTAS HEXAGONALES (5 puntas) ══ -->
-        <!-- Punta central (la más alta) -->
-        <polygon points="80,26 74,44 86,44" fill="url(#gold1)" stroke="#8a5e00" stroke-width="0.7"/>
-        <!-- rombo en punta central -->
-        <polygon points="80,30 76.5,38 80,42 83.5,38" fill="#e8b820" stroke="#7a5500" stroke-width="0.5"/>
-        <circle  cx="80" cy="36" r="2.5" fill="#fff5a0" opacity="0.8"/>
+        <!-- PUNTAS (5) -->
+        <!-- central -->
+        <polygon points="55,25 49,48 61,48" fill="url(#g1)" stroke="#7a5200" stroke-width="0.6"/>
+        <polygon points="55,30 51.5,42 55,46 58.5,42" fill="#e8b820" stroke="#7a5200" stroke-width="0.4"/>
+        <circle  cx="55" cy="38" r="2.2" fill="#fff9b0" opacity="0.8"/>
+        <!-- izq-centro -->
+        <polygon points="34,42 28,60 40,60" fill="url(#g1)" stroke="#7a5200" stroke-width="0.6"/>
+        <polygon points="34,46 31,55 34,58 37,55" fill="#e8b820" stroke="#7a5200" stroke-width="0.4"/>
+        <circle  cx="34" cy="52" r="1.8" fill="#fff9b0" opacity="0.7"/>
+        <!-- der-centro -->
+        <polygon points="76,42 70,60 82,60" fill="url(#g1)" stroke="#7a5200" stroke-width="0.6"/>
+        <polygon points="76,46 73,55 76,58 79,55" fill="#e8b820" stroke="#7a5200" stroke-width="0.4"/>
+        <circle  cx="76" cy="52" r="1.8" fill="#fff9b0" opacity="0.7"/>
+        <!-- extremo izq -->
+        <polygon points="18,52 13,66 23,66" fill="url(#g1)" stroke="#7a5200" stroke-width="0.6"/>
+        <polygon points="18,55 15.5,62 18,65 20.5,62" fill="#e8b820" stroke="#7a5200" stroke-width="0.4"/>
+        <!-- extremo der -->
+        <polygon points="92,52 87,66 97,66" fill="url(#g1)" stroke="#7a5200" stroke-width="0.6"/>
+        <polygon points="92,55 89.5,62 92,65 94.5,62" fill="#e8b820" stroke="#7a5200" stroke-width="0.4"/>
 
-        <!-- Punta izquierda-centro -->
-        <polygon points="52,38 46,54 58,54" fill="url(#gold1)" stroke="#8a5e00" stroke-width="0.7"/>
-        <polygon points="52,42 49,49 52,53 55,49" fill="#e8b820" stroke="#7a5500" stroke-width="0.5"/>
-        <circle  cx="52" cy="48" r="2" fill="#fff5a0" opacity="0.7"/>
+        <!-- CUERPO -->
+        <path d="M13,66 L13,112 Q55,120 97,112 L97,66 Z" fill="url(#g1)" stroke="#7a5200" stroke-width="0.7"/>
 
-        <!-- Punta derecha-centro -->
-        <polygon points="108,38 102,54 114,54" fill="url(#gold1)" stroke="#8a5e00" stroke-width="0.7"/>
-        <polygon points="108,42 105,49 108,53 111,49" fill="#e8b820" stroke="#7a5500" stroke-width="0.5"/>
-        <circle  cx="108" cy="48" r="2" fill="#fff5a0" opacity="0.7"/>
+        <!-- Divisores verticales -->
+        <line x1="30"  y1="66" x2="30"  y2="111" stroke="#7a5200" stroke-width="0.7" opacity="0.55"/>
+        <line x1="47"  y1="66" x2="47"  y2="113" stroke="#7a5200" stroke-width="0.7" opacity="0.55"/>
+        <line x1="63"  y1="66" x2="63"  y2="113" stroke="#7a5200" stroke-width="0.7" opacity="0.55"/>
+        <line x1="80"  y1="66" x2="80"  y2="111" stroke="#7a5200" stroke-width="0.7" opacity="0.55"/>
 
-        <!-- Punta extremo izquierdo -->
-        <polygon points="28,48 22,62 34,62" fill="url(#gold1)" stroke="#8a5e00" stroke-width="0.7"/>
-        <polygon points="28,52 25,58 28,61 31,58" fill="#e8b820" stroke="#7a5500" stroke-width="0.5"/>
+        <!-- Ventanas rectangulares -->
+        <rect x="15"  y="76" width="13" height="20" rx="1.5" fill="none" stroke="#7a5200" stroke-width="1"/>
+        <rect x="16.5" y="77.5" width="10" height="17" rx="1" fill="#b8860b" opacity="0.18"/>
+        <rect x="32"  y="76" width="13" height="20" rx="1.5" fill="none" stroke="#7a5200" stroke-width="1"/>
+        <rect x="33.5" y="77.5" width="10" height="17" rx="1" fill="#b8860b" opacity="0.18"/>
+        <rect x="48.5" y="75" width="13" height="22" rx="1.5" fill="none" stroke="#7a5200" stroke-width="1"/>
+        <rect x="50"   y="76.5" width="10" height="19" rx="1" fill="#b8860b" opacity="0.2"/>
+        <rect x="65"  y="76" width="13" height="20" rx="1.5" fill="none" stroke="#7a5200" stroke-width="1"/>
+        <rect x="66.5" y="77.5" width="10" height="17" rx="1" fill="#b8860b" opacity="0.18"/>
+        <rect x="82"  y="76" width="13" height="20" rx="1.5" fill="none" stroke="#7a5200" stroke-width="1"/>
+        <rect x="83.5" y="77.5" width="10" height="17" rx="1" fill="#b8860b" opacity="0.18"/>
 
-        <!-- Punta extremo derecho -->
-        <polygon points="132,48 126,62 138,62" fill="url(#gold1)" stroke="#8a5e00" stroke-width="0.7"/>
-        <polygon points="132,52 129,58 132,61 135,58" fill="#e8b820" stroke="#7a5500" stroke-width="0.5"/>
+        <!-- Friso superior cuerpo -->
+        <rect x="13" y="66" width="84" height="5" fill="url(#g2)" opacity="0.55"/>
+        <!-- Rombos friso -->
+        <polygon points="22,66 24.5,68.5 22,71 19.5,68.5" fill="#ffe566" opacity="0.75"/>
+        <polygon points="38,66 40.5,68.5 38,71 35.5,68.5" fill="#ffe566" opacity="0.75"/>
+        <polygon points="55,66 57.5,68.5 55,71 52.5,68.5" fill="#ffe566" opacity="0.75"/>
+        <polygon points="72,66 74.5,68.5 72,71 69.5,68.5" fill="#ffe566" opacity="0.75"/>
+        <polygon points="88,66 90.5,68.5 88,71 85.5,68.5" fill="#ffe566" opacity="0.75"/>
 
-        <!-- ══ CUERPO PRINCIPAL ══ -->
-        <!-- Relleno cuerpo -->
-        <path d="M22,62 L22,100 Q80,108 138,100 L138,62 Z" fill="url(#gold1)" stroke="#8a5e00" stroke-width="0.8"/>
-
-        <!-- Líneas divisoras verticales interiores del cuerpo -->
-        <line x1="45"  y1="62" x2="45"  y2="99" stroke="#8a5e00" stroke-width="0.8" opacity="0.6"/>
-        <line x1="68"  y1="62" x2="68"  y2="101" stroke="#8a5e00" stroke-width="0.8" opacity="0.6"/>
-        <line x1="92"  y1="62" x2="92"  y2="101" stroke="#8a5e00" stroke-width="0.8" opacity="0.6"/>
-        <line x1="115" y1="62" x2="115" y2="99"  stroke="#8a5e00" stroke-width="0.8" opacity="0.6"/>
-
-        <!-- Ventanas rectangulares en el cuerpo (5 secciones) -->
-        <rect x="26"  y="70" width="15" height="16" rx="2" fill="none" stroke="#8a5e00" stroke-width="1.2"/>
-        <rect x="28"  y="72" width="11" height="12" rx="1" fill="#b8860b" opacity="0.25"/>
-        <rect x="49"  y="70" width="15" height="16" rx="2" fill="none" stroke="#8a5e00" stroke-width="1.2"/>
-        <rect x="51"  y="72" width="11" height="12" rx="1" fill="#b8860b" opacity="0.25"/>
-        <rect x="72.5" y="69" width="15" height="17" rx="2" fill="none" stroke="#8a5e00" stroke-width="1.2"/>
-        <rect x="74.5" y="71" width="11" height="13" rx="1" fill="#b8860b" opacity="0.3"/>
-        <rect x="96"  y="70" width="15" height="16" rx="2" fill="none" stroke="#8a5e00" stroke-width="1.2"/>
-        <rect x="98"  y="72" width="11" height="12" rx="1" fill="#b8860b" opacity="0.25"/>
-        <rect x="119" y="70" width="15" height="16" rx="2" fill="none" stroke="#8a5e00" stroke-width="1.2"/>
-        <rect x="121" y="72" width="11" height="12" rx="1" fill="#b8860b" opacity="0.25"/>
-
-        <!-- Fila superior de decoración geométrica -->
-        <rect x="22" y="62" width="116" height="6" rx="0" fill="url(#gold3)" opacity="0.6"/>
-        <!-- Pequeños rombos decorativos en friso superior -->
-        <polygon points="34,62 37,65 34,68 31,65"  fill="#ffe87a" opacity="0.8"/>
-        <polygon points="57,62 60,65 57,68 54,65"  fill="#ffe87a" opacity="0.8"/>
-        <polygon points="80,62 83,65 80,68 77,65"  fill="#ffe87a" opacity="0.8"/>
-        <polygon points="103,62 106,65 103,68 100,65" fill="#ffe87a" opacity="0.8"/>
-        <polygon points="126,62 129,65 126,68 123,65" fill="#ffe87a" opacity="0.8"/>
-
-        <!-- ══ ARO DE PERLAS SUPERIOR (rodea el cuerpo por arriba) ══ -->
         <!-- Fila de perlas borde superior cuerpo -->
-        <circle cx="22"  cy="62" r="3"   fill="#fdf6c0" stroke="#b8860b" stroke-width="0.6"/>
-        <circle cx="31"  cy="62" r="2.5" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.6"/>
-        <circle cx="40"  cy="62" r="2.5" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.6"/>
-        <circle cx="49"  cy="62" r="2.5" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.6"/>
-        <circle cx="58"  cy="62" r="2.5" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.6"/>
-        <circle cx="67"  cy="62" r="2.5" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.6"/>
-        <circle cx="80"  cy="61" r="3.2" fill="#fff"    stroke="#b8860b" stroke-width="0.6"/>
-        <circle cx="93"  cy="62" r="2.5" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.6"/>
-        <circle cx="102" cy="62" r="2.5" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.6"/>
-        <circle cx="111" cy="62" r="2.5" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.6"/>
-        <circle cx="120" cy="62" r="2.5" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.6"/>
-        <circle cx="129" cy="62" r="2.5" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.6"/>
-        <circle cx="138" cy="62" r="3"   fill="#fdf6c0" stroke="#b8860b" stroke-width="0.6"/>
+        <circle cx="13"  cy="66" r="2.4" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.5"/>
+        <circle cx="21"  cy="66" r="2"   fill="#fdf6c0" stroke="#b8860b" stroke-width="0.5"/>
+        <circle cx="29"  cy="66" r="2"   fill="#fdf6c0" stroke="#b8860b" stroke-width="0.5"/>
+        <circle cx="37"  cy="66" r="2"   fill="#fdf6c0" stroke="#b8860b" stroke-width="0.5"/>
+        <circle cx="46"  cy="66" r="2"   fill="#fdf6c0" stroke="#b8860b" stroke-width="0.5"/>
+        <circle cx="55"  cy="65" r="2.6" fill="#fff"    stroke="#b8860b" stroke-width="0.5"/>
+        <circle cx="64"  cy="66" r="2"   fill="#fdf6c0" stroke="#b8860b" stroke-width="0.5"/>
+        <circle cx="73"  cy="66" r="2"   fill="#fdf6c0" stroke="#b8860b" stroke-width="0.5"/>
+        <circle cx="81"  cy="66" r="2"   fill="#fdf6c0" stroke="#b8860b" stroke-width="0.5"/>
+        <circle cx="89"  cy="66" r="2"   fill="#fdf6c0" stroke="#b8860b" stroke-width="0.5"/>
+        <circle cx="97"  cy="66" r="2.4" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.5"/>
 
-        <!-- ══ BASE OVALADA ══ -->
-        <ellipse cx="80" cy="104" rx="60" ry="10" fill="url(#gold1)" stroke="#8a5e00" stroke-width="1"/>
-        <!-- ribete interior oval -->
-        <ellipse cx="80" cy="104" rx="54" ry="7"  fill="none" stroke="#e8b820" stroke-width="0.7" opacity="0.6"/>
-        <!-- Perlas base oval -->
-        <circle cx="28"  cy="104" r="2.5" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.5"/>
-        <circle cx="38"  cy="107" r="2.2" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.5"/>
-        <circle cx="49"  cy="109" r="2.2" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.5"/>
-        <circle cx="62"  cy="111" r="2.2" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.5"/>
-        <circle cx="80"  cy="112" r="2.8" fill="#fff"    stroke="#b8860b" stroke-width="0.5"/>
-        <circle cx="98"  cy="111" r="2.2" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.5"/>
-        <circle cx="111" cy="109" r="2.2" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.5"/>
-        <circle cx="122" cy="107" r="2.2" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.5"/>
-        <circle cx="132" cy="104" r="2.5" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.5"/>
+        <!-- BASE OVAL -->
+        <ellipse cx="55" cy="117" rx="44" ry="9"  fill="url(#g1)" stroke="#7a5200" stroke-width="0.9"/>
+        <ellipse cx="55" cy="117" rx="38" ry="6"  fill="none"     stroke="#e8b820" stroke-width="0.6" opacity="0.55"/>
+        <!-- Perlas base -->
+        <circle cx="16"  cy="117" r="2.2" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.4"/>
+        <circle cx="25"  cy="120" r="2"   fill="#fdf6c0" stroke="#b8860b" stroke-width="0.4"/>
+        <circle cx="35"  cy="122" r="2"   fill="#fdf6c0" stroke="#b8860b" stroke-width="0.4"/>
+        <circle cx="46"  cy="124" r="2"   fill="#fdf6c0" stroke="#b8860b" stroke-width="0.4"/>
+        <circle cx="55"  cy="125" r="2.4" fill="#fff"    stroke="#b8860b" stroke-width="0.4"/>
+        <circle cx="64"  cy="124" r="2"   fill="#fdf6c0" stroke="#b8860b" stroke-width="0.4"/>
+        <circle cx="75"  cy="122" r="2"   fill="#fdf6c0" stroke="#b8860b" stroke-width="0.4"/>
+        <circle cx="85"  cy="120" r="2"   fill="#fdf6c0" stroke="#b8860b" stroke-width="0.4"/>
+        <circle cx="94"  cy="117" r="2.2" fill="#fdf6c0" stroke="#b8860b" stroke-width="0.4"/>
 
-        <!-- ══ REFLEJO / LUZ ══ -->
-        <path d="M22,62 Q80,56 138,62 L138,72 Q80,66 22,72 Z" fill="#fff5a0" opacity="0.12"/>
+        <!-- Reflejo sutil -->
+        <path d="M13,66 Q55,60 97,66 L97,76 Q55,70 13,76 Z" fill="#fff9b0" opacity="0.1"/>
       </svg>
-    </div>
     </div>
     <div class="portada-titulo">Colección Filatélica<span>de Menfis</span></div>
     <div class="portada-sub">Sellos de España</div>
@@ -519,11 +502,12 @@
     <div style="display:flex;align-items:center;gap:10px">
       <button onclick="showPortada()" style="background:transparent;border:1px solid rgba(184,134,11,0.5);color:var(--gold-light);padding:8px 16px;font-family:'Crimson Pro',serif;font-size:0.9rem;font-weight:600;cursor:pointer;border-radius:2px;transition:all 0.2s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(184,134,11,0.5)'">◀ Épocas</button>
       <div id="authArea"></div>
+      <div style="width:1px;height:28px;background:rgba(184,134,11,0.25);margin:0 4px;flex-shrink:0"></div>
+      <button id="darkModeBtn" onclick="toggleDarkMode()" title="Cambiar modo claro/oscuro">
+        <span id="darkModeIcon">🌙</span>
+        <span class="dm-tip" id="darkModeTip">Modo oscuro</span>
+      </button>
     </div>
-    <button id="darkModeBtn" onclick="toggleDarkMode()" title="Cambiar modo claro/oscuro">
-      <span id="darkModeIcon">🌙</span>
-      <span class="dm-tip" id="darkModeTip">Modo oscuro</span>
-    </button>
   </div>
 </header>
 
