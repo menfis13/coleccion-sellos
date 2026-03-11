@@ -135,6 +135,7 @@
   header { background: var(--ink); color: var(--cream); position: relative; overflow: hidden; }
   header::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--sepia), var(--gold), var(--gold-light), var(--gold), var(--sepia)); }
   .header-inner { max-width: 1400px; margin: 0 auto; padding: 28px 32px 24px; display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+  .header-title { text-align: center; }
   .header-title h1 { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: var(--cream); }
   .header-title h1 span { color: var(--gold-light); font-style: italic; }
   .header-subtitle { font-size: 0.85rem; color: #a89070; letter-spacing: 0.15em; text-transform: uppercase; margin-top: 4px; }
@@ -1533,13 +1534,9 @@ document.addEventListener('wheel', (e) => {
   let touch1 = null, touch2 = null;
   let pinchStartDist = 0, pinchStartScale = 1;
   let panStartX = 0, panStartY = 0;
-  let panStartTx = 0, panStartTy = 0;
 
   function dist(a, b) {
     return Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
-  }
-  function midpoint(a, b) {
-    return { x: (a.clientX + b.clientX) / 2, y: (a.clientY + b.clientY) / 2 };
   }
 
   // Limita el pan para que la imagen nunca salga de la pantalla
@@ -1574,8 +1571,6 @@ document.addEventListener('wheel', (e) => {
       touch1 = touches[0]; touch2 = touches[1];
       pinchStartDist  = dist(touch1, touch2);
       pinchStartScale = lbScale;
-      panStartTx = lbDrag.curTx;
-      panStartTy = lbDrag.curTy;
     } else if (touches.length === 1 && lbScale > 1) {
       e.preventDefault();
       touch1 = touches[0];
@@ -1592,10 +1587,6 @@ document.addEventListener('wheel', (e) => {
       e.preventDefault();
       const newDist = dist(touches[0], touches[1]);
       lbScale = Math.min(5, Math.max(1, pinchStartScale * (newDist / pinchStartDist)));
-      const startMid = midpoint(touch1, touch2);
-      const nowMid   = midpoint(touches[0], touches[1]);
-      lbDrag.curTx = panStartTx + (nowMid.x - startMid.x);
-      lbDrag.curTy = panStartTy + (nowMid.y - startMid.y);
       if (lbScale <= 1) { lbScale = 1; lbDrag.curTx = 0; lbDrag.curTy = 0; }
       applyTransform(true);
     } else if (touches.length === 1 && lbScale > 1) {
