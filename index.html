@@ -121,6 +121,7 @@
   #darkModeBtn:hover .dm-tip { opacity: 1; }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { overflow-x: hidden; max-width: 100%; }
   body { font-family: 'Crimson Pro', Georgia, serif; background: var(--cream); color: var(--ink); min-height: 100vh; }
   body::before {
     content: '';
@@ -570,6 +571,7 @@
   <div class="results-info" id="resultsInfo"></div>
   <div class="grid-view active" id="gridView"></div>
   <div class="list-view" id="listView">
+    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
     <table class="list-table">
       <thead><tr>
         <th onclick="sortBy('edifil')">Edifil ↕</th>
@@ -578,6 +580,7 @@
       </tr></thead>
       <tbody id="listBody"></tbody>
     </table>
+    </div>
   </div>
 </div>
 
