@@ -260,17 +260,34 @@
   .saving-toast.show { transform: translateY(0); }
 
   @media (max-width: 640px) {
-    .header-inner { padding: 10px 12px; gap: 6px; flex-wrap: nowrap; justify-content: center; }
-    .header-title { position: static; transform: none; flex: 0 1 auto; text-align: center; }
-    .header-title .header-subtitle:first-child { display: none; }
-    .header-title h1 { font-size: 1rem; }
-    .header-title .header-subtitle:last-child { display: none; }
+    .header-inner {
+      padding: 12px 14px 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px 0;
+    }
+    .header-title {
+      position: static;
+      transform: none;
+      width: 100%;
+      order: 1;
+      text-align: center;
+    }
+    .header-title .header-subtitle { font-size: 0.7rem; }
+    .header-title h1 { font-size: 1.05rem; }
     .header-stats { display: none; }
-    .toolbar { padding: 12px 16px; } .main { padding: 16px; }
-    .form-grid { grid-template-columns: 1fr; } .photo-section { grid-template-columns: 1fr; }
-    .header-inner > div:last-child { gap: 6px; flex-shrink: 0; }
+    .header-inner > div:last-child {
+      order: 2;
+      width: 100%;
+      justify-content: center;
+      gap: 8px;
+    }
     .header-inner > div:last-child > div[style*="width:1px"] { display: none; }
     #darkModeBtn { width: 28px; height: 28px; font-size: 0.8rem; }
+    .toolbar { padding: 12px 16px; }
+    .main { padding: 16px; }
+    .form-grid { grid-template-columns: 1fr; }
+    .photo-section { grid-template-columns: 1fr; }
   }
 
   /* AUTH */
@@ -502,7 +519,7 @@
     <div class="header-title">
       <div class="header-subtitle">Colección Filatélica de Menfis</div>
       <h1 id="header-epoca-titulo" style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:#f0e8d8"><span style="color:#e0b84a;font-style:italic">(1850-1870) Isabel II</span></h1>
-      <div class="header-subtitle" id="header-epoca-sub" style="margin-top:2px">Primera época de la filatelia española</div>
+      <div class="header-subtitle" id="header-epoca-sub" style="display:none"></div>
     </div>
     <div class="header-stats">
       <div class="stat-box"><span class="stat-num" id="stat-total">—</span><span class="stat-label">Total</span></div>
@@ -1053,11 +1070,9 @@ function renderList(filtered) {
       <td><span style="display:flex;align-items:center;gap:6px"><span class="stamp-color-dot ${colorClass(s.color)}"></span>${s.color||'—'}</span></td>
       <td>${s.valor_facial||'—'}</td><td>${s.dentado||'—'}</td>
       <td>${s.estado ? `<span style="background:var(--sage);color:white;padding:2px 8px;border-radius:1px;font-size:0.75rem">${s.estado}</span>` : '<span style="color:#aaa">—</span>'}</td>
-      <td>${s.delante
-        ? `<img src="${s.delante}" style="width:40px;height:40px;object-fit:cover;border-radius:2px;border:1px solid rgba(184,134,11,0.3);display:block" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='block'""><span style="display:none;color:#aaa;font-size:0.75rem">—</span>`
-        : s.referencia
-          ? `<img src="${s.referencia}" style="width:40px;height:40px;object-fit:cover;border-radius:2px;border:1px solid rgba(184,134,11,0.2);opacity:0.6;display:block" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='block'""><span style="display:none;color:#aaa;font-size:0.75rem">—</span>`
-          : '<span style="color:#aaa;font-size:0.75rem">—</span>'
+      <td>${s.referencia
+        ? `<img src="${s.referencia}" style="width:40px;height:40px;object-fit:cover;border-radius:2px;border:1px solid rgba(184,134,11,0.25);display:block" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span style="display:none;color:#aaa;font-size:0.75rem">—</span>`
+        : '<span style="color:#aaa;font-size:0.75rem">—</span>'
       }</td>
     </tr>`).join('');
 }
