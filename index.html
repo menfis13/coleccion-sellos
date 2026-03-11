@@ -868,7 +868,15 @@ function renderStamps() {
   document.getElementById('stat-tengo').textContent = withEstado;
   document.getElementById('stat-fotos').textContent = withPhoto;
   document.getElementById('resultsInfo').textContent = `Mostrando ${filtered.length} de ${stamps.length} sellos`;
-  if (currentView === 'grid') renderGrid(filtered);
+
+  // Siempre sincronizar estado visual de botones y contenedores con currentView
+  const isGrid = currentView === 'grid';
+  document.getElementById('gridView').classList.toggle('active', isGrid);
+  document.getElementById('listView').classList.toggle('active', !isGrid);
+  document.getElementById('btnGrid').classList.toggle('active', isGrid);
+  document.getElementById('btnList').classList.toggle('active', !isGrid);
+
+  if (isGrid) renderGrid(filtered);
   else renderList(filtered);
 }
 
@@ -915,10 +923,6 @@ function sortBy(field) {
 }
 function setView(v) {
   currentView = v;
-  document.getElementById('gridView').classList.toggle('active', v==='grid');
-  document.getElementById('listView').classList.toggle('active', v==='list');
-  document.getElementById('btnGrid').classList.toggle('active', v==='grid');
-  document.getElementById('btnList').classList.toggle('active', v==='list');
   renderStamps();
 }
 
