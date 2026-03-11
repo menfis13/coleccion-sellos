@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Colección Filatélica de Menfis</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:wght@300;400;600&display=swap" rel="stylesheet">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -247,7 +247,7 @@
 
   input[type="file"] { display: none; }
 
-  .lightbox { display: none; position: fixed; inset: 0; background: rgba(10,7,3,0.93); z-index: 900; align-items: center; justify-content: center; cursor: zoom-out; backdrop-filter: blur(4px); }
+  .lightbox { display: none; position: fixed; inset: 0; background: rgba(10,7,3,0.93); z-index: 900; align-items: center; justify-content: center; cursor: zoom-out; backdrop-filter: blur(4px); touch-action: none; }
   .lightbox.open { display: flex; }
   .lightbox img { max-width: 92vw; max-height: 88vh; object-fit: contain; border-radius: 3px; box-shadow: 0 32px 100px rgba(0,0,0,0.8); animation: lbIn 0.2s ease; cursor: default; transition: transform 0.12s cubic-bezier(0.25, 0.46, 0.45, 0.94); will-change: transform; }
   @keyframes lbIn { from { transform: scale(0.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
@@ -1393,25 +1393,96 @@ document.addEventListener('wheel', (e) => {
   const lb = document.getElementById('lightbox');
   if (!lb.classList.contains('open')) return;
   e.preventDefault();
-
   const img = document.getElementById('lightboxImg');
-
-  // Mientras llegan eventos de rueda: sin transición, actualización directa
   img.style.transition = 'none';
-
   const factor = e.deltaY < 0 ? 1.1 : 0.91;
   lbScale = Math.min(5, Math.max(1, lbScale * factor));
   if (lbScale <= 1) { lbScale = 1; lbDrag.curTx = 0; lbDrag.curTy = 0; }
   img.style.transform = `scale(${lbScale}) translate(${lbDrag.curTx}px,${lbDrag.curTy}px)`;
   img.style.cursor = lbScale > 1 ? 'grab' : 'default';
-
-  // Al dejar de girar la rueda, pequeña transición de asentamiento
   clearTimeout(lbWheelTimer);
   lbWheelTimer = setTimeout(() => {
     img.style.transition = 'transform 0.2s cubic-bezier(0.22,1,0.36,1)';
     img.style.transform = `scale(${lbScale}) translate(${lbDrag.curTx}px,${lbDrag.curTy}px)`;
   }, 80);
 }, { passive: false });
+
+// ── TOUCH: pinch-zoom + pan ──────────────────────────────
+(function() {
+  const lb  = () => document.getElementById('lightbox');
+  const img = () => document.getElementById('lightboxImg');
+
+  let touch1 = null, touch2 = null;
+  let pinchStartDist = 0, pinchStartScale = 1;
+  let panStartX = 0, panStartY = 0;
+  let panStartTx = 0, panStartTy = 0;
+
+  function dist(a, b) {
+    return Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+  }
+  function midpoint(a, b) {
+    return { x: (a.clientX + b.clientX) / 2, y: (a.clientY + b.clientY) / 2 };
+  }
+  function applyTransform(instant) {
+    const el = img();
+    el.style.transition = instant ? 'none' : 'transform 0.2s cubic-bezier(0.22,1,0.36,1)';
+    el.style.transform = `scale(${lbScale}) translate(${lbDrag.curTx}px,${lbDrag.curTy}px)`;
+  }
+
+  document.addEventListener('touchstart', (e) => {
+    if (!lb().classList.contains('open')) return;
+    const touches = e.touches;
+    if (touches.length === 2) {
+      // Inicio de pinch
+      e.preventDefault();
+      touch1 = touches[0]; touch2 = touches[1];
+      pinchStartDist  = dist(touch1, touch2);
+      pinchStartScale = lbScale;
+      panStartTx = lbDrag.curTx;
+      panStartTy = lbDrag.curTy;
+    } else if (touches.length === 1 && lbScale > 1) {
+      // Inicio de pan con un dedo
+      e.preventDefault();
+      touch1 = touches[0];
+      panStartX  = touch1.clientX - lbDrag.curTx;
+      panStartY  = touch1.clientY - lbDrag.curTy;
+    }
+  }, { passive: false });
+
+  document.addEventListener('touchmove', (e) => {
+    if (!lb().classList.contains('open')) return;
+    const touches = e.touches;
+
+    if (touches.length === 2) {
+      e.preventDefault();
+      const newDist = dist(touches[0], touches[1]);
+      lbScale = Math.min(5, Math.max(1, pinchStartScale * (newDist / pinchStartDist)));
+      // Pan simultáneo al pinch (mover el punto central)
+      const startMid = midpoint(touch1, touch2);
+      const nowMid   = midpoint(touches[0], touches[1]);
+      lbDrag.curTx = panStartTx + (nowMid.x - startMid.x);
+      lbDrag.curTy = panStartTy + (nowMid.y - startMid.y);
+      if (lbScale <= 1) { lbScale = 1; lbDrag.curTx = 0; lbDrag.curTy = 0; }
+      applyTransform(true);
+    } else if (touches.length === 1 && lbScale > 1) {
+      e.preventDefault();
+      lbDrag.curTx = touches[0].clientX - panStartX;
+      lbDrag.curTy = touches[0].clientY - panStartY;
+      applyTransform(true);
+    }
+  }, { passive: false });
+
+  document.addEventListener('touchend', (e) => {
+    if (!lb().classList.contains('open')) return;
+    if (e.touches.length < 2) {
+      // Al soltar el pinch, pequeña transición de asentamiento
+      if (lbScale < 1.05) { lbScale = 1; lbDrag.curTx = 0; lbDrag.curTy = 0; }
+      applyTransform(false);
+      touch2 = null;
+    }
+    if (e.touches.length === 0) touch1 = null;
+  }, { passive: true });
+})();
 
 // Arrastrar con ratón
 (function() {
