@@ -198,6 +198,7 @@
   .list-table th { background: var(--ink); color: var(--gold-light); font-family: 'Playfair Display', serif; font-weight: 400; font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 12px 16px; text-align: left; cursor: pointer; user-select: none; }
   .list-table th:hover { background: #2a1f10; }
   .list-table td { padding: 10px 16px; border-bottom: 1px solid rgba(92,61,30,0.08); font-size: 0.95rem; vertical-align: middle; }
+  .list-table td:last-child { padding: 6px 12px; }
   .list-table tr:last-child td { border-bottom: none; }
   .list-table tr:hover td { background: rgba(245,240,232,0.7); cursor: pointer; }
   .list-table tr:nth-child(even) td { background: rgba(237,229,208,0.2); }
@@ -259,15 +260,14 @@
   .saving-toast.show { transform: translateY(0); }
 
   @media (max-width: 640px) {
-    .header-inner { padding: 12px 14px; gap: 8px; flex-wrap: nowrap; }
-    .header-title { position: static; transform: none; flex: 1; min-width: 0; }
-    .header-title .header-subtitle:first-child { font-size: 0.7rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .header-inner { padding: 10px 12px; gap: 6px; flex-wrap: nowrap; justify-content: center; }
+    .header-title { position: static; transform: none; flex: 0 1 auto; text-align: center; }
+    .header-title .header-subtitle:first-child { display: none; }
     .header-title h1 { font-size: 1rem; }
     .header-title .header-subtitle:last-child { display: none; }
     .header-stats { display: none; }
     .toolbar { padding: 12px 16px; } .main { padding: 16px; }
     .form-grid { grid-template-columns: 1fr; } .photo-section { grid-template-columns: 1fr; }
-    /* grupo derecho compacto */
     .header-inner > div:last-child { gap: 6px; flex-shrink: 0; }
     .header-inner > div:last-child > div[style*="width:1px"] { display: none; }
     #darkModeBtn { width: 28px; height: 28px; font-size: 0.8rem; }
@@ -557,7 +557,7 @@
       <thead><tr>
         <th onclick="sortBy('edifil')">Edifil ↕</th>
         <th onclick="sortBy('año')">Año ↕</th>
-        <th>Descripción</th><th>Color</th><th>Valor Facial</th><th>Dentado</th><th>Estado</th><th>Foto</th>
+        <th>Descripción</th><th>Color</th><th>Valor Facial</th><th>Dentado</th><th>Estado</th><th style="width:56px">Imagen</th>
       </tr></thead>
       <tbody id="listBody"></tbody>
     </table>
@@ -1053,7 +1053,12 @@ function renderList(filtered) {
       <td><span style="display:flex;align-items:center;gap:6px"><span class="stamp-color-dot ${colorClass(s.color)}"></span>${s.color||'—'}</span></td>
       <td>${s.valor_facial||'—'}</td><td>${s.dentado||'—'}</td>
       <td>${s.estado ? `<span style="background:var(--sage);color:white;padding:2px 8px;border-radius:1px;font-size:0.75rem">${s.estado}</span>` : '<span style="color:#aaa">—</span>'}</td>
-      <td>${s.delante ? '📷' : '—'}</td>
+      <td>${s.delante
+        ? `<img src="${s.delante}" style="width:40px;height:40px;object-fit:cover;border-radius:2px;border:1px solid rgba(184,134,11,0.3);display:block" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='block'""><span style="display:none;color:#aaa;font-size:0.75rem">—</span>`
+        : s.referencia
+          ? `<img src="${s.referencia}" style="width:40px;height:40px;object-fit:cover;border-radius:2px;border:1px solid rgba(184,134,11,0.2);opacity:0.6;display:block" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='block'""><span style="display:none;color:#aaa;font-size:0.75rem">—</span>`
+          : '<span style="color:#aaa;font-size:0.75rem">—</span>'
+      }</td>
     </tr>`).join('');
 }
 
