@@ -1541,9 +1541,26 @@ document.addEventListener('wheel', (e) => {
   function midpoint(a, b) {
     return { x: (a.clientX + b.clientX) / 2, y: (a.clientY + b.clientY) / 2 };
   }
-  function applyTransform(instant) {
+
+  // Limita el pan para que la imagen nunca salga de la pantalla
+  function clampPan() {
+    if (lbScale <= 1) { lbDrag.curTx = 0; lbDrag.curTy = 0; return; }
     const el = img();
-    el.style.transition = instant ? 'none' : 'transform 0.2s cubic-bezier(0.22,1,0.36,1)';
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const iw = el.offsetWidth  || vw * 0.92;
+    const ih = el.offsetHeight || vh * 0.88;
+    // Máximo desplazamiento permitido en cada eje
+    const maxTx = Math.max(0, (iw  * (lbScale - 1)) / 2);
+    const maxTy = Math.max(0, (ih * (lbScale - 1)) / 2);
+    lbDrag.curTx = Math.min(maxTx, Math.max(-maxTx, lbDrag.curTx));
+    lbDrag.curTy = Math.min(maxTy, Math.max(-maxTy, lbDrag.curTy));
+  }
+
+  function applyTransform(instant) {
+    clampPan();
+    const el = img();
+    el.style.transition = instant ? 'none' : 'transform 0.25s cubic-bezier(0.22,1,0.36,1)';
     el.style.transform = `scale(${lbScale}) translate(${lbDrag.curTx}px,${lbDrag.curTy}px)`;
   }
 
@@ -1551,7 +1568,6 @@ document.addEventListener('wheel', (e) => {
     if (!lb().classList.contains('open')) return;
     const touches = e.touches;
     if (touches.length === 2) {
-      // Inicio de pinch
       e.preventDefault();
       touch1 = touches[0]; touch2 = touches[1];
       pinchStartDist  = dist(touch1, touch2);
@@ -1559,7 +1575,6 @@ document.addEventListener('wheel', (e) => {
       panStartTx = lbDrag.curTx;
       panStartTy = lbDrag.curTy;
     } else if (touches.length === 1 && lbScale > 1) {
-      // Inicio de pan con un dedo
       e.preventDefault();
       touch1 = touches[0];
       panStartX  = touch1.clientX - lbDrag.curTx;
@@ -1575,7 +1590,6 @@ document.addEventListener('wheel', (e) => {
       e.preventDefault();
       const newDist = dist(touches[0], touches[1]);
       lbScale = Math.min(5, Math.max(1, pinchStartScale * (newDist / pinchStartDist)));
-      // Pan simultáneo al pinch (mover el punto central)
       const startMid = midpoint(touch1, touch2);
       const nowMid   = midpoint(touches[0], touches[1]);
       lbDrag.curTx = panStartTx + (nowMid.x - startMid.x);
@@ -1593,9 +1607,8 @@ document.addEventListener('wheel', (e) => {
   document.addEventListener('touchend', (e) => {
     if (!lb().classList.contains('open')) return;
     if (e.touches.length < 2) {
-      // Al soltar el pinch, pequeña transición de asentamiento
       if (lbScale < 1.05) { lbScale = 1; lbDrag.curTx = 0; lbDrag.curTy = 0; }
-      applyTransform(false);
+      applyTransform(false); // clampPan se llama dentro
       touch2 = null;
     }
     if (e.touches.length === 0) touch1 = null;
@@ -1617,9 +1630,14 @@ document.addEventListener('wheel', (e) => {
     if (!lbDrag.active) return;
     lbDrag.curTx = e.clientX - lbDrag.startX;
     lbDrag.curTy = e.clientY - lbDrag.startY;
-    const img = document.getElementById('lightboxImg');
-    img.style.transition = 'none';
-    img.style.transform = `scale(${lbScale}) translate(${lbDrag.curTx}px,${lbDrag.curTy}px)`;
+    // Limitar para no salir de pantalla
+    const el = document.getElementById('lightboxImg');
+    const maxTx = Math.max(0, (el.offsetWidth  * (lbScale - 1)) / 2);
+    const maxTy = Math.max(0, (el.offsetHeight * (lbScale - 1)) / 2);
+    lbDrag.curTx = Math.min(maxTx, Math.max(-maxTx, lbDrag.curTx));
+    lbDrag.curTy = Math.min(maxTy, Math.max(-maxTy, lbDrag.curTy));
+    el.style.transition = 'none';
+    el.style.transform = `scale(${lbScale}) translate(${lbDrag.curTx}px,${lbDrag.curTy}px)`;
   });
   document.addEventListener('mouseup', () => {
     if (!lbDrag.active) return;
