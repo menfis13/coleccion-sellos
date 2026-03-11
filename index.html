@@ -1548,11 +1548,13 @@ document.addEventListener('wheel', (e) => {
     const el = img();
     const vw = window.innerWidth;
     const vh = window.innerHeight;
-    const iw = el.offsetWidth  || vw * 0.92;
-    const ih = el.offsetHeight || vh * 0.88;
-    // Máximo desplazamiento permitido en cada eje
-    const maxTx = Math.max(0, (iw  * (lbScale - 1)) / 2);
-    const maxTy = Math.max(0, (ih * (lbScale - 1)) / 2);
+    // Tamaño real de la imagen en pantalla (sin escala CSS)
+    const iw = el.naturalWidth  ? Math.min(el.naturalWidth,  vw * 0.92) : vw * 0.92;
+    const ih = el.naturalHeight ? Math.min(el.naturalHeight, vh * 0.88) : vh * 0.88;
+    // El pan máximo es la mitad del espacio "ganado" al escalar
+    // Dividir por lbScale porque translate() actúa en espacio pre-escala
+    const maxTx = Math.max(0, (iw  * (lbScale - 1)) / (2 * lbScale));
+    const maxTy = Math.max(0, (ih  * (lbScale - 1)) / (2 * lbScale));
     lbDrag.curTx = Math.min(maxTx, Math.max(-maxTx, lbDrag.curTx));
     lbDrag.curTy = Math.min(maxTy, Math.max(-maxTy, lbDrag.curTy));
   }
@@ -1632,8 +1634,11 @@ document.addEventListener('wheel', (e) => {
     lbDrag.curTy = e.clientY - lbDrag.startY;
     // Limitar para no salir de pantalla
     const el = document.getElementById('lightboxImg');
-    const maxTx = Math.max(0, (el.offsetWidth  * (lbScale - 1)) / 2);
-    const maxTy = Math.max(0, (el.offsetHeight * (lbScale - 1)) / 2);
+    const vw = window.innerWidth, vh = window.innerHeight;
+    const iw = el.naturalWidth  ? Math.min(el.naturalWidth,  vw * 0.92) : vw * 0.92;
+    const ih = el.naturalHeight ? Math.min(el.naturalHeight, vh * 0.88) : vh * 0.88;
+    const maxTx = Math.max(0, (iw * (lbScale - 1)) / (2 * lbScale));
+    const maxTy = Math.max(0, (ih * (lbScale - 1)) / (2 * lbScale));
     lbDrag.curTx = Math.min(maxTx, Math.max(-maxTx, lbDrag.curTx));
     lbDrag.curTy = Math.min(maxTy, Math.max(-maxTy, lbDrag.curTy));
     el.style.transition = 'none';
