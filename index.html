@@ -1604,7 +1604,7 @@ function showPortada() {
       <div class="portada-card-sub">${ep.subtitulo}</div>
       <div class="portada-card-sellos">
         <div><strong>${ep.data.length}</strong>sellos</div>
-        <div><strong>${epocasContadores[ep.id] !== undefined ? epocasContadores[ep.id] : ep.data.filter(s=>s.estado).length}</strong>en colección</div>
+        <div><strong>${epocasContadores[ep.id] !== undefined ? epocasContadores[ep.id] : '<span style="opacity:0.4;font-size:0.8rem">…</span>'}</strong>en colección</div>
       </div>
     </div>
   `).join('');
@@ -1689,7 +1689,7 @@ function switchEpoca(epocaId) {
   loadFromSheets();
 }
 
-// Mostrar portada al inicio
+// Mostrar portada al inicio — esperar contadores de Sheets antes de renderizar
 async function precargarContadores() {
   const promesas = Object.values(EPOCAS).map(async ep => {
     try {
@@ -1704,11 +1704,17 @@ async function precargarContadores() {
     } catch(e) {}
   });
   await Promise.all(promesas);
-  if (document.getElementById('portada').classList.contains('open')) showPortada();
 }
 
-showPortada();
-precargarContadores();
+async function iniciar() {
+  // Mostrar portada con placeholder mientras carga
+  showPortada();
+  // Cargar contadores reales y refrescar tarjetas
+  await precargarContadores();
+  showPortada();
+}
+
+iniciar();
 
 /* ── MODO OSCURO ── */
 function toggleDarkMode() {
