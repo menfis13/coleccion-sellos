@@ -724,7 +724,6 @@ const EPOCAS = {
 
 let currentEpoca = null;
 const REFERENCE_DATA = EPOCAS['isabel2'].data;
-// Contadores reales por época, actualizados tras cada carga desde Sheets
 const epocasContadores = {};
 
 // Estado
@@ -803,8 +802,7 @@ async function loadFromSheets() {
   }
   populateFilters();
   renderStamps();
-  // Guardar contador real de esta época para la portada
-  epocasContadores[currentEpoca] = stamps.filter(s => s.estado).length;
+  if (currentEpoca) epocasContadores[currentEpoca] = stamps.filter(s => s.estado).length;
 }
 
 async function saveToSheets(stamp) {
@@ -910,7 +908,6 @@ function renderStamps() {
   document.getElementById('stat-tengo').textContent = withEstado;
   document.getElementById('stat-fotos').textContent = withPhoto;
   document.getElementById('resultsInfo').textContent = `Mostrando ${filtered.length} de ${stamps.length} sellos`;
-  // Mantener contador de portada siempre actualizado
   if (currentEpoca) epocasContadores[currentEpoca] = withEstado;
 
   // Siempre sincronizar estado visual de botones y contenedores con currentView
@@ -1662,7 +1659,33 @@ function switchEpoca(epocaId) {
 }
 
 // Mostrar portada al inicio
+// Precarga contadores reales de todas las épocas desde Sheets
+async function precargarContadores() {
+  const promesas = Object.values(EPOCAS).map(async ep => {
+    try {
+      const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(ep.sheet)}`;
+      const res = await fetch(url);
+      const text = await res.text();
+      const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\((.*)\);?$/s)[1]);
+      const rows = json.table?.rows || [];
+      let count = 0;
+      rows.forEach(row => {
+        if (row.c && row.c[6] && row.c[6].v) count++;
+      });
+      epocasContadores[ep.id] = count;
+    } catch(e) {
+      // Si falla, se queda con el valor estático
+    }
+  });
+  await Promise.all(promesas);
+  // Refrescar las tarjetas de portada con los contadores reales
+  if (document.getElementById('portada').classList.contains('open')) {
+    showPortada();
+  }
+}
+
 showPortada();
+precargarContadores();
 
 /* ── MODO OSCURO ── */
 function toggleDarkMode() {
