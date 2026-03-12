@@ -724,6 +724,8 @@ const EPOCAS = {
 
 let currentEpoca = null;
 const REFERENCE_DATA = EPOCAS['isabel2'].data;
+// Contadores reales por época, actualizados tras cada carga desde Sheets
+const epocasContadores = {};
 
 // Estado
 let stamps = [];
@@ -801,6 +803,8 @@ async function loadFromSheets() {
   }
   populateFilters();
   renderStamps();
+  // Guardar contador real de esta época para la portada
+  epocasContadores[currentEpoca] = stamps.filter(s => s.estado).length;
 }
 
 async function saveToSheets(stamp) {
@@ -906,6 +910,8 @@ function renderStamps() {
   document.getElementById('stat-tengo').textContent = withEstado;
   document.getElementById('stat-fotos').textContent = withPhoto;
   document.getElementById('resultsInfo').textContent = `Mostrando ${filtered.length} de ${stamps.length} sellos`;
+  // Mantener contador de portada siempre actualizado
+  if (currentEpoca) epocasContadores[currentEpoca] = withEstado;
 
   // Siempre sincronizar estado visual de botones y contenedores con currentView
   const isGrid = currentView === 'grid';
@@ -1570,7 +1576,7 @@ function showPortada() {
       <div class="portada-card-sub">${ep.subtitulo}</div>
       <div class="portada-card-sellos">
         <div><strong>${ep.data.length}</strong>sellos</div>
-        <div><strong>${ep.data.filter(s=>s.estado).length || '0'}</strong>en colección</div>
+        <div><strong>${epocasContadores[ep.id] !== undefined ? epocasContadores[ep.id] : ep.data.filter(s=>s.estado).length}</strong>en colección</div>
       </div>
     </div>
   `).join('');
