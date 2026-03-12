@@ -291,37 +291,6 @@
     .photo-section { grid-template-columns: 1fr; }
   }
 
-  /* Móvil en horizontal (landscape) */
-  @media (max-height: 500px) and (orientation: landscape) {
-    .header-inner {
-      padding: 6px 14px 5px;
-      flex-wrap: nowrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-    }
-    .header-title {
-      position: static;
-      transform: none;
-      flex: 1;
-      text-align: center;
-      order: 0;
-    }
-    .header-title .header-subtitle { display: none; }
-    .header-title h1 { font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .header-stats { display: none; }
-    .header-inner > div:last-child {
-      flex-shrink: 0;
-      width: auto;
-      justify-content: flex-end;
-      gap: 6px;
-    }
-    .header-inner > div:last-child > div[style*="width:1px"] { display: none; }
-    #darkModeBtn { width: 26px; height: 26px; font-size: 0.75rem; }
-    .toolbar { padding: 8px 12px; }
-    .main { padding: 10px 14px; }
-  }
-
   /* AUTH */
   .auth-area { display: flex; align-items: center; gap: 12px; }
   .auth-user { display: flex; align-items: center; gap: 10px; }
@@ -755,6 +724,8 @@ const EPOCAS = {
 
 let currentEpoca = 'isabel2';
 const REFERENCE_DATA = EPOCAS['isabel2'].data;
+// Contadores reales por época, actualizados tras cada carga desde Sheets
+const epocasContadores = {};
 
 // Estado
 let stamps = [];
@@ -832,6 +803,8 @@ async function loadFromSheets() {
   }
   populateFilters();
   renderStamps();
+  // Guardar contador real de esta época para la portada
+  epocasContadores[currentEpoca] = stamps.filter(s => s.estado).length;
 }
 
 async function saveToSheets(stamp) {
@@ -937,6 +910,8 @@ function renderStamps() {
   document.getElementById('stat-tengo').textContent = withEstado;
   document.getElementById('stat-fotos').textContent = withPhoto;
   document.getElementById('resultsInfo').textContent = `Mostrando ${filtered.length} de ${stamps.length} sellos`;
+  // Mantener contador de portada siempre actualizado
+  epocasContadores[currentEpoca] = withEstado;
 
   // Siempre sincronizar estado visual de botones y contenedores con currentView
   const isGrid = currentView === 'grid';
@@ -1601,7 +1576,7 @@ function showPortada() {
       <div class="portada-card-sub">${ep.subtitulo}</div>
       <div class="portada-card-sellos">
         <div><strong>${ep.data.length}</strong>sellos</div>
-        <div><strong>${ep.data.filter(s=>s.estado).length || '0'}</strong>en colección</div>
+        <div><strong>${epocasContadores[ep.id] !== undefined ? epocasContadores[ep.id] : ep.data.filter(s=>s.estado).length}</strong>en colección</div>
       </div>
     </div>
   `).join('');
