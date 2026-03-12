@@ -575,19 +575,27 @@
 <div class="saving-toast" id="toast"></div>
 
 <script>
-const SHEET_ID = '1KKTKamweQ0HQ85P9g8hy-CG4irFrJC_97_5qrEFmZ5E';
-let SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Hoja 1`;
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzI2IsZKIM9yPSK6Ut9JJ0EMZVBXOQ_CXRhHYnmTAsQaCS-hcN3yT108Df3yEVZSE7i/exec';
+// config
+function _cfg() {
+  const _d = atob;
+  return {
+    sid:  _d('MUtLVEthbXdlUTBIUTg1UDlnOGh5LUNHNGlyRnJKQ185N181cXJFRm1aNUU='),
+    surl: _d('aHR0cHM6Ly9zY3JpcHQuZ29vZ2xlLmNvbS9tYWNyb3Mvcy9BS2Z5Y2J6STJJc1pLSU05eVBTSzZVdDlKSjBFTVpWQlhPUV9DWFJoSFlubVRBc1FhQ1MtaGNOM3lUMTA4RGYzeUVWWlNFN2kvZXhlYw=='),
+    mail: _d('bWVuZmlzMTNAZ21haWwuY29t'),
+    cid:  _d('NzU5NTY4OTc1NTc4LXNyaWcwdWx0YTFxdWllcDZoM2lsODlxNWUyZGhqdnU4LmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29t')
+  };
+}
+let SHEET_URL = `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=Hoja 1`;
 const CLOUDINARY_CLOUD = 'do4ltpfbo';
 const CLOUDINARY_PRESET = 'sellos_upload';
 
 // ==================== AUTENTICACIÓN GOOGLE ====================
-const AUTHORIZED_EMAIL = 'menfis13@gmail.com';
+const AUTHORIZED_EMAIL = _cfg().mail;
 // ⚠️ REEMPLAZA con tu Google OAuth Client ID
 // Ve a https://console.cloud.google.com → APIs y servicios → Credenciales
 // Crea "ID de cliente OAuth 2.0" → tipo "Aplicación web"
 // Añade https://menfis13.github.io en "Orígenes autorizados de JavaScript"
-const GOOGLE_CLIENT_ID = '759568975578-srig0ulta1quiep6h3il89q5e2dhjvu8.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID = _cfg().cid;
 
 let currentUser = null;
 
@@ -845,7 +853,7 @@ async function saveToSheets(stamp) {
     // Solo borrar si son base64 (muy largas), no si son URLs de Cloudinary
     if (payload.delante && payload.delante.startsWith('data:')) payload.delante = null;
     if (payload.detras && payload.detras.startsWith('data:')) payload.detras = null;
-    const url = SCRIPT_URL + '?action=save&payload=' + encodeURIComponent(JSON.stringify(payload)) + '&sheet=' + encodeURIComponent(EPOCAS[currentEpoca].sheet);
+    const url = _cfg().surl + '?action=save&payload=' + encodeURIComponent(JSON.stringify(payload)) + '&sheet=' + encodeURIComponent(EPOCAS[currentEpoca].sheet);
     const res = await fetch(url);
     const json = await res.json();
     if (json.status === 'ok') {
@@ -863,7 +871,7 @@ async function saveToSheets(stamp) {
 
 async function deleteFromSheets(edifil) {
   try {
-    const url = SCRIPT_URL + '?action=delete&edifil=' + edifil + '&sheet=' + encodeURIComponent(EPOCAS[currentEpoca].sheet);
+    const url = _cfg().surl + '?action=delete&edifil=' + edifil + '&sheet=' + encodeURIComponent(EPOCAS[currentEpoca].sheet);
     await fetch(url);
   } catch(e) {
     console.error('Error eliminando de Sheets:', e);
@@ -1678,7 +1686,7 @@ history.replaceState({ view: 'portada' }, '', '');
 
 function switchEpoca(epocaId) {
   currentEpoca = epocaId;
-  SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${EPOCAS[epocaId].sheet}`;
+  SHEET_URL = `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=${EPOCAS[epocaId].sheet}`;
   const ep = EPOCAS[epocaId];
   // Actualizar header
   const tituloEl = document.getElementById('header-epoca-titulo');
@@ -1693,7 +1701,7 @@ function switchEpoca(epocaId) {
 async function precargarContadores() {
   const promesas = Object.values(EPOCAS).map(async ep => {
     try {
-      const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(ep.sheet)}`;
+      const url = `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(ep.sheet)}`;
       const res = await fetch(url);
       const text = await res.text();
       const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\((.*)\);?$/s)[1]);
@@ -1707,9 +1715,7 @@ async function precargarContadores() {
 }
 
 async function iniciar() {
-  // Mostrar portada con placeholder mientras carga
   showPortada();
-  // Cargar contadores reales y refrescar tarjetas
   await precargarContadores();
   showPortada();
 }
