@@ -1096,29 +1096,29 @@ function irAlPrimerSello() {
 }
 
 function scrollAndHighlight(edifil) {
-  // Busca la tarjeta (grid) o fila (lista) con ese edifil y hace scroll + resalta
-  // Primero asegurar que renderStamps ha pintado con ese filtro
   let target = null;
+  const str = String(edifil);
   if (currentView === 'grid') {
-    const cards = document.querySelectorAll('#gridView .stamp-card');
-    cards.forEach(card => {
+    document.querySelectorAll('#gridView .stamp-card').forEach(card => {
       card.classList.remove('search-highlight');
       const edifilEl = card.querySelector('.stamp-edifil');
-      if (edifilEl && edifilEl.textContent.includes(String(edifil))) target = card;
+      // Coincidencia exacta: el texto debe ser exactamente "Edifil nº X"
+      if (edifilEl && edifilEl.textContent.replace(/\D/g,'') === str) target = card;
     });
     if (target) target.classList.add('search-highlight');
   } else {
-    const rows = document.querySelectorAll('#listBody tr');
-    rows.forEach(row => {
+    document.querySelectorAll('#listBody tr').forEach(row => {
       row.classList.remove('search-highlight');
-      const firstTd = row.querySelector('td strong');
-      if (firstTd && firstTd.textContent === String(edifil)) target = row;
+      const td = row.querySelector('td strong');
+      if (td && td.textContent.trim() === str) target = row;
     });
     if (target) target.classList.add('search-highlight');
   }
   if (target) {
     const top = target.getBoundingClientRect().top + window.scrollY - 140;
     window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+    // Quitar resaltado tras 5 segundos
+    setTimeout(() => target.classList.remove('search-highlight'), 5000);
   }
 }
 
@@ -1421,48 +1421,52 @@ function showCropModal(sourceCanvas, callback) {
   _cropNatH = sourceCanvas.height;
   showCropModal._src = sourceCanvas;
 
-  // Calcular tamaño display respetando max-width:90vw / max-height:62vh
-  const maxW = Math.floor(window.innerWidth  * 0.90);
-  const maxH = Math.floor(window.innerHeight * 0.62);
-  const scale = Math.min(1, maxW / _cropNatW, maxH / _cropNatH);
-  _cropDispW = Math.round(_cropNatW * scale);
-  _cropDispH = Math.round(_cropNatH * scale);
-
-  // Dibujar imagen en canvas de fondo (sin img.onload)
-  const bg = document.getElementById('cropBg');
-  bg.width  = _cropDispW;
-  bg.height = _cropDispH;
-  bg.getContext('2d').drawImage(sourceCanvas, 0, 0, _cropDispW, _cropDispH);
-
-  // Canvas overlay encima
-  const ov = document.getElementById('cropOverlay');
-  ov.width  = _cropDispW;
-  ov.height = _cropDispH;
-  ov.style.width  = _cropDispW + 'px';
-  ov.style.height = _cropDispH + 'px';
-
-  // Autodetección del sello
-  const _det = _autoDetectStamp(sourceCanvas);
-  if (_det) {
-    const scX=_cropDispW/_cropNatW, scY=_cropDispH/_cropNatH;
-    _cropRect={x:Math.round(_det.x*scX),y:Math.round(_det.y*scY),
-               w:Math.round(_det.w*scX),h:Math.round(_det.h*scY)};
-    document.getElementById('cropHint').textContent='Sello detectado automáticamente — ajusta si es necesario';
-  } else {
-    const pad=0.10;
-    _cropRect={x:Math.round(_cropDispW*pad),y:Math.round(_cropDispH*pad),
-               w:Math.round(_cropDispW*(1-pad*2)),h:Math.round(_cropDispH*(1-pad*2))};
-  }
-
-  // Ocultar modal del sello mientras se recorta
+  // Ocultar modal del sello mientras se recorta (antes de calcular viewport)
   const stampModal = document.getElementById('modalOverlay');
   const stampWasOpen = stampModal.classList.contains('open');
   if (stampWasOpen) stampModal.classList.remove('open');
   showCropModal._stampWasOpen = stampWasOpen;
 
+  // Abrir cropModal primero para que el viewport sea correcto al medir
   document.getElementById('cropModal').classList.add('open');
-  _initCropEvents();  // primero inicializar (clona el canvas)
-  requestAnimationFrame(() => { _drawCrop(); }); // dibujar tras render visible
+
+  // Usar rAF para que el DOM ya tenga las dimensiones reales (crítico en móvil)
+  requestAnimationFrame(() => {
+    const maxW = Math.max(200, Math.floor(window.innerWidth  * 0.90));
+    const maxH = Math.max(150, Math.floor(window.innerHeight * 0.62));
+    const scale = Math.min(1, maxW / _cropNatW, maxH / _cropNatH);
+    _cropDispW = Math.max(1, Math.round(_cropNatW * scale));
+    _cropDispH = Math.max(1, Math.round(_cropNatH * scale));
+
+    const bg = document.getElementById('cropBg');
+    bg.width  = _cropDispW;
+    bg.height = _cropDispH;
+    bg.style.width  = _cropDispW + 'px';
+    bg.style.height = _cropDispH + 'px';
+    bg.getContext('2d').drawImage(sourceCanvas, 0, 0, _cropDispW, _cropDispH);
+
+    const ov = document.getElementById('cropOverlay');
+    ov.width  = _cropDispW;
+    ov.height = _cropDispH;
+    ov.style.width  = _cropDispW + 'px';
+    ov.style.height = _cropDispH + 'px';
+
+    // Autodetección del sello
+    const _det = _autoDetectStamp(sourceCanvas);
+    if (_det) {
+      const scX=_cropDispW/_cropNatW, scY=_cropDispH/_cropNatH;
+      _cropRect={x:Math.round(_det.x*scX),y:Math.round(_det.y*scY),
+                 w:Math.round(_det.w*scX),h:Math.round(_det.h*scY)};
+      document.getElementById('cropHint').textContent='Sello detectado automáticamente — ajusta si es necesario';
+    } else {
+      const pad=0.10;
+      _cropRect={x:Math.round(_cropDispW*pad),y:Math.round(_cropDispH*pad),
+                 w:Math.round(_cropDispW*(1-pad*2)),h:Math.round(_cropDispH*(1-pad*2))};
+    }
+
+    _initCropEvents();
+    _drawCrop();
+  });
 }
 
 function confirmCrop(doCrop) {
