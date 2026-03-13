@@ -1278,6 +1278,60 @@ function _initCropEvents() {
   window.addEventListener('touchend',  _onPointerUp);
 }
 
+
+// ── Auto-detección del sello ────────────────────────────────────────────
+// Funciona tanto con fondo oscuro (anverso/reverso) como claro (referencia)
+function _autoDetectStamp(canvas) {
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const data = ctx.getImageData(0, 0, W, H).data;
+
+  function px(x, y) {
+    const i = (y * W + x) * 4;
+    return [data[i], data[i+1], data[i+2]];
+  }
+  function luma(c) { return 0.299*c[0] + 0.587*c[1] + 0.114*c[2]; }
+  function colorDist(a, b) {
+    return Math.sqrt((a[0]-b[0])**2 + (a[1]-b[1])**2 + (a[2]-b[2])**2);
+  }
+
+  // Color de fondo = media de las 4 esquinas
+  const corners = [px(2,2), px(W-3,2), px(2,H-3), px(W-3,H-3)];
+  const bg = corners.reduce((acc,c) => [acc[0]+c[0]/4, acc[1]+c[1]/4, acc[2]+c[2]/4], [0,0,0]);
+  const bgLuma = luma(bg);
+
+  // Umbral adaptativo: más bajo para fondo muy oscuro o muy claro
+  const THRESH = bgLuma < 60 ? 22 : bgLuma > 200 ? 22 : 30;
+  const STEP = Math.max(2, Math.floor(Math.min(W, H) / 200));
+
+  let minX = W, maxX = 0, minY = H, maxY = 0;
+  let found = false;
+
+  for (let y = 0; y < H; y += STEP) {
+    for (let x = 0; x < W; x += STEP) {
+      if (colorDist(px(x, y), bg) > THRESH) {
+        if (x < minX) minX = x;
+        if (x > maxX) maxX = x;
+        if (y < minY) minY = y;
+        if (y > maxY) maxY = y;
+        found = true;
+      }
+    }
+  }
+
+  if (!found || (maxX - minX) < W * 0.1 || (maxY - minY) < H * 0.1) return null;
+
+  // Margen pequeño (1.5%)
+  const mx = Math.round(W * 0.015);
+  const my = Math.round(H * 0.015);
+  return {
+    x: Math.max(0, minX - mx),
+    y: Math.max(0, minY - my),
+    w: Math.min(W - Math.max(0, minX - mx), maxX - minX + mx * 2),
+    h: Math.min(H - Math.max(0, minY - my), maxY - minY + my * 2)
+  };
+}
+
 function showCropModal(sourceCanvas, callback) {
   _cropCallback = callback;
   _cropNatW = sourceCanvas.width;
@@ -1304,14 +1358,28 @@ function showCropModal(sourceCanvas, callback) {
   ov.style.width  = _cropDispW + 'px';
   ov.style.height = _cropDispH + 'px';
 
-  // Selección inicial = 80% centrada
-  const pad = 0.10;
-  _cropRect = {
-    x: Math.round(_cropDispW * pad),
-    y: Math.round(_cropDispH * pad),
-    w: Math.round(_cropDispW * (1 - pad*2)),
-    h: Math.round(_cropDispH * (1 - pad*2))
-  };
+  // Autodetección del sello
+  const _det = _autoDetectStamp(sourceCanvas);
+  if (_det) {
+    const scX = _cropDispW / _cropNatW;
+    const scY = _cropDispH / _cropNatH;
+    _cropRect = {
+      x: Math.round(_det.x * scX),
+      y: Math.round(_det.y * scY),
+      w: Math.round(_det.w * scX),
+      h: Math.round(_det.h * scY)
+    };
+    document.getElementById('cropHint').textContent =
+      'Sello detectado automáticamente — ajusta las esquinas si es necesario';
+  } else {
+    const pad = 0.10;
+    _cropRect = {
+      x: Math.round(_cropDispW * pad),
+      y: Math.round(_cropDispH * pad),
+      w: Math.round(_cropDispW * (1 - pad*2)),
+      h: Math.round(_cropDispH * (1 - pad*2))
+    };
+  }
 
   // Ocultar modal del sello mientras se recorta
   const stampModal = document.getElementById('modalOverlay');
