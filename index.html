@@ -856,8 +856,12 @@ async function saveToSheets(stamp) {
     // Solo borrar si son base64 (muy largas), no si son URLs de Cloudinary
     if (payload.delante && payload.delante.startsWith('data:')) payload.delante = null;
     if (payload.detras && payload.detras.startsWith('data:')) payload.detras = null;
-    const url = _cfg().surl + '?action=save&token=' + _cfg().tok + '&payload=' + encodeURIComponent(JSON.stringify(payload)) + '&sheet=' + encodeURIComponent(EPOCAS[currentEpoca].sheet);
-    const res = await fetch(url);
+    const url = _cfg().surl + '?action=save&sheet=' + encodeURIComponent(EPOCAS[currentEpoca].sheet);
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: _cfg().tok, payload })
+    });
     const json = await res.json();
     if (json.status === 'ok') {
       setSyncStatus('', 'Guardado en Google Sheets ✓');
@@ -874,8 +878,12 @@ async function saveToSheets(stamp) {
 
 async function deleteFromSheets(edifil) {
   try {
-    const url = _cfg().surl + '?action=delete&token=' + _cfg().tok + '&edifil=' + edifil + '&sheet=' + encodeURIComponent(EPOCAS[currentEpoca].sheet);
-    await fetch(url);
+    const url = _cfg().surl + '?action=delete&sheet=' + encodeURIComponent(EPOCAS[currentEpoca].sheet);
+    await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: _cfg().tok, edifil })
+    });
   } catch(e) {
     console.error('Error eliminando de Sheets:', e);
   }
