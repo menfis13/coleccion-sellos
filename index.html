@@ -1058,19 +1058,25 @@ function setView(v) {
   renderStamps();
 }
 
+let _searchTimer = null;
 function onSearchInput() {
   document.querySelectorAll('.search-highlight').forEach(el => el.classList.remove('search-highlight'));
   const search = document.getElementById('searchInput').value.trim();
   if (/^\d+$/.test(search)) {
-    // Numero exacto: mostrar TODOS los sellos y saltar al buscado
+    // Numero: renderizar todo sin filtrar (para ver toda la coleccion mientras escribe)
     window._searchOverride = true;
     renderStamps();
     window._searchOverride = false;
-    const edifil = parseInt(search);
-    if (stamps.find(s => s.edifil === edifil)) {
-      setTimeout(() => scrollAndHighlight(edifil), 80);
-    }
+    // Debounce 600ms antes de saltar al sello
+    clearTimeout(_searchTimer);
+    _searchTimer = setTimeout(() => {
+      const edifil = parseInt(document.getElementById('searchInput').value.trim());
+      if (stamps.find(s => s.edifil === edifil)) {
+        scrollAndHighlight(edifil);
+      }
+    }, 600);
   } else {
+    clearTimeout(_searchTimer);
     renderStamps();
   }
 }
