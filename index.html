@@ -368,13 +368,36 @@
   #btnCropSkip{ background:none; border:1px solid rgba(184,134,11,0.35); color:#7a6040; }
 
   @media (max-width: 600px) {
-    header { padding: 12px 16px; }
-    .header-inner { flex-direction: column; align-items: flex-start; gap: 10px; }
-    .header-title h1, #header-epoca-titulo { font-size: 1.1rem !important; }
-    .header-subtitle { font-size: 0.72rem; }
-    .header-stats { gap: 12px; }
-    .stat-value { font-size: 1.1rem; }
-    .header-inner > div:last-child { align-self: flex-end; }
+    /* Cabecera: dos filas compactas, sin amontonar */
+    body { padding-top: 80px; }
+    .header-inner {
+      padding: 10px 14px 8px;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+      justify-content: space-between;
+    }
+    /* Título centrado ocupa su propia línea */
+    .header-title {
+      position: static;
+      transform: none;
+      order: 1;
+      width: 100%;
+      text-align: center;
+      pointer-events: auto;
+    }
+    .header-title h1, #header-epoca-titulo { font-size: 1rem !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .header-subtitle { font-size: 0.65rem; }
+    /* Stats a la izquierda, botones a la derecha */
+    .header-stats { order: 2; gap: 8px; flex-shrink: 1; }
+    .stat-box { padding: 4px 8px; }
+    .stat-num { font-size: 1.1rem; }
+    .stat-label { font-size: 0.6rem; }
+    .header-inner > div:last-child { order: 3; flex-shrink: 0; }
+    /* Toolbar: buscador en fila completa */
+    .toolbar { padding: 8px 12px; gap: 8px; }
+    .search-wrap { min-width: 0; max-width: 100%; flex: 1 1 100%; order: -1; }
+    .main { padding: 12px 14px; }
   }
   @media (max-width: 600px) {
     #portada.open { justify-content: flex-start; padding-top: 0; }
@@ -914,7 +937,9 @@ function saveLocal() {
 
 // ==================== FILTERS ====================
 function getFiltered() {
-  const search = document.getElementById('searchInput').value.toLowerCase().trim();
+  const rawSearch = document.getElementById('searchInput').value.toLowerCase().trim();
+  // Si estamos en modo override (búsqueda numérica -> mostrar todo), ignorar el filtro de búsqueda
+  const search = window._searchOverride ? '' : rawSearch;
   const filterYear = document.getElementById('filterYear').value;
   const filterEstado = document.getElementById('filterEstado').value;
   const filterColor = document.getElementById('filterColor').value;
@@ -1034,30 +1059,25 @@ function setView(v) {
 }
 
 function onSearchInput() {
-  // Limpiar resaltados previos
   document.querySelectorAll('.search-highlight').forEach(el => el.classList.remove('search-highlight'));
-  renderStamps();
   const search = document.getElementById('searchInput').value.trim();
   if (/^\d+$/.test(search)) {
+    // Numero exacto: mostrar TODOS los sellos y saltar al buscado
+    window._searchOverride = true;
+    renderStamps();
+    window._searchOverride = false;
     const edifil = parseInt(search);
-    const found = stamps.find(s => s.edifil === edifil);
-    if (found) {
-      // Pequeño delay para que el DOM se pinte antes de hacer scroll
+    if (stamps.find(s => s.edifil === edifil)) {
       setTimeout(() => scrollAndHighlight(edifil), 80);
     }
+  } else {
+    renderStamps();
   }
 }
 
 // ==================== IR ARRIBA / RESALTAR ====================
 function irAlPrimerSello() {
-  // Scroll hasta el primer sello visible en la cuadrícula o lista
-  const firstCard = document.querySelector('#gridView .stamp-card, #listBody tr');
-  if (firstCard) {
-    const offset = firstCard.getBoundingClientRect().top + window.scrollY - 120;
-    window.scrollTo({ top: Math.max(0, offset), behavior: 'smooth' });
-  } else {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
+  window.scrollTo(0, 0);
 }
 
 function scrollAndHighlight(edifil) {
