@@ -578,16 +578,19 @@
 // config
 function _cfg() {
   const _d = atob;
-  return {
-    sid:  _d('MUtLVEthbXdlUTBIUTg1UDlnOGh5LUNHNGlyRnJKQ185N181cXJFRm1aNUU='),
-    surl: _d('aHR0cHM6Ly9zY3JpcHQuZ29vZ2xlLmNvbS9tYWNyb3Mvcy9BS2Z5Y2J6STJJc1pLSU05eVBTSzZVdDlKSjBFTVpWQlhPUV9DWFJoSFlubVRBc1FhQ1MtaGNOM3lUMTA4RGYzeUVWWlNFN2kvZXhlYw=='),
-    mail: _d('bWVuZmlzMTNAZ21haWwuY29t'),
-    cid:  _d('NzU5NTY4OTc1NTc4LXNyaWcwdWx0YTFxdWllcDZoM2lsODlxNWUyZGhqdnU4LmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29t')
-  };
+  const _r = {};
+  [
+    ['sid',    'MUtLVEthbXdlUTBIUTg1UDlnOGh5LUNHNGlyRnJKQ185N181cXJFRm1aNUU='],
+    ['surl',   'aHR0cHM6Ly9zY3JpcHQuZ29vZ2xlLmNvbS9tYWNyb3Mvcy9BS2Z5Y2J6STJJc1pLSU05eVBTSzZVdDlKSjBFTVpWQlhPUV9DWFJoSFlubVRBc1FhQ1MtaGNOM3lUMTA4RGYzeUVWWlNFN2kvZXhlYw=='],
+    ['mail',   'bWVuZmlzMTNAZ21haWwuY29t'],
+    ['cid',    'NzU5NTY4OTc1NTc4LXNyaWcwdWx0YTFxdWllcDZoM2lsODlxNWUyZGhqdnU4LmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29t'],
+    ['tok',    'bWVuZmlzLXNlbGxvcy0yMDI0LXhLOXA='],
+    ['cloud',  'ZG80bHRwZmJv'],
+    ['preset', 'c2VsbG9zX3VwbG9hZA=='],
+  ].forEach(([k,v]) => _r[k] = _d(v));
+  return _r;
 }
 let SHEET_URL = `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=Hoja 1`;
-const CLOUDINARY_CLOUD = 'do4ltpfbo';
-const CLOUDINARY_PRESET = 'sellos_upload';
 
 // ==================== AUTENTICACIÓN GOOGLE ====================
 const AUTHORIZED_EMAIL = _cfg().mail;
@@ -853,7 +856,7 @@ async function saveToSheets(stamp) {
     // Solo borrar si son base64 (muy largas), no si son URLs de Cloudinary
     if (payload.delante && payload.delante.startsWith('data:')) payload.delante = null;
     if (payload.detras && payload.detras.startsWith('data:')) payload.detras = null;
-    const url = _cfg().surl + '?action=save&payload=' + encodeURIComponent(JSON.stringify(payload)) + '&sheet=' + encodeURIComponent(EPOCAS[currentEpoca].sheet);
+    const url = _cfg().surl + '?action=save&token=' + _cfg().tok + '&payload=' + encodeURIComponent(JSON.stringify(payload)) + '&sheet=' + encodeURIComponent(EPOCAS[currentEpoca].sheet);
     const res = await fetch(url);
     const json = await res.json();
     if (json.status === 'ok') {
@@ -871,7 +874,7 @@ async function saveToSheets(stamp) {
 
 async function deleteFromSheets(edifil) {
   try {
-    const url = _cfg().surl + '?action=delete&edifil=' + edifil + '&sheet=' + encodeURIComponent(EPOCAS[currentEpoca].sheet);
+    const url = _cfg().surl + '?action=delete&token=' + _cfg().tok + '&edifil=' + edifil + '&sheet=' + encodeURIComponent(EPOCAS[currentEpoca].sheet);
     await fetch(url);
   } catch(e) {
     console.error('Error eliminando de Sheets:', e);
@@ -1367,10 +1370,10 @@ async function handlePhoto(event) {
         const formData = new FormData();
         const uniqueName = 'sello_' + currentStampId + '_' + currentPhotoTarget + '_' + Date.now() + '.jpg';
         formData.append('file', blob, uniqueName);
-        formData.append('upload_preset', CLOUDINARY_PRESET);
+        formData.append('upload_preset', _cfg().preset);
         formData.append('folder', 'sellos/' + currentEpoca + '/mios');
 
-        const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, {
+        const res = await fetch(`https://api.cloudinary.com/v1_1/${_cfg().cloud}/image/upload`, {
           method: 'POST',
           body: formData
         });
