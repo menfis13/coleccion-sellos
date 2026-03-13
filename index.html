@@ -78,6 +78,24 @@
   /* ══════════════════════════════════
      BOTÓN MODO OSCURO (inline, tras Añadir sello)
   ══════════════════════════════════ */
+  /* ══════════════════════════════════
+     RESALTADO BÚSQUEDA
+  ══════════════════════════════════ */
+  @keyframes highlightPulse {
+    0%   { box-shadow: 0 0 0 0 rgba(184,134,11,0.7), 0 8px 24px var(--shadow); }
+    40%  { box-shadow: 0 0 0 10px rgba(184,134,11,0.15), 0 8px 24px var(--shadow); }
+    100% { box-shadow: 0 0 0 0 rgba(184,134,11,0), 0 8px 24px var(--shadow); }
+  }
+  .stamp-card.search-highlight {
+    outline: 2px solid var(--gold);
+    animation: highlightPulse 1.4s ease 2;
+  }
+  .list-table tr.search-highlight td {
+    background: rgba(184,134,11,0.12) !important;
+    outline: 2px solid var(--gold);
+    outline-offset: -2px;
+  }
+
   #darkModeBtn {
     position: relative;
     width: 34px;
@@ -440,6 +458,7 @@
     </div>
     <div style="display:flex;align-items:center;gap:10px">
       <button onclick="showPortada()" style="background:transparent;border:1px solid rgba(184,134,11,0.5);color:var(--gold-light);padding:8px 16px;font-family:'Crimson Pro',serif;font-size:0.9rem;font-weight:600;cursor:pointer;border-radius:2px;transition:all 0.2s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(184,134,11,0.5)'">◀ Épocas</button>
+      <button onclick="irAlPrimerSello()" title="Ir al primer sello" style="background:transparent;border:1px solid rgba(184,134,11,0.35);color:#a89070;padding:8px 12px;font-family:'Crimson Pro',serif;font-size:0.9rem;font-weight:600;cursor:pointer;border-radius:2px;transition:all 0.2s;flex-shrink:0" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold-light)'" onmouseout="this.style.borderColor='rgba(184,134,11,0.35)';this.style.color='#a89070'">↑ Arriba</button>
       <div id="authArea"></div>
       <div style="width:1px;height:28px;background:rgba(184,134,11,0.25);margin:0 4px;flex-shrink:0"></div>
       <button id="darkModeBtn" onclick="toggleDarkMode()" title="Cambiar modo claro/oscuro">
@@ -462,7 +481,7 @@
   <div class="toolbar">
     <div class="search-wrap">
       <span class="search-icon">🔍</span>
-      <input type="text" id="searchInput" placeholder="Buscar por Edifil, color, año..." oninput="renderStamps()">
+      <input type="text" id="searchInput" placeholder="Buscar por Edifil, color, año..." oninput="onSearchInput()">
     </div>
     <select class="filter-select" id="filterYear" onchange="renderStamps()"><option value="">Todos los años</option></select>
     <select class="filter-select" id="filterEstado" onchange="renderStamps()">
@@ -1012,6 +1031,60 @@ function sortBy(field) {
 function setView(v) {
   currentView = v;
   renderStamps();
+}
+
+function onSearchInput() {
+  // Limpiar resaltados previos
+  document.querySelectorAll('.search-highlight').forEach(el => el.classList.remove('search-highlight'));
+  renderStamps();
+  const search = document.getElementById('searchInput').value.trim();
+  if (/^\d+$/.test(search)) {
+    const edifil = parseInt(search);
+    const found = stamps.find(s => s.edifil === edifil);
+    if (found) {
+      // Pequeño delay para que el DOM se pinte antes de hacer scroll
+      setTimeout(() => scrollAndHighlight(edifil), 80);
+    }
+  }
+}
+
+// ==================== IR ARRIBA / RESALTAR ====================
+function irAlPrimerSello() {
+  // Scroll hasta el primer sello visible en la cuadrícula o lista
+  const firstCard = document.querySelector('#gridView .stamp-card, #listBody tr');
+  if (firstCard) {
+    const offset = firstCard.getBoundingClientRect().top + window.scrollY - 120;
+    window.scrollTo({ top: Math.max(0, offset), behavior: 'smooth' });
+  } else {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function scrollAndHighlight(edifil) {
+  // Busca la tarjeta (grid) o fila (lista) con ese edifil y hace scroll + resalta
+  // Primero asegurar que renderStamps ha pintado con ese filtro
+  let target = null;
+  if (currentView === 'grid') {
+    const cards = document.querySelectorAll('#gridView .stamp-card');
+    cards.forEach(card => {
+      card.classList.remove('search-highlight');
+      const edifilEl = card.querySelector('.stamp-edifil');
+      if (edifilEl && edifilEl.textContent.includes(String(edifil))) target = card;
+    });
+    if (target) target.classList.add('search-highlight');
+  } else {
+    const rows = document.querySelectorAll('#listBody tr');
+    rows.forEach(row => {
+      row.classList.remove('search-highlight');
+      const firstTd = row.querySelector('td strong');
+      if (firstTd && firstTd.textContent === String(edifil)) target = row;
+    });
+    if (target) target.classList.add('search-highlight');
+  }
+  if (target) {
+    const top = target.getBoundingClientRect().top + window.scrollY - 140;
+    window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+  }
 }
 
 // ==================== MODAL ====================
