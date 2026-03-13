@@ -1032,6 +1032,7 @@ function openNew() {
   fillModal({edifil:'',año:'',descripcion:'',color:'',valor_facial:'',dentado:'',estado:'',delante:null,detras:null,referencia:null,notas:''});
   document.getElementById('btnDelete').style.display = 'none';
   document.getElementById('modalOverlay').classList.add('open');
+  history.pushState({ view: 'modal' }, '', '');
 }
 function fillModal(s) {
   document.getElementById('mEdifil').textContent = s.edifil ? `Edifil nº ${s.edifil}` : 'Nuevo sello';
@@ -1088,7 +1089,10 @@ function saveStamp() {
   }
   saveToSheets(data);
   renderStamps();
+  // Cerrar modal y limpiar historial si hay entrada pendiente
+  const _modalState = history.state && (history.state.view === 'sello' || history.state.view === 'modal');
   document.getElementById('modalOverlay').classList.remove('open');
+  if (_modalState) history.back();
 }
 function deleteStamp() {
   if (!isEditor()) { showToast('🔒 Sin permisos de edición'); return; }
@@ -1099,7 +1103,9 @@ function deleteStamp() {
   saveLocal();
   deleteFromSheets(edifil);
   renderStamps();
+  const _modalStateDel = history.state && (history.state.view === 'sello' || history.state.view === 'modal');
   document.getElementById('modalOverlay').classList.remove('open');
+  if (_modalStateDel) history.back();
   showToast('Sello eliminado');
 }
 
@@ -1637,47 +1643,23 @@ function entrarColeccion() {
 
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
 
-// Historia del navegador — botón atrás del móvil
+// Historia del navegador — botón atrás móvil (único listener)
 window.addEventListener('popstate', function(e) {
   const state = e.state || {};
-  // Cerrar lightbox si está abierto
+
+  // 1. Cerrar lightbox si está abierto
   if (document.getElementById('lightbox').classList.contains('open')) {
     closeLightbox();
     return;
   }
-  // Cerrar modal sello si está abierto
+
+  // 2. Cerrar modal si está abierto
   if (document.getElementById('modalOverlay').classList.contains('open')) {
     document.getElementById('modalOverlay').classList.remove('open');
     return;
   }
-  // Si el estado destino es 'epoca' o 'sello', quedarse en la época (no ir a portada)
-  if (state.view === 'epoca' || state.view === 'sello') {
-    document.getElementById('portada').classList.remove('open');
-    document.body.style.overflow = '';
-    return;
-  }
-  // En cualquier otro caso, mostrar portada
-  if (!document.getElementById('portada').classList.contains('open')) {
-    showPortada();
-  }
-});
 
-history.replaceState({ view: 'portada' }, '', '');
-
-// Historia del navegador — botón atrás del móvil
-window.addEventListener('popstate', function(e) {
-  const state = e.state;
-  // Si hay un modal de sello abierto, cerrarlo
-  if (document.getElementById('modalOverlay').classList.contains('open')) {
-    document.getElementById('modalOverlay').classList.remove('open');
-    return;
-  }
-  // Si hay un lightbox abierto, cerrarlo
-  if (document.getElementById('lightbox').classList.contains('open')) {
-    closeLightbox();
-    return;
-  }
-  // Si estamos en una época, volver a portada
+  // 3. Si estamos en una época, volver a portada
   if (!document.getElementById('portada').classList.contains('open')) {
     showPortada();
     return;
