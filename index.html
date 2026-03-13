@@ -1279,57 +1279,30 @@ function _initCropEvents() {
 }
 
 
-// ── Auto-detección del sello ────────────────────────────────────────────
-// Funciona tanto con fondo oscuro (anverso/reverso) como claro (referencia)
+// ── Auto-detección del sello ────────────────────────────────
 function _autoDetectStamp(canvas) {
   const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
   const data = ctx.getImageData(0, 0, W, H).data;
-
-  function px(x, y) {
-    const i = (y * W + x) * 4;
-    return [data[i], data[i+1], data[i+2]];
-  }
-  function luma(c) { return 0.299*c[0] + 0.587*c[1] + 0.114*c[2]; }
-  function colorDist(a, b) {
-    return Math.sqrt((a[0]-b[0])**2 + (a[1]-b[1])**2 + (a[2]-b[2])**2);
-  }
-
-  // Color de fondo = media de las 4 esquinas
-  const corners = [px(2,2), px(W-3,2), px(2,H-3), px(W-3,H-3)];
-  const bg = corners.reduce((acc,c) => [acc[0]+c[0]/4, acc[1]+c[1]/4, acc[2]+c[2]/4], [0,0,0]);
-  const bgLuma = luma(bg);
-
-  // Umbral adaptativo: más bajo para fondo muy oscuro o muy claro
-  const THRESH = bgLuma < 60 ? 22 : bgLuma > 200 ? 22 : 30;
-  const STEP = Math.max(2, Math.floor(Math.min(W, H) / 200));
-
-  let minX = W, maxX = 0, minY = H, maxY = 0;
-  let found = false;
-
-  for (let y = 0; y < H; y += STEP) {
-    for (let x = 0; x < W; x += STEP) {
-      if (colorDist(px(x, y), bg) > THRESH) {
-        if (x < minX) minX = x;
-        if (x > maxX) maxX = x;
-        if (y < minY) minY = y;
-        if (y > maxY) maxY = y;
-        found = true;
-      }
+  function px(x, y) { const i=(y*W+x)*4; return [data[i],data[i+1],data[i+2]]; }
+  function luma(c) { return 0.299*c[0]+0.587*c[1]+0.114*c[2]; }
+  function dist(a,b) { return Math.sqrt((a[0]-b[0])**2+(a[1]-b[1])**2+(a[2]-b[2])**2); }
+  const corners=[px(2,2),px(W-3,2),px(2,H-3),px(W-3,H-3)];
+  const bg=corners.reduce((a,c)=>[a[0]+c[0]/4,a[1]+c[1]/4,a[2]+c[2]/4],[0,0,0]);
+  const THRESH=luma(bg)<60?20:28;
+  const STEP=Math.max(1,Math.floor(Math.min(W,H)/250));
+  let minX=W,maxX=0,minY=H,maxY=0,found=false;
+  for(let y=0;y<H;y+=STEP) for(let x=0;x<W;x+=STEP) {
+    if(dist(px(x,y),bg)>THRESH){
+      if(x<minX)minX=x; if(x>maxX)maxX=x;
+      if(y<minY)minY=y; if(y>maxY)maxY=y;
+      found=true;
     }
   }
-
-  if (!found || (maxX - minX) < W * 0.1 || (maxY - minY) < H * 0.1) return null;
-
-  // Margen pequeño (1.5%)
-  const mx = Math.round(W * 0.015);
-  const my = Math.round(H * 0.015);
-  return {
-    x: Math.max(0, minX - mx),
-    y: Math.max(0, minY - my),
-    w: Math.min(W - Math.max(0, minX - mx), maxX - minX + mx * 2),
-    h: Math.min(H - Math.max(0, minY - my), maxY - minY + my * 2)
-  };
+  if(!found||(maxX-minX)<W*0.08||(maxY-minY)<H*0.08) return null;
+  const mx=Math.round(W*0.018),my=Math.round(H*0.018);
+  return{x:Math.max(0,minX-mx),y:Math.max(0,minY-my),
+         w:Math.min(W,maxX-minX+mx*2),h:Math.min(H,maxY-minY+my*2)};
 }
 
 function showCropModal(sourceCanvas, callback) {
@@ -1361,24 +1334,14 @@ function showCropModal(sourceCanvas, callback) {
   // Autodetección del sello
   const _det = _autoDetectStamp(sourceCanvas);
   if (_det) {
-    const scX = _cropDispW / _cropNatW;
-    const scY = _cropDispH / _cropNatH;
-    _cropRect = {
-      x: Math.round(_det.x * scX),
-      y: Math.round(_det.y * scY),
-      w: Math.round(_det.w * scX),
-      h: Math.round(_det.h * scY)
-    };
-    document.getElementById('cropHint').textContent =
-      'Sello detectado automáticamente — ajusta las esquinas si es necesario';
+    const scX=_cropDispW/_cropNatW, scY=_cropDispH/_cropNatH;
+    _cropRect={x:Math.round(_det.x*scX),y:Math.round(_det.y*scY),
+               w:Math.round(_det.w*scX),h:Math.round(_det.h*scY)};
+    document.getElementById('cropHint').textContent='Sello detectado automáticamente — ajusta si es necesario';
   } else {
-    const pad = 0.10;
-    _cropRect = {
-      x: Math.round(_cropDispW * pad),
-      y: Math.round(_cropDispH * pad),
-      w: Math.round(_cropDispW * (1 - pad*2)),
-      h: Math.round(_cropDispH * (1 - pad*2))
-    };
+    const pad=0.10;
+    _cropRect={x:Math.round(_cropDispW*pad),y:Math.round(_cropDispH*pad),
+               w:Math.round(_cropDispW*(1-pad*2)),h:Math.round(_cropDispH*(1-pad*2))};
   }
 
   // Ocultar modal del sello mientras se recorta
@@ -1684,6 +1647,7 @@ function showPortada() {
   const portada = document.getElementById('portada');
   portada.classList.add('open');
   document.body.style.overflow = 'hidden';
+  window.scrollTo(0, 0);
   history.pushState({ view: 'portada' }, '', '');
 
   const container = document.getElementById('portadaEpocas');
@@ -1705,6 +1669,8 @@ function entrarEpoca(epocaId) {
   currentEpoca = epocaId;
   document.getElementById('portada').classList.remove('open');
   document.body.style.overflow = '';
+  // Asegurar que portada queda en el historial antes de la época
+  history.replaceState({ view: 'portada' }, '', '');
   history.pushState({ view: 'epoca', epocaId }, '', '');
   switchEpoca(epocaId);
 }
@@ -1719,20 +1685,30 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbo
 
 // Historia del navegador — botón atrás móvil (único listener)
 window.addEventListener('popstate', function(e) {
+  const state = e.state || {};
+
   // 1. Cerrar lightbox si está abierto
   if (document.getElementById('lightbox').classList.contains('open')) {
     closeLightbox();
-    history.pushState({ view: 'modal_open' }, '', '');
+    history.pushState({ view: state.view || 'epoca' }, '', '');
     return;
   }
 
-  // 2. Cerrar modal si está abierto (y reponer entrada para que el siguiente atrás vaya a portada)
+  // 2. Cerrar modal si está abierto
   if (document.getElementById('modalOverlay').classList.contains('open')) {
     document.getElementById('modalOverlay').classList.remove('open');
     return;
   }
 
-  // 3. Si estamos en una época, volver a portada
+  // 3. Volver a portada si venimos de una época
+  if (state.view === 'portada' || state.view === undefined) {
+    if (!document.getElementById('portada').classList.contains('open')) {
+      showPortada();
+    }
+    return;
+  }
+
+  // 4. Si el estado es época pero la portada está oculta, volver a portada
   if (!document.getElementById('portada').classList.contains('open')) {
     showPortada();
     return;
