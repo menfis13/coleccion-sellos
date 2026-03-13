@@ -96,6 +96,11 @@
     outline-offset: -2px;
   }
 
+  #edifilJump::-webkit-outer-spin-button,
+  #edifilJump::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  #edifilJump { -moz-appearance: textfield; }
+  #edifilJump::placeholder { color: #6a5040; }
+
   #darkModeBtn {
     position: relative;
     width: 34px;
@@ -479,9 +484,17 @@
       <div class="stat-box"><span class="stat-num" id="stat-tengo">—</span><span class="stat-label">En colección</span></div>
       <div class="stat-box"><span class="stat-num" id="stat-fotos">—</span><span class="stat-label">Con foto</span></div>
     </div>
-    <div style="display:flex;align-items:center;gap:10px">
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
       <button onclick="showPortada()" style="background:transparent;border:1px solid rgba(184,134,11,0.5);color:var(--gold-light);padding:8px 16px;font-family:'Crimson Pro',serif;font-size:0.9rem;font-weight:600;cursor:pointer;border-radius:2px;transition:all 0.2s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(184,134,11,0.5)'">◀ Épocas</button>
       <button onclick="irAlPrimerSello()" title="Ir al primer sello" style="background:transparent;border:1px solid rgba(184,134,11,0.35);color:#a89070;padding:8px 12px;font-family:'Crimson Pro',serif;font-size:0.9rem;font-weight:600;cursor:pointer;border-radius:2px;transition:all 0.2s;flex-shrink:0" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold-light)'" onmouseout="this.style.borderColor='rgba(184,134,11,0.35)';this.style.color='#a89070'">↑ Arriba</button>
+      <div style="position:relative;flex-shrink:0">
+        <span style="position:absolute;left:9px;top:50%;transform:translateY(-50%);color:#8a7050;font-size:0.85rem;pointer-events:none">#</span>
+        <input type="number" id="edifilJump" min="1" placeholder="Edifil…"
+          style="width:100px;padding:7px 10px 7px 24px;background:rgba(255,255,255,0.07);border:1px solid rgba(184,134,11,0.35);color:#d4c8a8;font-family:'Crimson Pro',serif;font-size:0.9rem;border-radius:2px;outline:none;-moz-appearance:textfield"
+          oninput="this.style.borderColor=this.value?'var(--gold)':'rgba(184,134,11,0.35)'"
+          onkeydown="if(event.key==='Enter'){saltarEdifil();}"
+          onblur="saltarEdifil()">
+      </div>
       <div id="authArea"></div>
       <div style="width:1px;height:28px;background:rgba(184,134,11,0.25);margin:0 4px;flex-shrink:0"></div>
       <button id="darkModeBtn" onclick="toggleDarkMode()" title="Cambiar modo claro/oscuro">
@@ -504,7 +517,7 @@
   <div class="toolbar">
     <div class="search-wrap">
       <span class="search-icon">🔍</span>
-      <input type="text" id="searchInput" placeholder="Buscar por Edifil, color, año..." oninput="onSearchInput()">
+      <input type="text" id="searchInput" placeholder="Buscar descripción, color, año…" oninput="onSearchInput()">
     </div>
     <select class="filter-select" id="filterYear" onchange="renderStamps()"><option value="">Todos los años</option></select>
     <select class="filter-select" id="filterEstado" onchange="renderStamps()">
@@ -1058,26 +1071,22 @@ function setView(v) {
   renderStamps();
 }
 
-let _searchTimer = null;
 function onSearchInput() {
   document.querySelectorAll('.search-highlight').forEach(el => el.classList.remove('search-highlight'));
-  const search = document.getElementById('searchInput').value.trim();
-  if (/^\d+$/.test(search)) {
-    // Numero: renderizar todo sin filtrar (para ver toda la coleccion mientras escribe)
-    window._searchOverride = true;
-    renderStamps();
-    window._searchOverride = false;
-    // Debounce 600ms antes de saltar al sello
-    clearTimeout(_searchTimer);
-    _searchTimer = setTimeout(() => {
-      const edifil = parseInt(document.getElementById('searchInput').value.trim());
-      if (stamps.find(s => s.edifil === edifil)) {
-        scrollAndHighlight(edifil);
-      }
-    }, 600);
-  } else {
-    clearTimeout(_searchTimer);
-    renderStamps();
+  renderStamps();
+}
+
+function saltarEdifil() {
+  const val = document.getElementById('edifilJump').value.trim();
+  if (!val) return;
+  const edifil = parseInt(val);
+  document.querySelectorAll('.search-highlight').forEach(el => el.classList.remove('search-highlight'));
+  // Mostrar todos los sellos (sin filtro)
+  window._searchOverride = true;
+  renderStamps();
+  window._searchOverride = false;
+  if (stamps.find(s => s.edifil === edifil)) {
+    setTimeout(() => scrollAndHighlight(edifil), 80);
   }
 }
 
