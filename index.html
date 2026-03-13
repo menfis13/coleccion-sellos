@@ -1081,13 +1081,45 @@ function saltarEdifil() {
   if (!val) return;
   const edifil = parseInt(val);
   document.querySelectorAll('.search-highlight').forEach(el => el.classList.remove('search-highlight'));
-  // Mostrar todos los sellos (sin filtro)
-  window._searchOverride = true;
-  renderStamps();
-  window._searchOverride = false;
+
+  // Buscar en época actual primero
   if (stamps.find(s => s.edifil === edifil)) {
+    window._searchOverride = true;
+    renderStamps();
+    window._searchOverride = false;
     setTimeout(() => scrollAndHighlight(edifil), 80);
+    return;
   }
+
+  // Buscar en otras épocas
+  let epocaDestino = null;
+  for (const [epId, ep] of Object.entries(EPOCAS)) {
+    if (epId !== currentEpoca && ep.data.find(s => s.edifil === edifil)) {
+      epocaDestino = epId;
+      break;
+    }
+  }
+  if (!epocaDestino) {
+    showToast('Edifil nº ' + edifil + ' no encontrado en ninguna época');
+    return;
+  }
+
+  // Cambiar de época y saltar
+  showToast('Saltando a ' + EPOCAS[epocaDestino].titulo + '…');
+  switchEpoca(epocaDestino);
+  // Esperar a que carguen los datos de Sheets antes de saltar
+  const esperarYSaltar = (intentos) => {
+    const found = stamps.find(s => s.edifil === edifil);
+    if (found) {
+      window._searchOverride = true;
+      renderStamps();
+      window._searchOverride = false;
+      setTimeout(() => scrollAndHighlight(edifil), 80);
+    } else if (intentos > 0) {
+      setTimeout(() => esperarYSaltar(intentos - 1), 300);
+    }
+  };
+  setTimeout(() => esperarYSaltar(10), 400);
 }
 
 // ==================== IR ARRIBA / RESALTAR ====================
