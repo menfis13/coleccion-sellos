@@ -1062,6 +1062,10 @@ function closeModal(e) {
   if (e && e.target !== document.getElementById('modalOverlay')) return;
   document.getElementById('modalOverlay').classList.remove('open');
   currentStampId = null;
+  // Limpiar entrada modal del historial para que atrás vaya a época
+  if (history.state && (history.state.view === 'sello' || history.state.view === 'modal')) {
+    history.replaceState({ view: 'epoca', epocaId: currentEpoca }, '', '');
+  }
 }
 function saveStamp() {
   if (!isEditor()) { showToast('🔒 Sin permisos de edición'); return; }
@@ -1089,10 +1093,11 @@ function saveStamp() {
   }
   saveToSheets(data);
   renderStamps();
-  // Cerrar modal y limpiar historial si hay entrada pendiente
-  const _modalState = history.state && (history.state.view === 'sello' || history.state.view === 'modal');
   document.getElementById('modalOverlay').classList.remove('open');
-  if (_modalState) history.back();
+  // Reemplazar entrada modal por época, para que atrás vaya a portada (no quede huérfana)
+  if (history.state && (history.state.view === 'sello' || history.state.view === 'modal')) {
+    history.replaceState({ view: 'epoca', epocaId: currentEpoca }, '', '');
+  }
 }
 function deleteStamp() {
   if (!isEditor()) { showToast('🔒 Sin permisos de edición'); return; }
@@ -1103,9 +1108,10 @@ function deleteStamp() {
   saveLocal();
   deleteFromSheets(edifil);
   renderStamps();
-  const _modalStateDel = history.state && (history.state.view === 'sello' || history.state.view === 'modal');
   document.getElementById('modalOverlay').classList.remove('open');
-  if (_modalStateDel) history.back();
+  if (history.state && (history.state.view === 'sello' || history.state.view === 'modal')) {
+    history.replaceState({ view: 'epoca', epocaId: currentEpoca }, '', '');
+  }
   showToast('Sello eliminado');
 }
 
@@ -1645,15 +1651,14 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbo
 
 // Historia del navegador — botón atrás móvil (único listener)
 window.addEventListener('popstate', function(e) {
-  const state = e.state || {};
-
   // 1. Cerrar lightbox si está abierto
   if (document.getElementById('lightbox').classList.contains('open')) {
     closeLightbox();
+    history.pushState({ view: 'modal_open' }, '', '');
     return;
   }
 
-  // 2. Cerrar modal si está abierto
+  // 2. Cerrar modal si está abierto (y reponer entrada para que el siguiente atrás vaya a portada)
   if (document.getElementById('modalOverlay').classList.contains('open')) {
     document.getElementById('modalOverlay').classList.remove('open');
     return;
