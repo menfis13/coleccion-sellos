@@ -161,9 +161,12 @@
   .header-title h1 span { color: var(--gold-light); font-style: italic; }
   .header-subtitle { font-size: 0.85rem; color: #a89070; letter-spacing: 0.15em; text-transform: uppercase; margin-top: 4px; }
   .header-stats { display: flex; gap: 24px; align-items: center; }
-  .stat-box { text-align: center; border: 1px solid rgba(184,134,11,0.3); padding: 8px 16px; border-radius: 2px; }
+  .stat-box { text-align: center; border: 1px solid rgba(184,134,11,0.3); padding: 8px 16px; border-radius: 2px; cursor: pointer; transition: background 0.2s, border-color 0.2s, transform 0.15s; user-select: none; }
+  .stat-box:hover { background: rgba(184,134,11,0.1); border-color: var(--gold); transform: translateY(-1px); }
+  .stat-box.active-filter { background: rgba(184,134,11,0.18); border-color: var(--gold-light); box-shadow: 0 0 0 1px var(--gold-light); }
+  .stat-box.active-filter .stat-label { color: var(--gold-light); }
   .stat-num { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--gold-light); display: block; }
-  .stat-label { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: #a89070; }
+  .stat-label { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: #a89070; transition: color 0.2s; }
   .btn-add-header { background: var(--gold); color: var(--ink); border: none; padding: 10px 20px; font-family: 'Crimson Pro', serif; font-size: 1rem; font-weight: 600; cursor: pointer; border-radius: 2px; transition: background 0.2s; }
   .btn-add-header:hover { background: var(--gold-light); }
 
@@ -480,9 +483,9 @@
       <div class="header-subtitle" id="header-epoca-sub" style="display:none"></div>
     </div>
     <div class="header-stats">
-      <div class="stat-box"><span class="stat-num" id="stat-total">—</span><span class="stat-label">Total</span></div>
-      <div class="stat-box"><span class="stat-num" id="stat-tengo">—</span><span class="stat-label">En colección</span></div>
-      <div class="stat-box"><span class="stat-num" id="stat-fotos">—</span><span class="stat-label">Con foto</span></div>
+      <div class="stat-box" id="statbox-total" onclick="toggleStatFilter('total')" title="Ver todos los sellos"><span class="stat-num" id="stat-total">—</span><span class="stat-label">Total</span></div>
+      <div class="stat-box" id="statbox-tengo" onclick="toggleStatFilter('tengo')" title="Ver sellos en mi colección"><span class="stat-num" id="stat-tengo">—</span><span class="stat-label">En colección</span></div>
+      <div class="stat-box" id="statbox-fotos" onclick="toggleStatFilter('fotos')" title="Ver sellos con foto"><span class="stat-num" id="stat-fotos">—</span><span class="stat-label">Con foto</span></div>
     </div>
     <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
       <button onclick="showPortada()" style="background:transparent;border:1px solid rgba(184,134,11,0.5);color:var(--gold-light);padding:8px 16px;font-family:'Crimson Pro',serif;font-size:0.9rem;font-weight:600;cursor:pointer;border-radius:2px;transition:all 0.2s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(184,134,11,0.5)'">◀ Épocas</button>
@@ -948,6 +951,26 @@ function saveLocal() {
   } catch(e) {}
 }
 
+// ==================== STAT FILTER ====================
+let activeStatFilter = null; // 'tengo' | 'fotos' | null
+
+function toggleStatFilter(tipo) {
+  if (tipo === 'total') {
+    // Total siempre limpia el filtro
+    activeStatFilter = null;
+  } else {
+    activeStatFilter = (activeStatFilter === tipo) ? null : tipo;
+  }
+  // Actualizar clases visuales
+  document.getElementById('statbox-total').classList.toggle('active-filter', activeStatFilter === null && tipo === 'total' && false);
+  document.getElementById('statbox-tengo').classList.toggle('active-filter', activeStatFilter === 'tengo');
+  document.getElementById('statbox-fotos').classList.toggle('active-filter', activeStatFilter === 'fotos');
+  renderStamps();
+  // Scroll a la zona de resultados
+  const main = document.querySelector('.main');
+  if (main) main.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
 // ==================== FILTERS ====================
 function getFiltered() {
   const rawSearch = document.getElementById('searchInput').value.toLowerCase().trim();
@@ -957,6 +980,9 @@ function getFiltered() {
   const filterEstado = document.getElementById('filterEstado').value;
   const filterColor = document.getElementById('filterColor').value;
   return stamps.filter(s => {
+    // Filtro por stat-box activo
+    if (activeStatFilter === 'tengo' && !s.estado) return false;
+    if (activeStatFilter === 'fotos' && !s.delante && !s.detras) return false;
     if (search) {
       // Si es solo número, buscar Edifil exacto
       if (/^\d+$/.test(search)) {
@@ -1008,7 +1034,10 @@ function renderStamps() {
   document.getElementById('stat-total').textContent = stamps.length;
   document.getElementById('stat-tengo').textContent = withEstado;
   document.getElementById('stat-fotos').textContent = withPhoto;
-  document.getElementById('resultsInfo').textContent = `Mostrando ${filtered.length} de ${stamps.length} sellos`;
+  let infoExtra = '';
+  if (activeStatFilter === 'tengo') infoExtra = ' · <strong style="color:var(--gold)">Filtro: En colección</strong> <span style="cursor:pointer;color:var(--sepia)" onclick="toggleStatFilter(\'tengo\')" title="Quitar filtro">✕</span>';
+  if (activeStatFilter === 'fotos') infoExtra = ' · <strong style="color:var(--gold)">Filtro: Con foto</strong> <span style="cursor:pointer;color:var(--sepia)" onclick="toggleStatFilter(\'fotos\')" title="Quitar filtro">✕</span>';
+  document.getElementById('resultsInfo').innerHTML = `Mostrando ${filtered.length} de ${stamps.length} sellos${infoExtra}`;
   if (currentEpoca) epocasContadores[currentEpoca] = withEstado;
 
   // Siempre sincronizar estado visual de botones y contenedores con currentView
@@ -1868,6 +1897,10 @@ function switchEpoca(epocaId) {
   currentEpoca = epocaId;
   SHEET_URL = `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=${EPOCAS[epocaId].sheet}`;
   const ep = EPOCAS[epocaId];
+  // Resetear filtro de stat al cambiar de época
+  activeStatFilter = null;
+  document.getElementById('statbox-tengo').classList.remove('active-filter');
+  document.getElementById('statbox-fotos').classList.remove('active-filter');
   // Actualizar header
   const tituloEl = document.getElementById('header-epoca-titulo');
   tituloEl.innerHTML = '<span style="color:#e0b84a;font-style:italic">' + ep.titulo + '</span>';
