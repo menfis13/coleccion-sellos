@@ -758,7 +758,7 @@ const EPOCAS = {
   },
   'duque': {
     id: 'duque',
-    titulo: '(1870-1872) Regencia Duque De La Torre',
+    titulo: '(1870-1872) Regencia. Duque Torre',
     subtitulo: 'Efigie alegórica de España',
     sello_ref: 'https://res.cloudinary.com/do4ltpfbo/image/upload/portada_duque.jpg',
     sheet: 'Hoja 2',
@@ -966,9 +966,6 @@ function toggleStatFilter(tipo) {
   document.getElementById('statbox-tengo').classList.toggle('active-filter', activeStatFilter === 'tengo');
   document.getElementById('statbox-fotos').classList.toggle('active-filter', activeStatFilter === 'fotos');
   renderStamps();
-  // Scroll a la zona de resultados
-  const main = document.querySelector('.main');
-  if (main) main.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // ==================== FILTERS ====================
