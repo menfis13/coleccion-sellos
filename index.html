@@ -392,16 +392,16 @@
   #btnCropSkip{ background:none; border:1px solid rgba(184,134,11,0.35); color:#7a6040; }
 
   @media (max-width: 600px) {
-    /* Cabecera: dos filas compactas, sin amontonar */
-    body { padding-top: 80px; }
+    /* Cabecera: tres filas compactas */
+    body { padding-top: 100px; }
     .header-inner {
-      padding: 10px 14px 8px;
+      padding: 8px 14px 8px;
       flex-wrap: wrap;
-      gap: 6px;
+      gap: 5px;
       align-items: center;
       justify-content: space-between;
     }
-    /* Título centrado ocupa su propia línea */
+    /* Fila 1: Título centrado */
     .header-title {
       position: static;
       transform: none;
@@ -412,12 +412,14 @@
     }
     .header-title h1, #header-epoca-titulo { font-size: 1rem !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .header-subtitle { font-size: 0.65rem; }
-    /* Stats a la izquierda, botones a la derecha */
-    .header-stats { order: 2; gap: 8px; flex-shrink: 1; }
-    .stat-box { padding: 4px 8px; }
+    /* Fila 2: Stats (Total + En colección visibles, Con foto oculto) */
+    .header-stats { order: 2; gap: 8px; flex-shrink: 0; width: 100%; justify-content: center; display: flex; }
+    .stat-box { padding: 4px 14px; }
     .stat-num { font-size: 1.1rem; }
     .stat-label { font-size: 0.6rem; }
-    .header-inner > div:last-child { order: 3; flex-shrink: 0; }
+    #statbox-fotos { display: none; }
+    /* Fila 3: Botones a la derecha */
+    .header-inner > div:last-child { order: 3; flex-shrink: 0; width: 100%; justify-content: flex-end; display: flex; gap: 6px; }
     /* Toolbar: buscador en fila completa */
     .toolbar { padding: 8px 12px; gap: 8px; }
     .search-wrap { min-width: 0; max-width: 100%; flex: 1 1 100%; order: -1; }
