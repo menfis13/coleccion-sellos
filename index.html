@@ -629,11 +629,18 @@
         <div class="form-group"><label class="form-label">Estado en tu colección</label>
           <select class="form-select" id="fEstado">
             <option value="">-- No tengo este sello --</option>
-            <option value="Nuevo">Nuevo / Mint</option>
+            <option value="Nuevo">Nuevo</option>
+            <option value="Nuevo Fijasello">Nuevo Fijasello</option>
             <option value="Usado">Usado</option>
-            <option value="Usado Fijasello">Usado con Fijasello</option>
-            <option value="Con charnela">Con charnela</option>
-            <option value="Fragmento">Fragmento</option>
+            <option value="Usado Fijasello">Usado Fijasello</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Filigrana</label>
+          <select class="form-select" id="fFiligrana">
+            <option value="">-- No aplica --</option>
+            <option value="Lazos">Lazos</option>
+            <option value="Líneas cruzadas">Líneas cruzadas</option>
+            <option value="Sin filigrana">Sin filigrana</option>
           </select>
         </div>
         <div class="form-group full"><label class="form-label">Notas personales</label><textarea class="form-textarea" id="fNotas" placeholder="Observaciones, procedencia, valor estimado..."></textarea></div>
@@ -897,6 +904,7 @@ async function loadFromSheets() {
           dentado: row.c[5]?.v || '',
           estado: row.c[6]?.v || null,
           notas: row.c[7]?.v || '',
+          filigrana: row.c[11]?.v || null,
           delante: row.c[9]?.v || null,
           detras: row.c[10]?.v || null,
         };
@@ -1221,7 +1229,7 @@ function openStamp(edifil) {
 function openNew() {
   if (!isEditor()) { showToast('🔒 Inicia sesión para añadir sellos'); return; }
   currentStampId = null;
-  fillModal({edifil:'',año:'',descripcion:'',color:'',valor_facial:'',dentado:'',estado:'',delante:null,detras:null,referencia:null,notas:''});
+  fillModal({edifil:'',año:'',descripcion:'',color:'',valor_facial:'',dentado:'',estado:'',filigrana:'',delante:null,detras:null,referencia:null,notas:''});
   document.getElementById('btnDelete').style.display = 'none';
   document.getElementById('modalOverlay').classList.add('open');
   history.pushState({ view: 'modal' }, '', '');
@@ -1246,6 +1254,7 @@ function fillModal(s) {
     const o = document.createElement('option'); o.value = s.estado; o.textContent = s.estado; eSel.appendChild(o);
   }
   eSel.value = s.estado || '';
+  document.getElementById('fFiligrana').value = s.filigrana || '';
   setPhotoSlot('referencia', s.referencia);
   setPhotoSlot('delante', s.delante);
   setPhotoSlot('detras', s.detras);
@@ -1270,6 +1279,7 @@ function saveStamp() {
     valor_facial: document.getElementById('fValor').value.trim(),
     dentado: document.getElementById('fDentado').value,
     estado: document.getElementById('fEstado').value || null,
+    filigrana: document.getElementById('fFiligrana').value || null,
     notas: document.getElementById('fNotas').value.trim(),
     delante: null, detras: null
   };
