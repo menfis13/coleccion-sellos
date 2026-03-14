@@ -412,6 +412,8 @@
   .crop-btns button { padding:11px 28px; font-family:'Crimson Pro',serif; font-size:1rem; font-weight:600; border:none; border-radius:2px; cursor:pointer; letter-spacing:0.04em; }
   #btnCropOk  { background:#b8860b; color:#1a1208; }
   #btnCropSkip{ background:none; border:1px solid rgba(184,134,11,0.35); color:#7a6040; }
+  #btnCropRotate { background:none; border:1px solid rgba(184,134,11,0.35); color:#c8a96e; padding:11px 18px; font-size:1.2rem; line-height:1; cursor:pointer; border-radius:2px; font-weight:600; transition: border-color 0.2s; }
+  #btnCropRotate:hover { border-color: var(--gold); }
 
   @media (max-width: 600px) {
     /* Cabecera: tres filas compactas */
@@ -1692,6 +1694,59 @@ function showCropModal(sourceCanvas, callback) {
   });
 }
 
+function rotateCrop() {
+  const src = showCropModal._src;
+  if (!src) return;
+
+  // Rotar el canvas fuente 90° en sentido horario
+  const rotated = document.createElement('canvas');
+  rotated.width  = src.height;
+  rotated.height = src.width;
+  const ctx = rotated.getContext('2d');
+  ctx.translate(rotated.width / 2, rotated.height / 2);
+  ctx.rotate(Math.PI / 2);
+  ctx.drawImage(src, -src.width / 2, -src.height / 2);
+
+  // Actualizar el canvas fuente
+  showCropModal._src = rotated;
+  _cropNatW = rotated.width;
+  _cropNatH = rotated.height;
+
+  // Recalcular escala de display
+  const maxW = Math.max(200, Math.floor(window.innerWidth  * 0.90));
+  const maxH = Math.max(150, Math.floor(window.innerHeight * 0.62));
+  const scale = Math.min(1, maxW / _cropNatW, maxH / _cropNatH);
+  _cropDispW = Math.max(1, Math.round(_cropNatW * scale));
+  _cropDispH = Math.max(1, Math.round(_cropNatH * scale));
+
+  // Redibujar el fondo
+  const bg = document.getElementById('cropBg');
+  bg.width  = _cropDispW; bg.height = _cropDispH;
+  bg.style.width  = _cropDispW + 'px'; bg.style.height = _cropDispH + 'px';
+  bg.getContext('2d').drawImage(rotated, 0, 0, _cropDispW, _cropDispH);
+
+  // Redibujar el overlay con las nuevas dimensiones
+  const ov = document.getElementById('cropOverlay');
+  ov.width  = _cropDispW; ov.height = _cropDispH;
+  ov.style.width  = _cropDispW + 'px'; ov.style.height = _cropDispH + 'px';
+
+  // Re-autodetectar en la imagen rotada
+  const det = _autoDetectStamp(rotated);
+  if (det) {
+    const scX = _cropDispW / _cropNatW, scY = _cropDispH / _cropNatH;
+    _cropRect = { x: Math.round(det.x * scX), y: Math.round(det.y * scY),
+                  w: Math.round(det.w * scX), h: Math.round(det.h * scY) };
+    document.getElementById('cropHint').textContent = 'Sello detectado — ajusta si es necesario';
+  } else {
+    const pad = 0.10;
+    _cropRect = { x: Math.round(_cropDispW * pad), y: Math.round(_cropDispH * pad),
+                  w: Math.round(_cropDispW * (1 - pad*2)), h: Math.round(_cropDispH * (1 - pad*2)) };
+  }
+
+  _initCropEvents();
+  _drawCrop();
+}
+
 function confirmCrop(doCrop) {
   document.getElementById('cropModal').classList.remove('open');
   // Restaurar modal del sello
@@ -2201,6 +2256,7 @@ function toggleDarkMode() {
   </div>
   <div class="crop-btns">
     <button id="btnCropSkip" onclick="confirmCrop(false)">Sin recortar</button>
+    <button id="btnCropRotate" onclick="rotateCrop()" title="Rotar 90°">↻</button>
     <button id="btnCropOk"   onclick="confirmCrop(true)">✓ Recortar</button>
   </div>
 </div>
