@@ -328,7 +328,7 @@
       flex-wrap: nowrap;
       justify-content: space-between;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
     .header-title {
       position: static;
@@ -338,15 +338,21 @@
       order: 0;
     }
     .header-title .header-subtitle { display: none; }
-    .header-title h1, #header-epoca-titulo { font-size: 1rem !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 260px; }
-    .header-stats { display: none; }
+    .header-title h1, #header-epoca-titulo { font-size: 1rem !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px; }
+    .header-stats { display: flex; gap: 5px; flex-shrink: 0; order: 1; }
+    .stat-box { padding: 3px 8px; }
+    .stat-num { font-size: 0.95rem; }
+    .stat-label { font-size: 0.52rem; }
+    #statbox-fotos { display: none; }
     .header-inner > div:last-child {
       flex-shrink: 0;
       width: auto;
+      order: 2;
       justify-content: flex-end;
-      gap: 6px;
+      gap: 5px;
     }
     .header-inner > div:last-child > div[style*="width:1px"] { display: none; }
+    .header-btn, .btn-add-header { width: 58px; height: 36px; font-size: 0.78rem; }
     body {
       padding-top: 70px;
       padding-left: env(safe-area-inset-left);
@@ -393,15 +399,15 @@
 
   @media (max-width: 600px) {
     /* Cabecera: tres filas compactas */
-    body { padding-top: 100px; }
+    body { padding-top: 92px; }
     .header-inner {
-      padding: 8px 14px 8px;
+      padding: 8px 14px 6px;
       flex-wrap: wrap;
       gap: 5px;
       align-items: center;
       justify-content: space-between;
     }
-    /* Fila 1: Título centrado */
+    /* Fila 1: Título centrado, sin subtítulo "Colección Filatélica de Menfis" */
     .header-title {
       position: static;
       transform: none;
@@ -411,10 +417,10 @@
       pointer-events: auto;
     }
     .header-title h1, #header-epoca-titulo { font-size: 1rem !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .header-subtitle { font-size: 0.65rem; }
-    /* Fila 2: Stats (Total + En colección visibles, Con foto oculto) */
+    .header-subtitle { display: none; }
+    /* Fila 2: Total + En colección iguales, Con foto oculto */
     .header-stats { order: 2; gap: 8px; flex-shrink: 0; width: 100%; justify-content: center; display: flex; }
-    .stat-box { padding: 4px 14px; }
+    .stat-box { padding: 4px 8px; }
     .stat-num { font-size: 1.1rem; }
     .stat-label { font-size: 0.6rem; }
     #statbox-fotos { display: none; }
