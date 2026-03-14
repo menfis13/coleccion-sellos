@@ -652,12 +652,9 @@
             <option value="Usado Fijasello">Usado Fijasello</option>
           </select>
         </div>
-        <div class="form-group"><label class="form-label">Filigrana</label>
+        <div class="form-group" id="grupoFiligrana" style="display:none"><label class="form-label">Filigrana</label>
           <select class="form-select" id="fFiligrana">
             <option value="">-- No aplica --</option>
-            <option value="Lazos">Lazos</option>
-            <option value="Líneas cruzadas">Líneas cruzadas</option>
-            <option value="Sin filigrana">Sin filigrana</option>
           </select>
         </div>
         <div class="form-group full"><label class="form-label">Notas personales</label><textarea class="form-textarea" id="fNotas" placeholder="Observaciones, procedencia, valor estimado..."></textarea></div>
@@ -796,16 +793,26 @@ window.addEventListener('load', () => {
 
 // Datos de referencia con imágenes base64 (solo para mostrar la imagen original del sello)
 // ==================== FILIGRANAS REQUERIDAS ====================
-// Sellos de Isabel II que DEBEN llevar filigrana para ser auténticos
+// Sellos de Isabel II que tienen filigrana obligatoria o son variante sin filigrana
 const FILIGRANAS_REQUERIDAS = {
-  39: 'Lazos', 40: 'Lazos', 41: 'Lazos', 42: 'Lazos',
-  43: 'Líneas cruzadas', 44: 'Líneas cruzadas', 45: 'Líneas cruzadas', 46: 'Líneas cruzadas'
+  39: { tipo: 'Lazos',            opciones: ['Lazos'] },
+  40: { tipo: 'Lazos',            opciones: ['Lazos'] },
+  41: { tipo: 'Lazos',            opciones: ['Lazos'] },
+  42: { tipo: 'Lazos',            opciones: ['Lazos'] },
+  43: { tipo: 'Líneas cruzadas',  opciones: ['Líneas cruzadas'] },
+  44: { tipo: 'Líneas cruzadas',  opciones: ['Líneas cruzadas'] },
+  45: { tipo: 'Líneas cruzadas',  opciones: ['Líneas cruzadas'] },
+  46: { tipo: 'Líneas cruzadas',  opciones: ['Líneas cruzadas'] },
+  47: { tipo: 'Sin filigrana',    opciones: ['Sin filigrana'] },
+  48: { tipo: 'Sin filigrana',    opciones: ['Sin filigrana'] },
+  49: { tipo: 'Sin filigrana',    opciones: ['Sin filigrana'] },
+  50: { tipo: 'Sin filigrana',    opciones: ['Sin filigrana'] },
 };
 
 function getFiligranaSello(s) {
-  const requerida = FILIGRANAS_REQUERIDAS[s.edifil];
-  if (!requerida) return null; // este sello no necesita filigrana
-  return { requerida, registrada: s.filigrana || null };
+  const info = FILIGRANAS_REQUERIDAS[s.edifil];
+  if (!info) return null;
+  return { requerida: info.tipo, opciones: info.opciones, registrada: s.filigrana || null };
 }
 
 const EPOCAS = {
@@ -1121,12 +1128,14 @@ function renderGrid(filtered) {
     const fil = getFiligranaSello(s);
     let filBadge = '';
     if (fil) {
-      if (!fil.registrada) {
+      if (fil.requerida === 'Sin filigrana') {
+        filBadge = `<span class="filigrana-badge requerida" title="Sin filigrana — cuidado con confundirlo con Edifil ${s.edifil-4}">ℹ Sin filigrana</span>`;
+      } else if (!fil.registrada) {
         filBadge = `<span class="filigrana-badge requerida" title="Requiere filigrana ${fil.requerida}">⚠ Filigrana</span>`;
       } else if (fil.registrada === fil.requerida) {
         filBadge = `<span class="filigrana-badge ok" title="Filigrana verificada: ${fil.registrada}">✓ ${fil.registrada}</span>`;
       } else {
-        filBadge = `<span class="filigrana-badge alerta" title="Filigrana incorrecta: tiene ${fil.registrada}, debería ser ${fil.requerida}">⚠ Revisar filigrana</span>`;
+        filBadge = `<span class="filigrana-badge alerta" title="Filigrana incorrecta">⚠ Revisar</span>`;
       }
     }
     return `<div class="stamp-card${noTengo ? '' : ' tengo'}" onclick="openStamp(${s.edifil})">
@@ -1296,13 +1305,28 @@ function fillModal(s) {
     const o = document.createElement('option'); o.value = s.estado; o.textContent = s.estado; eSel.appendChild(o);
   }
   eSel.value = s.estado || '';
-  document.getElementById('fFiligrana').value = s.filigrana || '';
+
+  // Campo filigrana: solo aparece para los 12 sellos relevantes
+  const fil = getFiligranaSello(s);
+  const grupoFil = document.getElementById('grupoFiligrana');
+  const selFil = document.getElementById('fFiligrana');
+  if (fil) {
+    grupoFil.style.display = '';
+    selFil.innerHTML = fil.opciones.map(op => `<option value="${op}">${op}</option>`).join('');
+    selFil.value = s.filigrana || fil.opciones[0];
+  } else {
+    grupoFil.style.display = 'none';
+    selFil.value = '';
+  }
 
   // Aviso de filigrana en el modal
   const avisoEl = document.getElementById('filigrana-aviso-modal');
-  const fil = getFiligranaSello(s);
+  // const fil removed duplicate
   if (fil) {
-    if (!fil.registrada) {
+    if (fil.requerida === 'Sin filigrana') {
+      // 47-50: estos no llevan filigrana, solo info discreta
+      avisoEl.innerHTML = `<div class="filigrana-aviso requerida">ℹ️ Este sello (<strong>Edifil ${s.edifil}</strong>) no lleva filigrana. Si alguien te lo vende como Edifil ${s.edifil - 4} (con filigrana ${FILIGRANAS_REQUERIDAS[s.edifil-4]?.tipo}), sería incorrecto.</div>`;
+    } else if (!fil.registrada) {
       avisoEl.innerHTML = `<div class="filigrana-aviso requerida">⚠️ <strong>Atención:</strong> Este sello debe llevar filigrana de <strong>${fil.requerida}</strong> para ser auténtico. Verifícala antes de comprarlo.</div>`;
     } else if (fil.registrada === fil.requerida) {
       avisoEl.innerHTML = `<div class="filigrana-aviso ok">✓ <strong>Filigrana verificada:</strong> ${fil.registrada}. Este sello está correctamente autentificado.</div>`;
