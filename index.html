@@ -384,7 +384,23 @@
   .btn-login-google svg { flex-shrink: 0; }
   .read-only-notice { background: rgba(184,134,11,0.08); border: 1px solid rgba(184,134,11,0.2); color: #a89070; padding: 6px 32px; font-size: 0.78rem; text-align: center; letter-spacing: 0.08em; }
   .edit-only { } /* controlled via JS */
-  /* ── Modal recortador manual ── */
+  /* ── FILIGRANA ── */
+  .filigrana-badge {
+    display: inline-flex; align-items: center; gap: 3px;
+    font-size: 0.6rem; letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 2px 6px; border-radius: 2px; font-family: 'Crimson Pro', serif;
+    font-weight: 600;
+  }
+  .filigrana-badge.requerida { background: rgba(184,134,11,0.12); color: var(--gold); border: 1px solid rgba(184,134,11,0.3); }
+  .filigrana-badge.ok        { background: rgba(74,94,74,0.12); color: var(--sage); border: 1px solid rgba(74,94,74,0.3); }
+  .filigrana-badge.alerta    { background: rgba(139,58,42,0.12); color: var(--rust); border: 1px solid rgba(139,58,42,0.3); }
+  .filigrana-aviso {
+    margin: 8px 0 4px; padding: 8px 12px; border-radius: 2px;
+    font-family: 'Crimson Pro', serif; font-size: 0.88rem; line-height: 1.4;
+  }
+  .filigrana-aviso.requerida { background: rgba(184,134,11,0.08); border-left: 3px solid var(--gold); color: var(--sepia); }
+  .filigrana-aviso.ok        { background: rgba(74,94,74,0.08); border-left: 3px solid var(--sage); color: var(--sage); }
+  .filigrana-aviso.alerta    { background: rgba(139,58,42,0.08); border-left: 3px solid var(--rust); color: var(--rust); }
   #cropModal { display:none; position:fixed; inset:0; background:#0d0a06; z-index:9999; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:16px; box-sizing:border-box; }
   #cropModal.open { display:flex; }
   #cropHeader { color:#c8a96e; font-family:'Playfair Display',serif; font-size:1.1rem; letter-spacing:0.05em; }
@@ -584,6 +600,7 @@
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
     <div class="modal-body">
+      <div id="filigrana-aviso-modal"></div>
       <div class="photo-section">
         <div class="photo-slot" id="slotReferencia">
           <div class="photo-slot-preview"></div>
@@ -778,6 +795,19 @@ window.addEventListener('load', () => {
 });
 
 // Datos de referencia con imágenes base64 (solo para mostrar la imagen original del sello)
+// ==================== FILIGRANAS REQUERIDAS ====================
+// Sellos de Isabel II que DEBEN llevar filigrana para ser auténticos
+const FILIGRANAS_REQUERIDAS = {
+  39: 'Lazos', 40: 'Lazos', 41: 'Lazos', 42: 'Lazos',
+  43: 'Líneas cruzadas', 44: 'Líneas cruzadas', 45: 'Líneas cruzadas', 46: 'Líneas cruzadas'
+};
+
+function getFiligranaSello(s) {
+  const requerida = FILIGRANAS_REQUERIDAS[s.edifil];
+  if (!requerida) return null; // este sello no necesita filigrana
+  return { requerida, registrada: s.filigrana || null };
+}
+
 const EPOCAS = {
   'isabel2': {
     id: 'isabel2',
@@ -1088,6 +1118,17 @@ function renderGrid(filtered) {
     const imgArea = s.referencia
       ? `<img class="stamp-photo" src="${s.referencia}" alt="Sello ${s.edifil}">`
       : `<div class="stamp-placeholder"><div class="stamp-placeholder-num">${s.edifil}</div></div>`;
+    const fil = getFiligranaSello(s);
+    let filBadge = '';
+    if (fil) {
+      if (!fil.registrada) {
+        filBadge = `<span class="filigrana-badge requerida" title="Requiere filigrana ${fil.requerida}">⚠ Filigrana</span>`;
+      } else if (fil.registrada === fil.requerida) {
+        filBadge = `<span class="filigrana-badge ok" title="Filigrana verificada: ${fil.registrada}">✓ ${fil.registrada}</span>`;
+      } else {
+        filBadge = `<span class="filigrana-badge alerta" title="Filigrana incorrecta: tiene ${fil.registrada}, debería ser ${fil.requerida}">⚠ Revisar filigrana</span>`;
+      }
+    }
     return `<div class="stamp-card${noTengo ? '' : ' tengo'}" onclick="openStamp(${s.edifil})">
       <div class="stamp-img-area">${imgArea}</div>
       <div class="stamp-info">
@@ -1098,6 +1139,7 @@ function renderGrid(filtered) {
           <span class="stamp-tag">📅 ${s.año || '—'}</span>
           <span class="stamp-tag">${s.valor_facial || '—'}</span>
           ${s.dentado ? `<span class="stamp-tag">${s.dentado}</span>` : ''}
+          ${filBadge}
         </div>
       </div>
     </div>`;
@@ -1255,6 +1297,22 @@ function fillModal(s) {
   }
   eSel.value = s.estado || '';
   document.getElementById('fFiligrana').value = s.filigrana || '';
+
+  // Aviso de filigrana en el modal
+  const avisoEl = document.getElementById('filigrana-aviso-modal');
+  const fil = getFiligranaSello(s);
+  if (fil) {
+    if (!fil.registrada) {
+      avisoEl.innerHTML = `<div class="filigrana-aviso requerida">⚠️ <strong>Atención:</strong> Este sello debe llevar filigrana de <strong>${fil.requerida}</strong> para ser auténtico. Verifícala antes de comprarlo.</div>`;
+    } else if (fil.registrada === fil.requerida) {
+      avisoEl.innerHTML = `<div class="filigrana-aviso ok">✓ <strong>Filigrana verificada:</strong> ${fil.registrada}. Este sello está correctamente autentificado.</div>`;
+    } else {
+      avisoEl.innerHTML = `<div class="filigrana-aviso alerta">⚠️ <strong>Revisar:</strong> Tiene registrada filigrana <strong>${fil.registrada}</strong> pero debería ser <strong>${fil.requerida}</strong>. Comprueba la autenticidad.</div>`;
+    }
+  } else {
+    avisoEl.innerHTML = '';
+  }
+
   setPhotoSlot('referencia', s.referencia);
   setPhotoSlot('delante', s.delante);
   setPhotoSlot('detras', s.detras);
