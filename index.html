@@ -244,8 +244,8 @@
   .photo-section { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 24px; }
   .photo-slot { border: 2px dashed rgba(92,61,30,0.25); border-radius: 3px; min-height: 180px; display: flex; flex-direction: column; align-items: stretch; justify-content: flex-start; transition: border-color 0.2s; position: relative; overflow: hidden; background: #ffffff; }
   .photo-slot:hover { border-color: var(--gold); }
-  .photo-slot-preview { flex: 1; position: relative; display: flex; align-items: center; justify-content: center; min-height: 110px; }
-  .photo-slot-preview img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; cursor: zoom-in; background: transparent; }
+  .photo-slot-preview { flex: 1; position: relative; display: flex; align-items: center; justify-content: center; min-height: 110px; cursor: zoom-in; }
+  .photo-slot-preview img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; background: transparent; }
   .photo-slot-icon { font-size: 1.5rem; opacity: 0.3; z-index: 1; }
   .photo-actions { display: flex; gap: 0; border-top: 1px solid rgba(92,61,30,0.12); z-index: 3; flex-shrink: 0; }
   .photo-actions button { flex: 1; background: #faf7f2; color: var(--sepia); border: none; border-right: 1px solid rgba(92,61,30,0.12); padding: 7px 2px; font-family: 'Crimson Pro', serif; font-size: 0.67rem; cursor: pointer; font-weight: 600; transition: background 0.15s, color 0.15s; line-height: 1.3; display: flex; flex-direction: column; align-items: center; gap: 2px; }
@@ -508,7 +508,7 @@
     </div>
     <div class="header-stats">
       <div class="stat-box" id="statbox-total" onclick="toggleStatFilter('total')" title="Ver todos los sellos"><span class="stat-num" id="stat-total">—</span><span class="stat-label">Total</span></div>
-      <div class="stat-box" id="statbox-tengo" onclick="toggleStatFilter('tengo')" title="Ver sellos en mi colección"><span class="stat-num" id="stat-tengo">—</span><span class="stat-label">En colección</span></div>
+      <div class="stat-box" id="statbox-tengo" onclick="toggleStatFilter('tengo')" title="Ver sellos en mi colección"><span class="stat-num" id="stat-tengo">—</span><span class="stat-label">Tengo</span></div>
       <div class="stat-box" id="statbox-fotos" onclick="toggleStatFilter('fotos')" title="Ver sellos con foto"><span class="stat-num" id="stat-fotos">—</span><span class="stat-label">Con foto</span></div>
     </div>
     <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
@@ -590,7 +590,7 @@
           <div style="text-align:center;font-size:0.62rem;color:var(--sepia);padding:4px 0 3px;letter-spacing:0.07em;border-top:1px solid rgba(92,61,30,0.1);background:#faf7f2">REFERENCIA</div>
         </div>
         <div class="photo-slot" id="slotDelante">
-          <div class="photo-slot-preview"><span class="photo-slot-icon">📷</span></div>
+          <div class="photo-slot-preview"></div>
           <div style="text-align:center;font-size:0.62rem;color:var(--sepia);padding:4px 0 3px;letter-spacing:0.07em;border-top:1px solid rgba(92,61,30,0.1);background:#faf7f2">ANVERSO</div>
           <div class="photo-actions edit-only" id="overlayDelante">
             <button onclick="event.stopPropagation(); triggerPhotoCamera('delante')"><span class="btn-icon">📷</span><span>Cámara</span></button>
@@ -599,7 +599,7 @@
           </div>
         </div>
         <div class="photo-slot" id="slotDetras">
-          <div class="photo-slot-preview"><span class="photo-slot-icon">📷</span></div>
+          <div class="photo-slot-preview"></div>
           <div style="text-align:center;font-size:0.62rem;color:var(--sepia);padding:4px 0 3px;letter-spacing:0.07em;border-top:1px solid rgba(92,61,30,0.1);background:#faf7f2">REVERSO</div>
           <div class="photo-actions edit-only" id="overlayDetras">
             <button onclick="event.stopPropagation(); triggerPhotoCamera('detras')"><span class="btn-icon">📷</span><span>Cámara</span></button>
@@ -1322,6 +1322,8 @@ function setPhotoSlot(side, src) {
     img.addEventListener('click', (e) => { e.stopPropagation(); openLightbox(src, captions[side]||''); });
     preview.insertBefore(img, preview.firstChild);
     slot.classList.add('has-photo');
+    // Click en todo el preview (no solo la imagen)
+    preview.onclick = (e) => { e.stopPropagation(); openLightbox(src, captions[side]||''); };
   }
 }
 function triggerPhoto(side) { currentPhotoTarget = side; document.getElementById('fileInput').click(); }
