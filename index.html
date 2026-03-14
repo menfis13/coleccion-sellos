@@ -487,13 +487,13 @@
       <div class="stat-box" id="statbox-tengo" onclick="toggleStatFilter('tengo')" title="Ver sellos en mi colección"><span class="stat-num" id="stat-tengo">—</span><span class="stat-label">En colección</span></div>
       <div class="stat-box" id="statbox-fotos" onclick="toggleStatFilter('fotos')" title="Ver sellos con foto"><span class="stat-num" id="stat-fotos">—</span><span class="stat-label">Con foto</span></div>
     </div>
-    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-      <button onclick="showPortada()" style="background:transparent;border:1px solid rgba(184,134,11,0.5);color:var(--gold-light);padding:8px 16px;font-family:'Crimson Pro',serif;font-size:0.9rem;font-weight:600;cursor:pointer;border-radius:2px;transition:all 0.2s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(184,134,11,0.5)'">◀ Épocas</button>
-      <button onclick="irAlPrimerSello()" title="Ir al primer sello" style="background:transparent;border:1px solid rgba(184,134,11,0.35);color:#a89070;padding:8px 12px;font-family:'Crimson Pro',serif;font-size:0.9rem;font-weight:600;cursor:pointer;border-radius:2px;transition:all 0.2s;flex-shrink:0" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold-light)'" onmouseout="this.style.borderColor='rgba(184,134,11,0.35)';this.style.color='#a89070'">↑ Arriba</button>
+    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+      <button onclick="showPortada()" style="background:transparent;border:1px solid rgba(184,134,11,0.5);color:var(--gold-light);padding:8px 10px;font-family:'Crimson Pro',serif;font-size:0.85rem;font-weight:600;cursor:pointer;border-radius:2px;transition:all 0.2s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(184,134,11,0.5)'">◀ Épocas</button>
+      <button onclick="irAlPrimerSello()" title="Ir al primer sello" style="background:transparent;border:1px solid rgba(184,134,11,0.35);color:#a89070;padding:8px 8px;font-family:'Crimson Pro',serif;font-size:0.85rem;font-weight:600;cursor:pointer;border-radius:2px;transition:all 0.2s;flex-shrink:0" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold-light)'" onmouseout="this.style.borderColor='rgba(184,134,11,0.35)';this.style.color='#a89070'">↑ Arriba</button>
       <div style="position:relative;flex-shrink:0">
-        <span style="position:absolute;left:9px;top:50%;transform:translateY(-50%);color:#8a7050;font-size:0.85rem;pointer-events:none">#</span>
+        <span style="position:absolute;left:7px;top:50%;transform:translateY(-50%);color:#8a7050;font-size:0.85rem;pointer-events:none">#</span>
         <input type="number" id="edifilJump" min="1" placeholder="Edifil…"
-          style="width:100px;padding:7px 10px 7px 24px;background:rgba(255,255,255,0.07);border:1px solid rgba(184,134,11,0.35);color:#d4c8a8;font-family:'Crimson Pro',serif;font-size:0.9rem;border-radius:2px;outline:none;-moz-appearance:textfield"
+          style="width:80px;padding:7px 6px 7px 20px;background:rgba(255,255,255,0.07);border:1px solid rgba(184,134,11,0.35);color:#d4c8a8;font-family:'Crimson Pro',serif;font-size:0.85rem;border-radius:2px;outline:none;-moz-appearance:textfield"
           oninput="this.style.borderColor=this.value?'var(--gold)':'rgba(184,134,11,0.35)'"
           onkeydown="if(event.key==='Enter'){saltarEdifil();}"
           onblur="saltarEdifil()">
@@ -758,7 +758,7 @@ const EPOCAS = {
   },
   'duque': {
     id: 'duque',
-    titulo: '(1870-1872) Regencia. Duque Torre',
+    titulo: '(1870-1872) Regencia Duque De La Torre',
     subtitulo: 'Efigie alegórica de España',
     sello_ref: 'https://res.cloudinary.com/do4ltpfbo/image/upload/portada_duque.jpg',
     sheet: 'Hoja 2',
