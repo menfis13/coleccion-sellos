@@ -167,7 +167,7 @@
   .stat-box.active-filter .stat-label { color: var(--gold-light); }
   .stat-num { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--gold-light); display: block; }
   .stat-label { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: #a89070; transition: color 0.2s; }
-  .header-btn, .btn-add-header { padding: 8px 10px; font-family: 'Crimson Pro', serif; font-size: 0.85rem; font-weight: 600; cursor: pointer; border-radius: 2px; transition: all 0.2s; white-space: nowrap; flex-shrink: 0; }
+  .header-btn, .btn-add-header { width: 72px; height: 36px; padding: 0; font-family: 'Crimson Pro', serif; font-size: 0.85rem; font-weight: 600; cursor: pointer; border-radius: 2px; transition: all 0.2s; white-space: nowrap; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; }
   .btn-add-header { background: var(--gold); color: var(--ink); border: none; }
   .btn-add-header:hover { background: var(--gold-light); }
 
@@ -338,7 +338,7 @@
       order: 0;
     }
     .header-title .header-subtitle { display: none; }
-    .header-title h1, #header-epoca-titulo { font-size: 0.78rem !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 260px; }
+    .header-title h1, #header-epoca-titulo { font-size: 0.88rem !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 260px; }
     .header-stats { display: none; }
     .header-inner > div:last-child {
       flex-shrink: 0;
@@ -509,7 +509,7 @@
       <div style="position:relative;flex-shrink:0">
         <span style="position:absolute;left:7px;top:50%;transform:translateY(-50%);color:#8a7050;font-size:0.85rem;pointer-events:none">#</span>
         <input type="number" id="edifilJump" min="1" placeholder="Edifil…"
-          style="width:86px;padding:7px 6px 7px 20px;background:rgba(255,255,255,0.07);border:1px solid rgba(184,134,11,0.35);color:#d4c8a8;font-family:'Crimson Pro',serif;font-size:0.9rem;border-radius:2px;outline:none;-moz-appearance:textfield"
+          style="width:72px;height:36px;padding:0 6px 0 20px;background:rgba(255,255,255,0.07);border:1px solid rgba(184,134,11,0.35);color:#d4c8a8;font-family:'Crimson Pro',serif;font-size:0.85rem;border-radius:2px;outline:none;-moz-appearance:textfield"
           oninput="this.style.borderColor=this.value?'var(--gold)':'rgba(184,134,11,0.35)'"
           onkeydown="if(event.key==='Enter'){saltarEdifil();}"
           onblur="saltarEdifil()">
@@ -688,7 +688,7 @@ function applyAuthUI() {
   const notice = document.getElementById('readOnlyNotice');
   if (isEditor()) {
     notice.style.display = 'none';
-    area.innerHTML = `<button class="btn-add-header" onclick="openNew()">＋ Añadir sello</button>`;
+    area.innerHTML = `<button class="btn-add-header" onclick="openNew()">＋ Sello</button>`;
     if (authPortada) authPortada.innerHTML = `
       <div style="display:flex;align-items:center;gap:10px;background:rgba(0,0,0,0.4);padding:8px 14px;border-radius:3px;border:1px solid rgba(184,134,11,0.2)">
         <img src="${currentUser.picture}" alt="" style="width:26px;height:26px;border-radius:50%;border:1px solid var(--gold)">
