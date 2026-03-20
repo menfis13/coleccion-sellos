@@ -384,13 +384,7 @@
   .btn-login-google svg { flex-shrink: 0; }
   .read-only-notice { background: rgba(184,134,11,0.08); border: 1px solid rgba(184,134,11,0.2); color: #a89070; padding: 6px 32px; font-size: 0.78rem; text-align: center; letter-spacing: 0.08em; }
   .edit-only { } /* controlled via JS */
-  /* ── PRECIOS CATÁLOGO ── */
-  .precio-catalogo { display:flex; gap:12px; flex-wrap:wrap; margin:6px 0 2px; }
-  .precio-item { font-family:'Crimson Pro',serif; font-size:0.82rem; color:var(--sepia); }
-  .precio-item strong { color:var(--gold); font-size:0.95rem; }
-  .precio-source { font-size:0.62rem; color:rgba(92,61,30,0.45); letter-spacing:0.06em; text-transform:uppercase; }
-  /* Badge precio en tarjeta grid */
-  .stamp-precio { font-size:0.68rem; color:var(--gold); font-family:'Crimson Pro',serif; font-weight:600; letter-spacing:0.03em; margin-top:3px; }
+  /* ── FILIGRANA ── */
   .filigrana-badge {
     display: inline-flex; align-items: center; gap: 3px;
     font-size: 0.6rem; letter-spacing: 0.06em; text-transform: uppercase;
@@ -408,11 +402,7 @@
   .filigrana-aviso.ok        { background: rgba(74,94,74,0.08); border-left: 3px solid var(--sage); color: var(--sage); }
   .filigrana-aviso.alerta    { background: rgba(139,58,42,0.08); border-left: 3px solid var(--rust); color: var(--rust); }
   /* ── PRECIOS EDIFIL ── */
-  .precio-edifil {
-    margin: 6px 0 8px; padding: 8px 12px; border-radius: 2px;
-    background: rgba(184,134,11,0.06); border: 1px solid rgba(184,134,11,0.2);
-    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
-  }
+  .precio-edifil { margin:6px 0 8px; padding:8px 12px; border-radius:2px; background:rgba(184,134,11,0.06); border:1px solid rgba(184,134,11,0.2); display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
   .precio-edifil-titulo { font-family:'Crimson Pro',serif; font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); font-weight:600; flex-shrink:0; }
   .precio-edifil-valores { display:flex; gap:16px; flex-wrap:wrap; }
   .precio-item { text-align:center; }
@@ -815,31 +805,9 @@ window.addEventListener('load', () => {
 // Datos de referencia con imágenes base64 (solo para mostrar la imagen original del sello)
 // ==================== FILIGRANAS REQUERIDAS ====================
 // Sellos de Isabel II que tienen filigrana obligatoria o son variante sin filigrana
-const FILIGRANAS_REQUERIDAS = {
-  39: { tipo: 'Lazos',            opciones: ['Lazos'] },
-  40: { tipo: 'Lazos',            opciones: ['Lazos'] },
-  41: { tipo: 'Lazos',            opciones: ['Lazos'] },
-  42: { tipo: 'Lazos',            opciones: ['Lazos'] },
-  43: { tipo: 'Líneas cruzadas',  opciones: ['Líneas cruzadas'] },
-  44: { tipo: 'Líneas cruzadas',  opciones: ['Líneas cruzadas'] },
-  45: { tipo: 'Líneas cruzadas',  opciones: ['Líneas cruzadas'] },
-  46: { tipo: 'Líneas cruzadas',  opciones: ['Líneas cruzadas'] },
-  47: { tipo: 'Sin filigrana',    opciones: ['Sin filigrana'] },
-  48: { tipo: 'Sin filigrana',    opciones: ['Sin filigrana'] },
-  49: { tipo: 'Sin filigrana',    opciones: ['Sin filigrana'] },
-  50: { tipo: 'Sin filigrana',    opciones: ['Sin filigrana'] },
-};
-
-function getFiligranaSello(s) {
-  const info = FILIGRANAS_REQUERIDAS[s.edifil];
-  if (!info) return null;
-  return { requerida: info.tipo, opciones: info.opciones, registrada: s.filigrana || null };
-}
-
-// ==================== PRECIOS CATÁLOGO EDIFIL 2020 ====================
 // ==================== PRECIOS CATÁLOGO EDIFIL 2020 ====================
 // Fuente: Catálogo Edifil Especializado Serie Azul Tomo I Siglo XIX (2020)
-// Precio Normal (calidad estándar): [nuevo_€, usado_€]
+// Formato: [precio_nuevo_normal, precio_usado_normal] en euros
 const PRECIOS_EDIFIL = {
   1:[500,19],"1A":[400,15],2:[2200,260],3:[2300,260],4:[3000,750],5:[4100,2100],
   6:[250,3],7:[3900,170],8:[17500,10200],9:[2250,250],10:[3600,1000],11:[2600,470],
@@ -867,8 +835,25 @@ const PRECIOS_EDIFIL = {
   97:[260,15],98:[26,1],99:[500,75],100:[160,13],"100A":[850,35],101:[2000,450]
 };
 
-function getPrecioEdifil(edifil) {
-  return PRECIOS_EDIFIL[edifil] || null;
+const FILIGRANAS_REQUERIDAS = {
+  39: { tipo: 'Lazos',            opciones: ['Lazos'] },
+  40: { tipo: 'Lazos',            opciones: ['Lazos'] },
+  41: { tipo: 'Lazos',            opciones: ['Lazos'] },
+  42: { tipo: 'Lazos',            opciones: ['Lazos'] },
+  43: { tipo: 'Líneas cruzadas',  opciones: ['Líneas cruzadas'] },
+  44: { tipo: 'Líneas cruzadas',  opciones: ['Líneas cruzadas'] },
+  45: { tipo: 'Líneas cruzadas',  opciones: ['Líneas cruzadas'] },
+  46: { tipo: 'Líneas cruzadas',  opciones: ['Líneas cruzadas'] },
+  47: { tipo: 'Sin filigrana',    opciones: ['Sin filigrana'] },
+  48: { tipo: 'Sin filigrana',    opciones: ['Sin filigrana'] },
+  49: { tipo: 'Sin filigrana',    opciones: ['Sin filigrana'] },
+  50: { tipo: 'Sin filigrana',    opciones: ['Sin filigrana'] },
+};
+
+function getFiligranaSello(s) {
+  const info = FILIGRANAS_REQUERIDAS[s.edifil];
+  if (!info) return null;
+  return { requerida: info.tipo, opciones: info.opciones, registrada: s.filigrana || null };
 }
 
 const EPOCAS = {
@@ -1182,14 +1167,7 @@ function renderGrid(filtered) {
       ? `<img class="stamp-photo" src="${s.referencia}" alt="Sello ${s.edifil}">`
       : `<div class="stamp-placeholder"><div class="stamp-placeholder-num">${s.edifil}</div></div>`;
     const fil = getFiligranaSello(s);
-    const precio = PRECIOS_EDIFIL[s.edifil];
-    let precioBadge = '';
-    if (precio && currentEpoca === 'isabel2') {
-      const partes = [];
-      if (precio[0]) partes.push(`N: ${precio[0]}€`);
-      if (precio[1]) partes.push(`U: ${precio[1]}€`);
-      if (partes.length) precioBadge = `<div class="stamp-precio">📋 ${partes.join(' · ')}</div>`;
-    }
+    let filBadge = '';
     if (fil) {
       if (fil.requerida === 'Sin filigrana') {
         filBadge = `<span class="filigrana-badge requerida" title="Sin filigrana — cuidado con confundirlo con Edifil ${s.edifil-4}">ℹ Sin filigrana</span>`;
@@ -1402,8 +1380,8 @@ function fillModal(s) {
 
   // Bloque de precios Edifil 2020
   const precioEl = document.getElementById('precio-edifil-modal');
-  const precio = getPrecioEdifil(s.edifil);
-  if (precio) {
+  const precio = PRECIOS_EDIFIL[s.edifil];
+  if (precio && currentEpoca === 'isabel2') {
     const [nuevo, usado] = precio;
     const usadoHtml = usado != null
       ? `<div class="precio-item"><span class="precio-item-label">Usado</span><span class="precio-item-valor">${usado.toLocaleString('es-ES')} €</span></div>`
