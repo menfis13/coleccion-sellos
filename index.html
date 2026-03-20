@@ -1208,7 +1208,8 @@ function renderGrid(filtered) {
     }
     const noTengo = !s.estado;
     const esVariante = s.variante === true;
-    return `<div class="stamp-card${noTengo ? '' : ' tengo'}${esVariante ? ' variante' : ''}" onclick="openStamp(${JSON.stringify(s.edifil)})">
+    const edId = typeof s.edifil === 'string' ? `'${s.edifil}'` : s.edifil;
+    return `<div class="stamp-card${noTengo ? '' : ' tengo'}${esVariante ? ' variante' : ''}" onclick="openStamp(${edId})">
       <div class="stamp-img-area">${imgArea}</div>
       <div class="stamp-info">
         <div class="stamp-edifil">Edifil nº ${s.edifil}</div>
@@ -1228,8 +1229,10 @@ function renderGrid(filtered) {
 function renderList(filtered) {
   const tbody = document.getElementById('listBody');
   if (!filtered.length) { tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--sepia)">Sin resultados</td></tr>'; return; }
-  tbody.innerHTML = filtered.map(s => `
-    <tr onclick="openStamp(${s.edifil})">
+  tbody.innerHTML = filtered.map(s => {
+    const edId = typeof s.edifil === 'string' ? `'${s.edifil}'` : s.edifil;
+    return `
+    <tr onclick="openStamp(${edId})">
       <td><strong>${s.edifil}</strong></td><td>${s.año||'—'}</td><td>${s.descripcion||'—'}</td>
       <td><span style="display:flex;align-items:center;gap:6px"><span class="stamp-color-dot ${colorClass(s.color)}"></span>${s.color||'—'}</span></td>
       <td>${s.valor_facial||'—'}</td><td>${s.dentado||'—'}</td>
@@ -1238,7 +1241,8 @@ function renderList(filtered) {
         ? `<img src="${s.referencia}" style="width:40px;height:40px;object-fit:cover;border-radius:2px;border:1px solid rgba(184,134,11,0.25);display:block" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span style="display:none;color:#aaa;font-size:0.75rem">—</span>`
         : '<span style="color:#aaa;font-size:0.75rem">—</span>'
       }</td>
-    </tr>`).join('');
+    </tr>`;
+  }).join('');
 }
 
 function sortBy(field) {
