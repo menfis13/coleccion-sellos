@@ -668,7 +668,7 @@
       <input type="file" id="fileCamera" accept="image/*" capture="environment" onchange="handlePhoto(event)" style="display:none;">
       <input type="file" id="fileGallery" accept="image/*" onchange="handlePhoto(event)" style="display:none;">
       <div class="form-grid">
-        <div class="form-group"><label class="form-label">Nº Edifil</label><input class="form-input" type="number" id="fEdifil" placeholder="Ej: 48"></div>
+        <div class="form-group"><label class="form-label">Nº Edifil</label><input class="form-input" type="text" id="fEdifil" placeholder="Ej: 48 ó 48A"></div>
         <div class="form-group"><label class="form-label">Año</label><input class="form-input" type="number" id="fAño" placeholder="Ej: 1856"></div>
         <div class="form-group full"><label class="form-label">Descripción</label><input class="form-input" type="text" id="fDesc" placeholder="Ej: Isabel II"></div>
         <div class="form-group"><label class="form-label">Color</label><input class="form-input" type="text" id="fColor" placeholder="Ej: azul"></div>
@@ -1452,7 +1452,8 @@ function closeModal(e) {
 }
 function saveStamp() {
   if (!isEditor()) { showToast('🔒 Sin permisos de edición'); return; }
-  const edifil = parseInt(document.getElementById('fEdifil').value);
+  const edifilRaw = document.getElementById('fEdifil').value.trim();
+  const edifil = isNaN(edifilRaw) ? edifilRaw : (parseInt(edifilRaw) || null);
   if (!edifil) { alert('El número Edifil es obligatorio'); return; }
   const data = {
     edifil, año: parseInt(document.getElementById('fAño').value)||null,
