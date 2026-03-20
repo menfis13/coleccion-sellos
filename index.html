@@ -418,7 +418,8 @@
   .precio-item { text-align:center; }
   .precio-item-label { font-size:0.65rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--sepia); display:block; }
   .precio-item-valor { font-family:'Playfair Display',serif; font-size:1rem; color:var(--ink); font-weight:700; }
-  .precio-nota { font-size:0.63rem; color:var(--sepia); opacity:0.6; margin-left:auto; font-style:italic; align-self:flex-end; } { display:none; position:fixed; inset:0; background:#0d0a06; z-index:9999; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:16px; box-sizing:border-box; }
+  .precio-nota { font-size:0.63rem; color:var(--sepia); opacity:0.6; margin-left:auto; font-style:italic; align-self:flex-end; }
+  #cropModal { display:none; position:fixed; inset:0; background:#0d0a06; z-index:9999; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:16px; box-sizing:border-box; }
   #cropModal.open { display:flex; }
   #cropHeader { color:#c8a96e; font-family:'Playfair Display',serif; font-size:1.1rem; letter-spacing:0.05em; }
   #cropHint { color:#6a5a40; font-family:'Crimson Pro',serif; font-size:0.82rem; letter-spacing:0.06em; }
@@ -836,35 +837,6 @@ function getFiligranaSello(s) {
 }
 
 // ==================== PRECIOS CATÁLOGO EDIFIL 2020 ====================
-// Precios en euros, calidad Normal. Solo época Isabel II (Edifil 1-101)
-// null = dato no extraíble con fiabilidad del OCR — consultar catálogo
-const PRECIOS_EDIFIL = {
-  1:  {n: 400,   u: 15},    2:  {n: 2200,  u: 260},   3:  {n: 2300,  u: 260},
-  6:  {n: 400,   u: 20},    15: {n: 1800,  u: 130},   16: {n: 2200,  u: 480},
-  18: {n: 1900,  u: 110},   23: {n: 13200, u: 7000},  28: {n: 300,   u: null},
-  29: {n: 9,     u: null},  30: {n: 9,     u: null},  32: {n: 12000, u: 1800},
-  33: {n: 2,     u: 2},     34: {n: 370,   u: 5},
-  // Filigranas
-  39: {n: 1100,  u: 170},   40: {n: 10,    u: 3},
-  41: {n: 3000,  u: 260},   42: {n: 400,   u: 22},
-  43: {n: 240,   u: 1},     44: {n: 9,     u: 2},
-  // Sin filigrana
-  47: {n: 1100,  u: null},  48: {n: 3,     u: 1},
-  49: {n: 300,   u: 12},
-  // 1860-1865
-  54: {n: 2500,  u: 1200},  58: {n: 2,     u: 1},
-  59: {n: 38,    u: 11},    61: {n: 40,    u: 18},    62: {n: 32,    u: 18},
-  63: {n: 32,    u: 10},    64: {n: 2,     u: 1},     65: {n: 4,     u: 2},
-  67: {n: 40,    u: 12},    68: {n: 40,    u: 12},    70: {n: 370,   u: 18},
-  72: {n: 370,   u: 55},
-  // Dentados
-  75: {n: 36,    u: 1},     79: {n: 1200,  u: 250},   81: {n: 38,    u: 2},
-  84: {n: 3500,  u: 4000},  85: {n: 2300,  u: null},  89: {n: 285,   u: 18},
-  91: {n: 110,   u: 11},    93: {n: 390,   u: 40},    94: {n: 24,    u: 1},
-  95: {n: 40,    u: 15},    96: {n: 40,    u: 15},    97: {n: 18,    u: 2},
-  101:{n: 1300,  u: 360}
-};
-
 // ==================== PRECIOS CATÁLOGO EDIFIL 2020 ====================
 // Fuente: Catálogo Edifil Especializado Serie Azul Tomo I Siglo XIX (2020)
 // Precio Normal (calidad estándar): [nuevo_€, usado_€]
@@ -1214,8 +1186,8 @@ function renderGrid(filtered) {
     let precioBadge = '';
     if (precio && currentEpoca === 'isabel2') {
       const partes = [];
-      if (precio.n) partes.push(`N: ${precio.n}€`);
-      if (precio.u) partes.push(`U: ${precio.u}€`);
+      if (precio[0]) partes.push(`N: ${precio[0]}€`);
+      if (precio[1]) partes.push(`U: ${precio[1]}€`);
       if (partes.length) precioBadge = `<div class="stamp-precio">📋 ${partes.join(' · ')}</div>`;
     }
     if (fil) {
