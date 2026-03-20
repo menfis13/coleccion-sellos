@@ -384,7 +384,13 @@
   .btn-login-google svg { flex-shrink: 0; }
   .read-only-notice { background: rgba(184,134,11,0.08); border: 1px solid rgba(184,134,11,0.2); color: #a89070; padding: 6px 32px; font-size: 0.78rem; text-align: center; letter-spacing: 0.08em; }
   .edit-only { } /* controlled via JS */
-  /* ── FILIGRANA ── */
+  /* ── PRECIOS CATÁLOGO ── */
+  .precio-catalogo { display:flex; gap:12px; flex-wrap:wrap; margin:6px 0 2px; }
+  .precio-item { font-family:'Crimson Pro',serif; font-size:0.82rem; color:var(--sepia); }
+  .precio-item strong { color:var(--gold); font-size:0.95rem; }
+  .precio-source { font-size:0.62rem; color:rgba(92,61,30,0.45); letter-spacing:0.06em; text-transform:uppercase; }
+  /* Badge precio en tarjeta grid */
+  .stamp-precio { font-size:0.68rem; color:var(--gold); font-family:'Crimson Pro',serif; font-weight:600; letter-spacing:0.03em; margin-top:3px; }
   .filigrana-badge {
     display: inline-flex; align-items: center; gap: 3px;
     font-size: 0.6rem; letter-spacing: 0.06em; text-transform: uppercase;
@@ -401,7 +407,18 @@
   .filigrana-aviso.requerida { background: rgba(184,134,11,0.08); border-left: 3px solid var(--gold); color: var(--sepia); }
   .filigrana-aviso.ok        { background: rgba(74,94,74,0.08); border-left: 3px solid var(--sage); color: var(--sage); }
   .filigrana-aviso.alerta    { background: rgba(139,58,42,0.08); border-left: 3px solid var(--rust); color: var(--rust); }
-  #cropModal { display:none; position:fixed; inset:0; background:#0d0a06; z-index:9999; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:16px; box-sizing:border-box; }
+  /* ── PRECIOS EDIFIL ── */
+  .precio-edifil {
+    margin: 6px 0 8px; padding: 8px 12px; border-radius: 2px;
+    background: rgba(184,134,11,0.06); border: 1px solid rgba(184,134,11,0.2);
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  }
+  .precio-edifil-titulo { font-family:'Crimson Pro',serif; font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); font-weight:600; flex-shrink:0; }
+  .precio-edifil-valores { display:flex; gap:16px; flex-wrap:wrap; }
+  .precio-item { text-align:center; }
+  .precio-item-label { font-size:0.65rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--sepia); display:block; }
+  .precio-item-valor { font-family:'Playfair Display',serif; font-size:1rem; color:var(--ink); font-weight:700; }
+  .precio-nota { font-size:0.63rem; color:var(--sepia); opacity:0.6; margin-left:auto; font-style:italic; align-self:flex-end; } { display:none; position:fixed; inset:0; background:#0d0a06; z-index:9999; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:16px; box-sizing:border-box; }
   #cropModal.open { display:flex; }
   #cropHeader { color:#c8a96e; font-family:'Playfair Display',serif; font-size:1.1rem; letter-spacing:0.05em; }
   #cropHint { color:#6a5a40; font-family:'Crimson Pro',serif; font-size:0.82rem; letter-spacing:0.06em; }
@@ -603,6 +620,7 @@
     </div>
     <div class="modal-body">
       <div id="filigrana-aviso-modal"></div>
+      <div id="precio-edifil-modal"></div>
       <div class="photo-section">
         <div class="photo-slot" id="slotReferencia">
           <div class="photo-slot-preview"></div>
@@ -815,6 +833,70 @@ function getFiligranaSello(s) {
   const info = FILIGRANAS_REQUERIDAS[s.edifil];
   if (!info) return null;
   return { requerida: info.tipo, opciones: info.opciones, registrada: s.filigrana || null };
+}
+
+// ==================== PRECIOS CATÁLOGO EDIFIL 2020 ====================
+// Precios en euros, calidad Normal. Solo época Isabel II (Edifil 1-101)
+// null = dato no extraíble con fiabilidad del OCR — consultar catálogo
+const PRECIOS_EDIFIL = {
+  1:  {n: 400,   u: 15},    2:  {n: 2200,  u: 260},   3:  {n: 2300,  u: 260},
+  6:  {n: 400,   u: 20},    15: {n: 1800,  u: 130},   16: {n: 2200,  u: 480},
+  18: {n: 1900,  u: 110},   23: {n: 13200, u: 7000},  28: {n: 300,   u: null},
+  29: {n: 9,     u: null},  30: {n: 9,     u: null},  32: {n: 12000, u: 1800},
+  33: {n: 2,     u: 2},     34: {n: 370,   u: 5},
+  // Filigranas
+  39: {n: 1100,  u: 170},   40: {n: 10,    u: 3},
+  41: {n: 3000,  u: 260},   42: {n: 400,   u: 22},
+  43: {n: 240,   u: 1},     44: {n: 9,     u: 2},
+  // Sin filigrana
+  47: {n: 1100,  u: null},  48: {n: 3,     u: 1},
+  49: {n: 300,   u: 12},
+  // 1860-1865
+  54: {n: 2500,  u: 1200},  58: {n: 2,     u: 1},
+  59: {n: 38,    u: 11},    61: {n: 40,    u: 18},    62: {n: 32,    u: 18},
+  63: {n: 32,    u: 10},    64: {n: 2,     u: 1},     65: {n: 4,     u: 2},
+  67: {n: 40,    u: 12},    68: {n: 40,    u: 12},    70: {n: 370,   u: 18},
+  72: {n: 370,   u: 55},
+  // Dentados
+  75: {n: 36,    u: 1},     79: {n: 1200,  u: 250},   81: {n: 38,    u: 2},
+  84: {n: 3500,  u: 4000},  85: {n: 2300,  u: null},  89: {n: 285,   u: 18},
+  91: {n: 110,   u: 11},    93: {n: 390,   u: 40},    94: {n: 24,    u: 1},
+  95: {n: 40,    u: 15},    96: {n: 40,    u: 15},    97: {n: 18,    u: 2},
+  101:{n: 1300,  u: 360}
+};
+
+// ==================== PRECIOS CATÁLOGO EDIFIL 2020 ====================
+// Fuente: Catálogo Edifil Especializado Serie Azul Tomo I Siglo XIX (2020)
+// Precio Normal (calidad estándar): [nuevo_€, usado_€]
+const PRECIOS_EDIFIL = {
+  1:[500,19],"1A":[400,15],2:[2200,260],3:[2300,260],4:[3000,750],5:[4100,2100],
+  6:[250,3],7:[3900,170],8:[17500,10200],9:[2250,250],10:[3600,1000],11:[2600,470],
+  12:[350,3],13:[1800,130],14:[14700,4800],15:[2000,110],16:[3200,470],
+  17:[400,2],18:[1900,110],19:[10000,3000],20:[2000,110],21:[2800,400],
+  22:[2200,480],23:[13200,7000],
+  24:[300,2],25:[1400,95],26:[1350,90],27:[2300,280],
+  28:[2,2],29:[3,3],30:[9,11],31:[60,70],
+  32:[1800,450],"32A":[12000,1800],"32B":[24000,600],
+  33:[370,2],"33A":[370,5],34:[3000,310],"34A":[7000,null],
+  35:[1,2],36:[1,2],37:[3,4],38:[18,22],
+  39:[2400,130],40:[240,1],"40A":[300,4],41:[1000,13],42:[700,13],
+  43:[3000,120],44:[9,2],"44A":[10,2],45:[3000,170],46:[400,22],
+  47:[450,38],48:[135,1],"48A":[3,1],"48B":[60,7],"48C":[6,19],"48D":[65,200],
+  49:[18,22],50:[60,22],
+  51:[300,18],52:[37,1],53:[300,12],54:[2500,1200],55:[240,10],56:[330,11],
+  57:[32,10],58:[2,1],"58A":[4,1],59:[38,7],60:[170,220],61:[55,18],62:[32,11],
+  63:[45,16],64:[2,1],65:[40,12],66:[170,180],67:[170,75],68:[40,12],
+  69:[270,28],70:[370,18],71:[1350,680],72:[370,55],73:[280,28],"73A":[400,60],
+  74:[460,120],75:[38,1],"75A":[45,1],76:[520,60],77:[3500,2300],78:[1700,480],
+  79:[1200,250],"79A":[1350,340],
+  80:[240,28],81:[36,1],82:[225,11],83:[950,380],84:[280,24],85:[180,18],86:[1000,66],
+  87:[390,40],88:[24,1],89:[185,7],"89A":[285,10],90:[1300,360],91:[230,23],92:[110,11],
+  93:[40,15],94:[40,15],95:[240,22],96:[18,1],
+  97:[260,15],98:[26,1],99:[500,75],100:[160,13],"100A":[850,35],101:[2000,450]
+};
+
+function getPrecioEdifil(edifil) {
+  return PRECIOS_EDIFIL[edifil] || null;
 }
 
 const EPOCAS = {
@@ -1128,7 +1210,14 @@ function renderGrid(filtered) {
       ? `<img class="stamp-photo" src="${s.referencia}" alt="Sello ${s.edifil}">`
       : `<div class="stamp-placeholder"><div class="stamp-placeholder-num">${s.edifil}</div></div>`;
     const fil = getFiligranaSello(s);
-    let filBadge = '';
+    const precio = PRECIOS_EDIFIL[s.edifil];
+    let precioBadge = '';
+    if (precio && currentEpoca === 'isabel2') {
+      const partes = [];
+      if (precio.n) partes.push(`N: ${precio.n}€`);
+      if (precio.u) partes.push(`U: ${precio.u}€`);
+      if (partes.length) precioBadge = `<div class="stamp-precio">📋 ${partes.join(' · ')}</div>`;
+    }
     if (fil) {
       if (fil.requerida === 'Sin filigrana') {
         filBadge = `<span class="filigrana-badge requerida" title="Sin filigrana — cuidado con confundirlo con Edifil ${s.edifil-4}">ℹ Sin filigrana</span>`;
@@ -1337,6 +1426,26 @@ function fillModal(s) {
     }
   } else {
     avisoEl.innerHTML = '';
+  }
+
+  // Bloque de precios Edifil 2020
+  const precioEl = document.getElementById('precio-edifil-modal');
+  const precio = getPrecioEdifil(s.edifil);
+  if (precio) {
+    const [nuevo, usado] = precio;
+    const usadoHtml = usado != null
+      ? `<div class="precio-item"><span class="precio-item-label">Usado</span><span class="precio-item-valor">${usado.toLocaleString('es-ES')} €</span></div>`
+      : '';
+    precioEl.innerHTML = `<div class="precio-edifil">
+      <span class="precio-edifil-titulo">📋 Edifil 2020</span>
+      <div class="precio-edifil-valores">
+        <div class="precio-item"><span class="precio-item-label">Nuevo</span><span class="precio-item-valor">${nuevo.toLocaleString('es-ES')} €</span></div>
+        ${usadoHtml}
+      </div>
+      <span class="precio-nota">Calidad Normal · Catálogo 2020</span>
+    </div>`;
+  } else {
+    precioEl.innerHTML = '';
   }
 
   setPhotoSlot('referencia', s.referencia);
