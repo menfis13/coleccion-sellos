@@ -3536,6 +3536,86 @@ function toggleDarkMode() {
   }
 })();
 
+// ===============================
+// DRAG & DROP + PEGAR (SEGURO)
+// ===============================
+
+function handleImageFile(file) {
+  const fakeEvent = { target: { files: [file], value: '' } };
+
+  // reutiliza EXACTAMENTE tu sistema actual
+  if (typeof handleFileSelect === 'function') {
+    handleFileSelect(fakeEvent);
+  }
+}
+
+function initDragAndDrop() {
+  document.querySelectorAll('input[type="file"]').forEach(input => {
+    
+    const container = input.closest('*');
+
+    if (!container) return;
+
+    container.addEventListener('dragover', e => {
+      e.preventDefault();
+      container.style.outline = '2px dashed #caa74d';
+    });
+
+    container.addEventListener('dragleave', () => {
+      container.style.outline = '';
+    });
+
+    container.addEventListener('drop', e => {
+      e.preventDefault();
+      container.style.outline = '';
+
+      const file = e.dataTransfer.files[0];
+      if (!file || !file.type.startsWith('image/')) return;
+
+      // simulamos que se ha seleccionado en ese input
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      input.files = dt.files;
+
+      const event = new Event('change', { bubbles: true });
+      input.dispatchEvent(event);
+    });
+
+  });
+}
+
+function initPasteSupport() {
+  document.addEventListener('paste', e => {
+    const items = e.clipboardData.items;
+
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+
+      if (item.type.startsWith('image/')) {
+        const file = item.getAsFile();
+
+        // usa el primer input de imagen disponible
+        const input = document.querySelector('input[type="file"]');
+        if (!input) return;
+
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        input.files = dt.files;
+
+        const event = new Event('change', { bubbles: true });
+        input.dispatchEvent(event);
+
+        break;
+      }
+    }
+  });
+}
+
+window.addEventListener('load', () => {
+  initDragAndDrop();
+  initPasteSupport();
+});
+
 </script>
 
 <!-- Modal recortador manual -->
