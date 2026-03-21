@@ -3293,12 +3293,22 @@ async function handlePhoto(event) {
           if (idx >= 0) {
             stamps[idx][currentPhotoTarget] = json.secure_url;
             setPhotoSlot(currentPhotoTarget, json.secure_url);
+            // Auto-estado: si no tenía estado, marcar como Nuevo automáticamente
+            let autoEstadoMsg = '';
+            if (!stamps[idx].estado) {
+              stamps[idx].estado = 'Nuevo';
+              const fEstado = document.getElementById('fEstado');
+              if (fEstado) fEstado.value = 'Nuevo';
+              autoEstadoMsg = ' · marcado como Nuevo ✓';
+              // Actualizar contadores de la cabecera
+              renderStamps();
+            }
             await saveToSheets(stamps[idx]);
             saveLocal();
             renderStamps();
           }
           setSyncStatus('', 'Foto guardada en Cloudinary ✓');
-          showToast('Foto guardada ✓');
+          showToast('Foto guardada ✓' + autoEstadoMsg);
         } else {
           console.error('Cloudinary error:', json);
           throw new Error(json.error?.message || 'Error en Cloudinary');
@@ -3306,7 +3316,17 @@ async function handlePhoto(event) {
       } catch(err) {
         console.error(err);
         const idx = stamps.findIndex(s => s.edifil === currentStampId);
-        if (idx >= 0) { stamps[idx][currentPhotoTarget] = previewSrc; saveLocal(); renderStamps(); }
+        if (idx >= 0) {
+          stamps[idx][currentPhotoTarget] = previewSrc;
+          // Auto-estado también en caso de error (guardado local)
+          if (!stamps[idx].estado) {
+            stamps[idx].estado = 'Nuevo';
+            const fEstado = document.getElementById('fEstado');
+            if (fEstado) fEstado.value = 'Nuevo';
+            showToast('Foto guardada localmente · marcado como Nuevo ✓');
+          }
+          saveLocal(); renderStamps();
+        }
         setSyncStatus('error', 'Error subiendo foto — guardada localmente');
         showToast('Error: ' + err.message);
       }
