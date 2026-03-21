@@ -775,23 +775,66 @@ function applyAuthUI() {
   const area = document.getElementById('authArea');
   const authPortada = document.getElementById('authPortada');
   const notice = document.getElementById('readOnlyNotice');
+  const isMobile = window.innerWidth <= 600;
+
   if (isEditor()) {
     notice.style.display = 'none';
     area.innerHTML = `<button class="btn-add-header" onclick="openNew()">＋ Añadir sello</button>`;
-    if (authPortada) authPortada.innerHTML = `
-      <div style="display:flex;align-items:center;gap:10px;background:rgba(0,0,0,0.4);padding:8px 14px;border-radius:3px;border:1px solid rgba(184,134,11,0.2)">
-        <img src="${currentUser.picture}" alt="" style="width:26px;height:26px;border-radius:50%;border:1px solid var(--gold)">
-        <span style="font-size:0.78rem;color:#a89070">${currentUser.name}</span>
-        <button class="btn-logout" onclick="signOut()">Salir</button>
-      </div>`;
+
+    if (isMobile) {
+      // Móvil con sesión: ocultar panel flotante, mostrar solo avatar en header
+      if (authPortada) authPortada.style.display = 'none';
+      let avatarBtn = document.getElementById('headerAvatar');
+      if (!avatarBtn) {
+        avatarBtn = document.createElement('button');
+        avatarBtn.id = 'headerAvatar';
+        avatarBtn.title = currentUser.name + ' · Toca para cerrar sesión';
+        avatarBtn.style.cssText = 'background:none;border:2px solid var(--gold);border-radius:50%;cursor:pointer;padding:0;width:32px;height:32px;overflow:hidden;flex-shrink:0;opacity:0.85;';
+        avatarBtn.innerHTML = `<img src="${currentUser.picture}" alt="" style="width:100%;height:100%;object-fit:cover;">`;
+        avatarBtn.onclick = () => { if (confirm('¿Cerrar sesión?')) signOut(); };
+        const darkBtn = document.getElementById('darkModeBtn');
+        if (darkBtn && darkBtn.parentNode) darkBtn.parentNode.insertBefore(avatarBtn, darkBtn);
+      } else {
+        avatarBtn.style.display = '';
+        avatarBtn.innerHTML = `<img src="${currentUser.picture}" alt="" style="width:100%;height:100%;object-fit:cover;">`;
+      }
+    } else {
+      // Escritorio con sesión: panel flotante discreto
+      if (authPortada) {
+        authPortada.style.display = '';
+        authPortada.innerHTML = `
+          <div style="display:flex;align-items:center;gap:10px;background:rgba(0,0,0,0.4);padding:8px 14px;border-radius:3px;border:1px solid rgba(184,134,11,0.2)">
+            <img src="${currentUser.picture}" alt="" style="width:26px;height:26px;border-radius:50%;border:1px solid var(--gold)">
+            <span style="font-size:0.78rem;color:#a89070">${currentUser.name}</span>
+            <button class="btn-logout" onclick="signOut()">Salir</button>
+          </div>`;
+      }
+    }
   } else {
     notice.style.display = 'block';
     area.innerHTML = '';
-    if (authPortada) authPortada.innerHTML = `
-      <button class="btn-login-google" onclick="triggerSignIn()">
-        <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/><path fill="#FBBC05" d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707s.102-1.167.282-1.707V4.961H.957C.347 6.175 0 7.55 0 9s.348 2.825.957 4.039l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.961L3.964 7.293C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
-        Iniciar sesión
-      </button>`;
+    // Ocultar avatar del header si existía
+    const avatarBtn = document.getElementById('headerAvatar');
+    if (avatarBtn) avatarBtn.style.display = 'none';
+
+    if (authPortada) {
+      authPortada.style.display = '';
+      if (isMobile) {
+        // Móvil sin sesión: botón compacto
+        authPortada.innerHTML = `
+          <button class="btn-login-google" onclick="triggerSignIn()" style="font-size:0.8rem;padding:6px 10px;gap:6px;">
+            <svg width="16" height="16" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/><path fill="#FBBC05" d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707s.102-1.167.282-1.707V4.961H.957C.347 6.175 0 7.55 0 9s.348 2.825.957 4.039l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.961L3.964 7.293C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
+            Entrar
+          </button>`;
+      } else {
+        // Escritorio sin sesión: botón completo
+        authPortada.innerHTML = `
+          <button class="btn-login-google" onclick="triggerSignIn()">
+            <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/><path fill="#FBBC05" d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707s.102-1.167.282-1.707V4.961H.957C.347 6.175 0 7.55 0 9s.348 2.825.957 4.039l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.961L3.964 7.293C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
+            Iniciar sesión
+          </button>`;
+      }
+    }
   }
   document.querySelectorAll('.edit-only').forEach(el => { el.style.display = isEditor() ? '' : 'none'; });
 }
@@ -3559,6 +3602,13 @@ function entrarEpoca(epocaId) {
   currentEpoca = epocaId;
   document.getElementById('portada').classList.remove('open');
   document.body.style.overflow = '';
+  // En móvil: ocultar authPortada flotante, mostrar avatar en header si hay sesión
+  if (window.innerWidth <= 600) {
+    const ap = document.getElementById('authPortada');
+    if (ap) ap.style.display = 'none';
+    const av = document.getElementById('headerAvatar');
+    if (av && isEditor()) av.style.display = '';
+  }
   // Asegurar que portada queda en el historial antes de la época
   history.replaceState({ view: 'portada' }, '', '');
   history.pushState({ view: 'epoca', epocaId }, '', '');
@@ -3568,6 +3618,13 @@ function entrarEpoca(epocaId) {
 function entrarColeccion() {
   document.getElementById('portada').classList.remove('open');
   document.body.style.overflow = '';
+  // En móvil: ocultar authPortada flotante, mostrar avatar en header si hay sesión
+  if (window.innerWidth <= 600) {
+    const ap = document.getElementById('authPortada');
+    if (ap) ap.style.display = 'none';
+    const av = document.getElementById('headerAvatar');
+    if (av && isEditor()) av.style.display = '';
+  }
   switchEpoca(currentEpoca);
 }
 
