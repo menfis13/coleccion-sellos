@@ -3536,75 +3536,24 @@ function toggleDarkMode() {
   }
 })();
 
-// ==========================================
-// MOTOR DE IMÁGENES UNIVERSAL (DRAG, DROP & PASTE)
-// ==========================================
-
-function initSmartImages() {
-  // 1. GESTIÓN DE ARRASTRAR Y SOLTAR
-  document.addEventListener('dragover', e => e.preventDefault());
-  
-  document.addEventListener('drop', e => {
-    const slot = e.target.closest('.photo-slot, .upload-area, [onclick*="click"]');
-    if (!slot) return;
-    
-    e.preventDefault();
-    const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith('image/')) {
-      insertFileInSlot(file, slot);
-    }
-  });
-
-  // 2. GESTIÓN DE PEGAR (CTRL+V)
-  document.addEventListener('paste', e => {
-    const items = e.clipboardData.items;
-    for (let i = 0; i < items.length; i++) {
-      if (items[i].type.startsWith('image/')) {
-        const file = items[i].getAsFile();
-        // Buscamos el slot que tenga el foco o el primero visible en el editor
-        let targetSlot = document.activeElement.closest('.photo-slot, .upload-area') || 
-                         document.querySelector('.photo-slot:not([style*="none"]), .upload-area');
-        
-        if (targetSlot) {
-          insertFileInSlot(file, targetSlot);
-        }
-        break;
-      }
-    }
-  });
-}
-
-function insertFileInSlot(file, slot) {
-  const input = slot.querySelector('input[type="file"]') || 
-                document.getElementById(slot.id.replace('slot', 'input')) ||
-                document.querySelector('input[type="file"]');
-                
-  if (input) {
-    const dt = new DataTransfer();
-    dt.items.add(file);
-    input.files = dt.files;
-    // Esto activa la previsualización y el recortador que ya tienes
-    input.dispatchEvent(new Event('change', { bubbles: true }));
-    console.log("Imagen insertada en:", input.id);
-  }
-}
-
-// Iniciar todo
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initSmartImages);
-} else {
-  initSmartImages();
-}
-
 </script>
 
-<style>
-  /* Guía visual para saber dónde soltar */
-  .photo-slot:hover, .upload-area:hover {
-    border: 2px dashed #b8860b !important;
-    background: rgba(184, 134, 11, 0.05) !important;
-  }
-</style>
-
+<!-- Modal recortador manual -->
+<div id="cropModal">
+  <div id="cropHeader">Recortar imagen</div>
+  <div id="cropHint">Arrastra los bordes o esquinas para ajustar · Toca dentro para mover</div>
+  <div id="cropWrap">
+    <canvas id="cropBg"></canvas>
+    <canvas id="cropOverlay"></canvas>
+  </div>
+  <div class="crop-btns">
+    <button id="btnCropSkip" onclick="confirmCrop(false)">Sin recortar</button>
+    <button id="btnCropRotate" onclick="rotateCrop()" title="Rotar 90°">↻</button>
+    <button id="btnCropOk"   onclick="confirmCrop(true)">✓ Recortar</button>
+  </div>
+</div>
 </body>
 </html>
+
+
+
