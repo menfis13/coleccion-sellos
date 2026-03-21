@@ -3537,70 +3537,36 @@ function toggleDarkMode() {
 })();
 
 // ==========================================
-// SISTEMA DE IMÁGENES: DRAG & DROP + PEGAR
+// MOTOR DE IMÁGENES UNIVERSAL (DRAG, DROP & PASTE)
 // ==========================================
 
-function initDragAndDrop() {
-  // Buscamos los contenedores de las fotos (delante y detrás)
-  const slots = document.querySelectorAll('.photo-slot, .upload-area');
+function initSmartImages() {
+  // 1. GESTIÓN DE ARRASTRAR Y SOLTAR
+  document.addEventListener('dragover', e => e.preventDefault());
   
-  slots.forEach(slot => {
-    slot.addEventListener('dragover', e => {
-      e.preventDefault();
-      slot.style.border = '2px dashed #e0b84a';
-      slot.style.backgroundColor = 'rgba(224, 184, 74, 0.1)';
-    });
-
-    slot.addEventListener('dragleave', () => {
-      slot.style.border = '';
-      slot.style.backgroundColor = '';
-    });
-
-    slot.addEventListener('drop', e => {
-      e.preventDefault();
-      slot.style.border = '';
-      slot.style.backgroundColor = '';
-      
-      const file = e.dataTransfer.files[0];
-      if (!file || !file.type.startsWith('image/')) return;
-
-      const input = slot.querySelector('input[type="file"]');
-      if (input) {
-        const dt = new DataTransfer();
-        dt.items.add(file);
-        input.files = dt.files;
-        // Dispara el evento para que el sistema de Menfis procese la imagen
-        input.dispatchEvent(new Event('change', { bubbles: true }));
-      }
-    });
+  document.addEventListener('drop', e => {
+    const slot = e.target.closest('.photo-slot, .upload-area, [onclick*="click"]');
+    if (!slot) return;
+    
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
+      insertFileInSlot(file, slot);
+    }
   });
-}
 
-function initPasteSupport() {
+  // 2. GESTIÓN DE PEGAR (CTRL+V)
   document.addEventListener('paste', e => {
-    // Solo funciona si el modal de edición está abierto
-    const modal = document.getElementById('modalSello') || document.getElementById('editor');
-    if (!modal || modal.style.display === 'none') return;
-
     const items = e.clipboardData.items;
     for (let i = 0; i < items.length; i++) {
       if (items[i].type.startsWith('image/')) {
         const file = items[i].getAsFile();
+        // Buscamos el slot que tenga el foco o el primero visible en el editor
+        let targetSlot = document.activeElement.closest('.photo-slot, .upload-area') || 
+                         document.querySelector('.photo-slot:not([style*="none"]), .upload-area');
         
-        // Si el usuario hizo clic o tiene el foco en el área de la foto trasera, va ahí.
-        // Si no, por defecto a la delantera.
-        let inputId = 'inputDelante';
-        if (document.activeElement && document.activeElement.closest('#slotDetras')) {
-          inputId = 'inputDetras';
-        }
-
-        const input = document.getElementById(inputId) || document.querySelector('input[type="file"]');
-        
-        if (input) {
-          const dt = new DataTransfer();
-          dt.items.add(file);
-          input.files = dt.files;
-          input.dispatchEvent(new Event('change', { bubbles: true }));
+        if (targetSlot) {
+          insertFileInSlot(file, targetSlot);
         }
         break;
       }
@@ -3608,27 +3574,37 @@ function initPasteSupport() {
   });
 }
 
-// Activamos las funciones al cargar la página
-window.addEventListener('load', () => {
-  initDragAndDrop();
-  initPasteSupport();
-});
+function insertFileInSlot(file, slot) {
+  const input = slot.querySelector('input[type="file"]') || 
+                document.getElementById(slot.id.replace('slot', 'input')) ||
+                document.querySelector('input[type="file"]');
+                
+  if (input) {
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    input.files = dt.files;
+    // Esto activa la previsualización y el recortador que ya tienes
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+    console.log("Imagen insertada en:", input.id);
+  }
+}
+
+// Iniciar todo
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initSmartImages);
+} else {
+  initSmartImages();
+}
 
 </script>
 
-<div id="cropModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; flex-direction:column; align-items:center; justify-content:center;">
-  <div id="cropHeader" style="color:white; margin-bottom:10px; font-family:'Playfair Display',serif; font-size:1.5rem;">Recortar imagen</div>
-  <div id="cropHint" style="color:#ccc; margin-bottom:20px; font-size:0.9rem;">Arrastra los bordes para ajustar · Toca dentro para mover</div>
-  <div id="cropWrap" style="position:relative; background:#222; max-width:90vw; max-height:70vh;">
-    <canvas id="cropBg"></canvas>
-    <canvas id="cropOverlay" style="position:absolute; top:0; left:0; cursor:move;"></canvas>
-  </div>
-  <div class="crop-btns" style="margin-top:20px; display:flex; gap:15px;">
-    <button id="btnCropSkip" onclick="confirmCrop(false)" style="padding:10px 20px; cursor:pointer;">Sin recortar</button>
-    <button id="btnCropRotate" onclick="rotateCrop()" style="padding:10px 20px; cursor:pointer;">↻ Rotar</button>
-    <button id="btnCropOk" onclick="confirmCrop(true)" style="padding:10px 20px; background:#b8860b; color:white; border:none; cursor:pointer; font-weight:bold;">✓ Aplicar</button>
-  </div>
-</div>
+<style>
+  /* Guía visual para saber dónde soltar */
+  .photo-slot:hover, .upload-area:hover {
+    border: 2px dashed #b8860b !important;
+    background: rgba(184, 134, 11, 0.05) !important;
+  }
+</style>
 
 </body>
 </html>
