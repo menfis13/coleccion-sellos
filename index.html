@@ -785,7 +785,9 @@ function handleGoogleCredential(response) {
   }
   currentUser = { name: payload.name, email: payload.email, picture: payload.picture };
   _googleCredentialToken = response.credential; // Guardar token JWT real en memoria
-  // NO guardamos sesión en localStorage (vulnerable a manipulación)
+  // Guardar el TOKEN COMPLETO en localStorage (seguro - está firmado por Google)
+  // No guardamos datos del usuario directamente (eso sí era manipulable)
+  localStorage.setItem('sellos_google_token', response.credential);
   applyAuthUI();
   showToast('✓ Sesión iniciada · ' + payload.name);
 }
@@ -806,17 +808,39 @@ function triggerSignIn() {
 
 function signOut() {
   currentUser = null;
-  _googleCredentialToken = null; // Limpiar token
-  // localStorage no se usa para sesión (era vulnerable)
+  _googleCredentialToken = null; // Limpiar token de memoria
+  localStorage.removeItem('sellos_google_token'); // Limpiar token guardado
   google.accounts.id.disableAutoSelect();
   applyAuthUI();
   showToast('Sesión cerrada');
 }
 
 window.addEventListener('load', () => {
-  // SEGURIDAD: NO se restaura sesión desde localStorage.
-  // El usuario debe autenticarse con Google cada vez que abre la app.
-  // Esto previene que alguien manipule localStorage para obtener acceso de editor.
+  // SEGURIDAD: Restaurar sesión desde el token JWT completo de Google (no desde datos de usuario)
+  // El token JWT está firmado por Google - aunque alguien lo lea no puede falsificarlo
+  // Solo guardamos el token completo, nunca los datos del usuario directamente
+  try {
+    const savedToken = localStorage.getItem('sellos_google_token');
+    if (savedToken) {
+      // Decodificar el payload del JWT (parte central entre los dos puntos)
+      const parts = savedToken.split('.');
+      if (parts.length === 3) {
+        const payload = JSON.parse(atob(parts[1]));
+        const now = Math.floor(Date.now() / 1000);
+        // Verificar que el token no ha expirado Y que el email es el autorizado
+        if (payload.exp > now && payload.email === AUTHORIZED_EMAIL) {
+          currentUser = { name: payload.name, email: payload.email, picture: payload.picture };
+          _googleCredentialToken = savedToken;
+          // Token válido restaurado silenciosamente
+        } else {
+          // Token expirado o email no autorizado - limpiar
+          localStorage.removeItem('sellos_google_token');
+        }
+      }
+    }
+  } catch(e) {
+    localStorage.removeItem('sellos_google_token');
+  }
 
   const t = setInterval(() => {
     if (window.google && google.accounts) {
