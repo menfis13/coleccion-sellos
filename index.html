@@ -3536,81 +3536,79 @@ function toggleDarkMode() {
   }
 })();
 
-// ===============================
-// DRAG & DROP + PEGAR (SEGURO)
-// ===============================
-
-function handleImageFile(file) {
-  const fakeEvent = { target: { files: [file], value: '' } };
-
-  // reutiliza EXACTAMENTE tu sistema actual
-  if (typeof handleFileSelect === 'function') {
-    handleFileSelect(fakeEvent);
-  }
-}
+// ==========================================
+// SISTEMA DE IMÁGENES: DRAG & DROP + PEGAR
+// ==========================================
 
 function initDragAndDrop() {
-  document.querySelectorAll('input[type="file"]').forEach(input => {
-    
-    const container = input.closest('*');
-
-    if (!container) return;
-
-    container.addEventListener('dragover', e => {
+  // Buscamos los contenedores de las fotos (delante y detrás)
+  const slots = document.querySelectorAll('.photo-slot, .upload-area');
+  
+  slots.forEach(slot => {
+    slot.addEventListener('dragover', e => {
       e.preventDefault();
-      container.style.outline = '2px dashed #caa74d';
+      slot.style.border = '2px dashed #e0b84a';
+      slot.style.backgroundColor = 'rgba(224, 184, 74, 0.1)';
     });
 
-    container.addEventListener('dragleave', () => {
-      container.style.outline = '';
+    slot.addEventListener('dragleave', () => {
+      slot.style.border = '';
+      slot.style.backgroundColor = '';
     });
 
-    container.addEventListener('drop', e => {
+    slot.addEventListener('drop', e => {
       e.preventDefault();
-      container.style.outline = '';
-
+      slot.style.border = '';
+      slot.style.backgroundColor = '';
+      
       const file = e.dataTransfer.files[0];
       if (!file || !file.type.startsWith('image/')) return;
 
-      // simulamos que se ha seleccionado en ese input
-      const dt = new DataTransfer();
-      dt.items.add(file);
-      input.files = dt.files;
-
-      const event = new Event('change', { bubbles: true });
-      input.dispatchEvent(event);
+      const input = slot.querySelector('input[type="file"]');
+      if (input) {
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        input.files = dt.files;
+        // Dispara el evento para que el sistema de Menfis procese la imagen
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+      }
     });
-
   });
 }
 
 function initPasteSupport() {
   document.addEventListener('paste', e => {
+    // Solo funciona si el modal de edición está abierto
+    const modal = document.getElementById('modalSello') || document.getElementById('editor');
+    if (!modal || modal.style.display === 'none') return;
+
     const items = e.clipboardData.items;
-
     for (let i = 0; i < items.length; i++) {
-      const item = items[i];
+      if (items[i].type.startsWith('image/')) {
+        const file = items[i].getAsFile();
+        
+        // Si el usuario hizo clic o tiene el foco en el área de la foto trasera, va ahí.
+        // Si no, por defecto a la delantera.
+        let inputId = 'inputDelante';
+        if (document.activeElement && document.activeElement.closest('#slotDetras')) {
+          inputId = 'inputDetras';
+        }
 
-      if (item.type.startsWith('image/')) {
-        const file = item.getAsFile();
-
-        // usa el primer input de imagen disponible
-        const input = document.querySelector('input[type="file"]');
-        if (!input) return;
-
-        const dt = new DataTransfer();
-        dt.items.add(file);
-        input.files = dt.files;
-
-        const event = new Event('change', { bubbles: true });
-        input.dispatchEvent(event);
-
+        const input = document.getElementById(inputId) || document.querySelector('input[type="file"]');
+        
+        if (input) {
+          const dt = new DataTransfer();
+          dt.items.add(file);
+          input.files = dt.files;
+          input.dispatchEvent(new Event('change', { bubbles: true }));
+        }
         break;
       }
     }
   });
 }
 
+// Activamos las funciones al cargar la página
 window.addEventListener('load', () => {
   initDragAndDrop();
   initPasteSupport();
@@ -3618,22 +3616,19 @@ window.addEventListener('load', () => {
 
 </script>
 
-<!-- Modal recortador manual -->
-<div id="cropModal">
-  <div id="cropHeader">Recortar imagen</div>
-  <div id="cropHint">Arrastra los bordes o esquinas para ajustar · Toca dentro para mover</div>
-  <div id="cropWrap">
+<div id="cropModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; flex-direction:column; align-items:center; justify-content:center;">
+  <div id="cropHeader" style="color:white; margin-bottom:10px; font-family:'Playfair Display',serif; font-size:1.5rem;">Recortar imagen</div>
+  <div id="cropHint" style="color:#ccc; margin-bottom:20px; font-size:0.9rem;">Arrastra los bordes para ajustar · Toca dentro para mover</div>
+  <div id="cropWrap" style="position:relative; background:#222; max-width:90vw; max-height:70vh;">
     <canvas id="cropBg"></canvas>
-    <canvas id="cropOverlay"></canvas>
+    <canvas id="cropOverlay" style="position:absolute; top:0; left:0; cursor:move;"></canvas>
   </div>
-  <div class="crop-btns">
-    <button id="btnCropSkip" onclick="confirmCrop(false)">Sin recortar</button>
-    <button id="btnCropRotate" onclick="rotateCrop()" title="Rotar 90°">↻</button>
-    <button id="btnCropOk"   onclick="confirmCrop(true)">✓ Recortar</button>
+  <div class="crop-btns" style="margin-top:20px; display:flex; gap:15px;">
+    <button id="btnCropSkip" onclick="confirmCrop(false)" style="padding:10px 20px; cursor:pointer;">Sin recortar</button>
+    <button id="btnCropRotate" onclick="rotateCrop()" style="padding:10px 20px; cursor:pointer;">↻ Rotar</button>
+    <button id="btnCropOk" onclick="confirmCrop(true)" style="padding:10px 20px; background:#b8860b; color:white; border:none; cursor:pointer; font-weight:bold;">✓ Aplicar</button>
   </div>
 </div>
+
 </body>
 </html>
-
-
-
