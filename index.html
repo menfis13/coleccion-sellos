@@ -260,6 +260,34 @@
   .list-table tr:nth-child(even) td { background: rgba(237,229,208,0.2); }
 
   .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(26,18,8,0.75); z-index: 500; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(2px); }
+  /* Botones navegación modal anterior/siguiente */
+  .modal-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(20,14,6,0.75);
+    border: 1px solid rgba(184,134,11,0.35);
+    color: var(--gold-light);
+    font-size: 1.4rem;
+    width: 38px; height: 64px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    border-radius: 3px;
+    z-index: 510;
+    transition: background 0.15s, border-color 0.15s;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .modal-nav:hover { background: rgba(184,134,11,0.18); border-color: var(--gold); }
+  .modal-nav:active { background: rgba(184,134,11,0.3); }
+  .modal-nav.prev { left: 6px; }
+  .modal-nav.next { right: 6px; }
+  .modal-nav:disabled { opacity: 0.2; cursor: default; pointer-events: none; }
+  @media (max-width: 600px) {
+    .modal-nav { width: 32px; height: 52px; font-size: 1.1rem; }
+    .modal-nav.prev { left: 2px; }
+    .modal-nav.next { right: 2px; }
+  }
   .modal-overlay.open { display: flex; }
   .modal { background: var(--cream); max-width: 680px; width: 100%; max-height: 90vh; overflow-y: auto; border-radius: 3px; box-shadow: 0 24px 80px rgba(0,0,0,0.4); border-top: 4px solid var(--gold); animation: modalIn 0.25s ease; }
   @keyframes modalIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
@@ -649,6 +677,7 @@
 </div>
 
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <button class="modal-nav prev" id="modalNavPrev" onclick="event.stopPropagation(); navegarSello(-1)" title="Sello anterior (←)">‹</button>
   <div class="modal" id="modal">
     <div class="modal-header">
       <div><div class="modal-edifil" id="mEdifil"></div><div class="modal-title" id="mTitle"></div></div>
@@ -726,6 +755,7 @@
       </div>
     </div>
   </div>
+  <button class="modal-nav next" id="modalNavNext" onclick="event.stopPropagation(); navegarSello(1)" title="Sello siguiente (→)">›</button>
 </div>
 
 <div class="lightbox" id="lightbox" onclick="if(!lbDrag.active && lbScale<=1) closeLightbox()">
@@ -2599,6 +2629,60 @@ function scrollAndHighlight(edifil) {
 }
 
 // ==================== MODAL ====================
+// ── Navegación entre sellos en el modal ──────────────────────────────────────
+function navegarSello(dir) {
+  if (!currentStampId) return;
+  const filtered = getFiltered();
+  const idx = filtered.findIndex(s => s.edifil === currentStampId);
+  if (idx === -1) return;
+  const nextIdx = idx + dir;
+  if (nextIdx < 0 || nextIdx >= filtered.length) return;
+  openStamp(filtered[nextIdx].edifil);
+}
+
+function actualizarNavModal() {
+  if (!currentStampId) return;
+  const filtered = getFiltered();
+  const idx = filtered.findIndex(s => s.edifil === currentStampId);
+  const btnPrev = document.getElementById('modalNavPrev');
+  const btnNext = document.getElementById('modalNavNext');
+  if (btnPrev) btnPrev.disabled = idx <= 0;
+  if (btnNext) btnNext.disabled = idx >= filtered.length - 1;
+}
+
+// Swipe táctil en el modal
+(function() {
+  let touchStartX = 0, touchStartY = 0;
+  document.addEventListener('touchstart', (e) => {
+    const modal = document.getElementById('modalOverlay');
+    if (!modal || !modal.classList.contains('open')) return;
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+
+  document.addEventListener('touchend', (e) => {
+    const modal = document.getElementById('modalOverlay');
+    if (!modal || !modal.classList.contains('open')) return;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    // Solo swipe horizontal claro (más horizontal que vertical, mínimo 60px)
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      navegarSello(dx < 0 ? 1 : -1); // swipe izq = siguiente, swipe der = anterior
+    }
+  }, { passive: true });
+})();
+
+// Teclas ← → cuando el modal está abierto
+document.addEventListener('keydown', (e) => {
+  const modal = document.getElementById('modalOverlay');
+  if (!modal || !modal.classList.contains('open')) return;
+  // No interferir si se está editando un campo de texto
+  if (['INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName)) return;
+  if (e.key === 'ArrowLeft')  { e.preventDefault(); navegarSello(-1); }
+  if (e.key === 'ArrowRight') { e.preventDefault(); navegarSello(1); }
+});
+// ── Fin navegación modal ──────────────────────────────────────────────────────
+
 function openStamp(edifil) {
   const s = stamps.find(x => x.edifil === edifil);
   if (!s) return;
@@ -2611,6 +2695,7 @@ function openStamp(edifil) {
   const formInputs = document.querySelectorAll('#modal .form-input, #modal .form-select, #modal .form-textarea');
   formInputs.forEach(el => { el.readOnly = !isEditor(); el.style.pointerEvents = isEditor() ? '' : 'none'; el.style.background = isEditor() ? '' : '#f5f0e8'; });
   applyAuthUI();
+  actualizarNavModal(); // Actualizar estado botones anterior/siguiente
 }
 function openNew() {
   if (!isEditor()) { showToast('🔒 Inicia sesión para añadir sellos'); return; }
