@@ -745,9 +745,11 @@ const AUTHORIZED_EMAIL = _cfg().mail;
 const GOOGLE_CLIENT_ID = _cfg().cid;
 
 let currentUser = null;
+let _googleCredentialToken = null; // Token JWT real de Google
 
 function isEditor() {
-  return currentUser && currentUser.email === AUTHORIZED_EMAIL;
+  // SEGURIDAD: requiere token JWT real de Google en memoria, no datos de localStorage
+  return currentUser && currentUser.email === AUTHORIZED_EMAIL && _googleCredentialToken !== null;
 }
 
 function applyAuthUI() {
@@ -782,7 +784,8 @@ function handleGoogleCredential(response) {
     return;
   }
   currentUser = { name: payload.name, email: payload.email, picture: payload.picture };
-  localStorage.setItem('sellos_user', JSON.stringify(currentUser));
+  _googleCredentialToken = response.credential; // Guardar token JWT real en memoria
+  // NO guardamos sesión en localStorage (vulnerable a manipulación)
   applyAuthUI();
   showToast('✓ Sesión iniciada · ' + payload.name);
 }
@@ -803,18 +806,17 @@ function triggerSignIn() {
 
 function signOut() {
   currentUser = null;
-  localStorage.removeItem('sellos_user');
+  _googleCredentialToken = null; // Limpiar token
+  // localStorage no se usa para sesión (era vulnerable)
   google.accounts.id.disableAutoSelect();
   applyAuthUI();
   showToast('Sesión cerrada');
 }
 
 window.addEventListener('load', () => {
-  // Recuperar sesión guardada
-  try {
-    const saved = localStorage.getItem('sellos_user');
-    if (saved) { currentUser = JSON.parse(saved); }
-  } catch(e) {}
+  // SEGURIDAD: NO se restaura sesión desde localStorage.
+  // El usuario debe autenticarse con Google cada vez que abre la app.
+  // Esto previene que alguien manipule localStorage para obtener acceso de editor.
 
   const t = setInterval(() => {
     if (window.google && google.accounts) {
