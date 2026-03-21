@@ -301,6 +301,23 @@
   .btn-secondary:hover { background: var(--parchment); }
 
   input[type="file"] { display: none; }
+  /* Drag & Drop / Paste en slots de foto */
+  .photo-slot.drag-over {
+    outline: 2.5px dashed var(--gold) !important;
+    background: rgba(184,134,11,0.07) !important;
+    transition: outline 0.15s, background 0.15s;
+  }
+  .photo-slot .drop-hint {
+    position: absolute;
+    bottom: 28px;
+    left: 0; right: 0;
+    text-align: center;
+    font-size: 0.65rem;
+    color: var(--sepia);
+    opacity: 0.55;
+    pointer-events: none;
+    letter-spacing: 0.05em;
+  }
 
   .lightbox { display: none; position: fixed; inset: 0; background: rgba(10,7,3,0.93); z-index: 900; align-items: center; justify-content: center; cursor: zoom-out; backdrop-filter: blur(4px); touch-action: none; }
   .lightbox.open { display: flex; }
@@ -648,6 +665,7 @@
         <div class="photo-slot" id="slotDelante">
           <div class="photo-slot-preview"></div>
           <div style="text-align:center;font-size:0.62rem;color:var(--sepia);padding:4px 0 3px;letter-spacing:0.07em;border-top:1px solid rgba(92,61,30,0.1);background:#faf7f2">ANVERSO</div>
+          <span class="drop-hint edit-only">📋 pegar · arrastrar</span>
           <div class="photo-actions edit-only" id="overlayDelante">
             <button onclick="event.stopPropagation(); triggerPhotoCamera('delante')"><span class="btn-icon">📷</span><span>Cámara</span></button>
             <button onclick="event.stopPropagation(); triggerPhotoGallery('delante')"><span class="btn-icon">🖼️</span><span>Galería</span></button>
@@ -657,6 +675,7 @@
         <div class="photo-slot" id="slotDetras">
           <div class="photo-slot-preview"></div>
           <div style="text-align:center;font-size:0.62rem;color:var(--sepia);padding:4px 0 3px;letter-spacing:0.07em;border-top:1px solid rgba(92,61,30,0.1);background:#faf7f2">REVERSO</div>
+          <span class="drop-hint edit-only">📋 pegar · arrastrar</span>
           <div class="photo-actions edit-only" id="overlayDetras">
             <button onclick="event.stopPropagation(); triggerPhotoCamera('detras')"><span class="btn-icon">📷</span><span>Cámara</span></button>
             <button onclick="event.stopPropagation(); triggerPhotoGallery('detras')"><span class="btn-icon">🖼️</span><span>Galería</span></button>
@@ -852,6 +871,7 @@ window.addEventListener('load', () => {
         cancel_on_tap_outside: true,
       });
       applyAuthUI();
+      initPhotoDragDrop(); // Activar drag & drop y paste en slots de foto
     }
   }, 200);
 });
@@ -2715,6 +2735,101 @@ function setPhotoSlot(side, src) {
 function triggerPhoto(side) { currentPhotoTarget = side; document.getElementById('fileInput').click(); }
 function triggerPhotoCamera(side) { currentPhotoTarget = side; window._fromCamera = true; document.getElementById('fileCamera').click(); }
 function triggerPhotoGallery(side) { currentPhotoTarget = side; window._fromCamera = false; document.getElementById('fileGallery').click(); }
+
+// ── Drag & Drop y Paste en slots de foto ──────────────────────────────────────
+function initPhotoDragDrop() {
+  const slotsConfig = [
+    { id: 'slotDelante', side: 'delante' },
+    { id: 'slotDetras',  side: 'detras'  },
+  ];
+
+  slotsConfig.forEach(({ id, side }) => {
+    const slot = document.getElementById(id);
+    if (!slot) return;
+
+    // Drag over: resaltar
+    slot.addEventListener('dragover', (e) => {
+      if (!isEditor()) return;
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'copy';
+      slot.classList.add('drag-over');
+    });
+
+    // Drag leave: quitar resaltado
+    slot.addEventListener('dragleave', (e) => {
+      if (!slot.contains(e.relatedTarget)) slot.classList.remove('drag-over');
+    });
+
+    // Drop: procesar imagen
+    slot.addEventListener('drop', (e) => {
+      e.preventDefault();
+      slot.classList.remove('drag-over');
+      if (!isEditor()) { showToast('🔒 Inicia sesión para editar'); return; }
+      const file = e.dataTransfer.files[0] || null;
+      if (file && file.type.startsWith('image/')) {
+        processFileAsPhoto(file, side);
+        return;
+      }
+      // Si no hay archivo, puede ser una imagen arrastrada desde el navegador (URL)
+      const imgUrl = e.dataTransfer.getData('text/uri-list') || e.dataTransfer.getData('text/plain');
+      if (imgUrl && /^https?:\/\//.test(imgUrl)) {
+        fetchUrlAsPhoto(imgUrl, side);
+      }
+    });
+  });
+
+  // Paste global: Ctrl+V cuando el modal está abierto
+  document.addEventListener('paste', (e) => {
+    if (!isEditor()) return;
+    // Solo actuar si el modal de sello está visible
+    const modal = document.getElementById('stampModal');
+    if (!modal || modal.style.display === 'none' || modal.style.display === '') return;
+
+    const items = e.clipboardData?.items;
+    if (!items) return;
+
+    for (const item of items) {
+      if (item.type.startsWith('image/')) {
+        const file = item.getAsFile();
+        if (!file) continue;
+        // Si no hay un target activo, preguntar con un toast y usar 'delante' por defecto
+        const target = currentPhotoTarget || 'delante';
+        processFileAsPhoto(file, target);
+        showToast('📋 Imagen pegada en ' + (target === 'delante' ? 'Anverso' : 'Reverso'));
+        e.preventDefault();
+        return;
+      }
+    }
+  });
+}
+
+// Procesar un File como si viniera del input de archivo (reutiliza todo el flujo existente)
+function processFileAsPhoto(file, side) {
+  currentPhotoTarget = side;
+  window._fromCamera = false;
+  // Crear un evento sintético compatible con handlePhoto
+  const dt = new DataTransfer();
+  dt.items.add(file);
+  const fakeInput = document.createElement('input');
+  fakeInput.type = 'file';
+  Object.defineProperty(fakeInput, 'files', { value: dt.files });
+  handlePhoto({ target: fakeInput });
+}
+
+// Cargar imagen desde URL externa (arrastre desde navegador)
+async function fetchUrlAsPhoto(url, side) {
+  try {
+    showToast('⏳ Cargando imagen...');
+    const resp = await fetch(url);
+    const blob = await resp.blob();
+    if (!blob.type.startsWith('image/')) { showToast('❌ No es una imagen válida'); return; }
+    const file = new File([blob], 'arrastrada.jpg', { type: blob.type });
+    processFileAsPhoto(file, side);
+  } catch(e) {
+    showToast('❌ No se pudo cargar la imagen');
+  }
+}
+// ── Fin Drag & Drop y Paste ───────────────────────────────────────────────────
 
 // ==================== RECORTADOR MANUAL ====================
 let _cropCallback = null;
