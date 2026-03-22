@@ -635,15 +635,20 @@
       <div class="stat-box" id="statbox-fotos" onclick="toggleStatFilter('fotos')" title="Ver sellos con foto"><span class="stat-num" id="stat-fotos">—</span><span class="stat-label">Con foto</span></div>
     </div>
     <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
-      <button onclick="showPortada()" class="header-btn" style="background:transparent;border:1px solid rgba(184,134,11,0.5);color:var(--gold-light);" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(184,134,11,0.5)'">◀ Épocas</button>
-      <button onclick="irAlPrimerSello()" class="header-btn" title="Ir al primer sello" style="background:transparent;border:1px solid rgba(184,134,11,0.35);color:#a89070;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold-light)'" onmouseout="this.style.borderColor='rgba(184,134,11,0.35)';this.style.color='#a89070'">↑ Arriba</button>
-      <div style="position:relative;flex-shrink:0">
-        <span style="position:absolute;left:7px;top:50%;transform:translateY(-50%);color:#8a7050;font-size:0.85rem;pointer-events:none">#</span>
-        <input type="number" id="edifilJump" min="1" placeholder="Edifil…"
-          style="width:72px;height:46px;padding:0 6px 0 20px;background:rgba(255,255,255,0.07);border:1px solid rgba(184,134,11,0.35);color:#d4c8a8;font-family:'Crimson Pro',serif;font-size:0.85rem;border-radius:2px;outline:none;-moz-appearance:textfield"
-          oninput="this.style.borderColor=this.value?'var(--gold)':'rgba(184,134,11,0.35)'"
-          onkeydown="if(event.key==='Enter'){saltarEdifil();}"
-          onblur="saltarEdifil()">
+      <div id="header-epocas-btns" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+        <button onclick="showPortada()" class="header-btn" style="background:transparent;border:1px solid rgba(184,134,11,0.5);color:var(--gold-light);" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(184,134,11,0.5)'">◀ Épocas</button>
+        <button onclick="irAlPrimerSello()" class="header-btn" title="Ir al primer sello" style="background:transparent;border:1px solid rgba(184,134,11,0.35);color:#a89070;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold-light)'" onmouseout="this.style.borderColor='rgba(184,134,11,0.35)';this.style.color='#a89070'">↑ Arriba</button>
+        <div style="position:relative;flex-shrink:0">
+          <span style="position:absolute;left:7px;top:50%;transform:translateY(-50%);color:#8a7050;font-size:0.85rem;pointer-events:none">#</span>
+          <input type="number" id="edifilJump" min="1" placeholder="Edifil…"
+            style="width:72px;height:46px;padding:0 6px 0 20px;background:rgba(255,255,255,0.07);border:1px solid rgba(184,134,11,0.35);color:#d4c8a8;font-family:'Crimson Pro',serif;font-size:0.85rem;border-radius:2px;outline:none;-moz-appearance:textfield"
+            oninput="this.style.borderColor=this.value?'var(--gold)':'rgba(184,134,11,0.35)'"
+            onkeydown="if(event.key==='Enter'){saltarEdifil();}"
+            onblur="saltarEdifil()">
+        </div>
+      </div>
+      <div id="header-pruebas-btns" style="display:none;align-items:center;gap:6px">
+        <button onclick="volverPortadaDesdePruebas()" class="header-btn" style="background:transparent;border:1px solid rgba(184,134,11,0.5);color:var(--gold-light);" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(184,134,11,0.5)'">◀ Épocas</button>
       </div>
       <div id="authArea"></div>
       <div style="width:1px;height:28px;background:rgba(184,134,11,0.25);margin:0 4px;flex-shrink:0"></div>
@@ -661,6 +666,20 @@
     <button onclick="volverPortadaDesdePruebas()" class="header-btn" style="background:transparent;border:1px solid rgba(100,149,200,0.4);color:#7ab0e0;">◀ Épocas</button>
     <h2>🎨 Pruebas Oficiales y del Artista</h2>
     <span class="pruebas-stats" id="pruebasStats"></span>
+  </div>
+  <div style="max-width:1400px;margin:0 auto;">
+    <div class="toolbar" id="pruebas-toolbar">
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="pruebaSearch" placeholder="Buscar prueba, descripción, año…" oninput="renderPruebas()">
+      </div>
+      <select class="filter-select" id="pruebaFilterAño" onchange="renderPruebas()"><option value="">Todos los años</option></select>
+      <select class="filter-select" id="pruebaFilterEstado" onchange="renderPruebas()">
+        <option value="">Todos los estados</option>
+        <option value="con_estado">En mi colección</option>
+        <option value="sin_estado">Sin registrar</option>
+      </select>
+    </div>
   </div>
   <div class="prueba-grid" id="pruebaGrid"></div>
 </div>
@@ -737,7 +756,7 @@
 </div>
 
 <div style="max-width:1400px;margin:0 auto;">
-  <div class="toolbar">
+  <div class="toolbar" id="epocas-toolbar">
     <div class="search-wrap">
       <span class="search-icon">🔍</span>
       <input type="text" id="searchInput" placeholder="Buscar descripción, color, año…" oninput="onSearchInput()">
@@ -4120,9 +4139,13 @@ function showPortada() {
   if (secPruebas && secPruebas.classList.contains('open')) {
     secPruebas.classList.remove('open');
     secPruebas.style.paddingTop = '';
+    const hEpocas = document.getElementById('header-epocas-btns');
+    const hPruebas = document.getElementById('header-pruebas-btns');
+    if (hEpocas) hEpocas.style.display = 'flex';
+    if (hPruebas) hPruebas.style.display = 'none';
     const tituloEl = document.getElementById('header-epoca-titulo');
     if (tituloEl) tituloEl.innerHTML = '';
-    document.querySelector('.toolbar') && (document.querySelector('.toolbar').style.display = '');
+    document.getElementById('epocas-toolbar') && (document.getElementById('epocas-toolbar').style.display = '');
     document.querySelector('.main') && (document.querySelector('.main').style.display = '');
     const sb = document.getElementById('syncBar');
     if (sb) sb.style.display = '';
@@ -4305,10 +4328,15 @@ function entrarPruebas() {
   const subEl = document.getElementById('header-epoca-sub');
   if (subEl) { subEl.textContent = ''; subEl.style.display = 'none'; }
   // Ocultar el contenido principal de sellos (toolbar + main con gridView/listView)
-  document.querySelector('.toolbar') && (document.querySelector('.toolbar').style.display = 'none');
+  document.getElementById('epocas-toolbar') && (document.getElementById('epocas-toolbar').style.display = 'none');
   document.querySelector('.main') && (document.querySelector('.main').style.display = 'none');
   document.getElementById('syncBar') && (document.getElementById('syncBar').style.display = 'none');
   document.getElementById('readOnlyNotice') && (document.getElementById('readOnlyNotice').style.display = 'none');
+  // Intercambiar botones del header
+  const hEpocas = document.getElementById('header-epocas-btns');
+  const hPruebas = document.getElementById('header-pruebas-btns');
+  if (hEpocas) hEpocas.style.display = 'none';
+  if (hPruebas) hPruebas.style.display = 'flex';
   history.pushState({ view: 'pruebas' }, '', '');
   window.scrollTo(0, 0);
   renderPruebas();
@@ -4326,11 +4354,16 @@ function entrarPruebas() {
 function volverPortadaDesdePruebas() {
   document.getElementById('seccionPruebas').classList.remove('open');
   document.getElementById('seccionPruebas').style.paddingTop = '';
+  // Restaurar botones del header
+  const hEpocas = document.getElementById('header-epocas-btns');
+  const hPruebas = document.getElementById('header-pruebas-btns');
+  if (hEpocas) hEpocas.style.display = 'flex';
+  if (hPruebas) hPruebas.style.display = 'none';
   // Limpiar título del header fijo
   const tituloEl = document.getElementById('header-epoca-titulo');
   if (tituloEl) tituloEl.innerHTML = '';
   // Restaurar contenido principal
-  document.querySelector('.toolbar') && (document.querySelector('.toolbar').style.display = '');
+  document.getElementById('epocas-toolbar') && (document.getElementById('epocas-toolbar').style.display = '');
   document.querySelector('.main') && (document.querySelector('.main').style.display = '');
   const sb = document.getElementById('syncBar');
   if (sb) sb.style.display = '';
@@ -4347,10 +4380,33 @@ function etiquetaCodigo(codigo) {
 
 function renderPruebas() {
   const grid = document.getElementById('pruebaGrid');
+  const searchVal = (document.getElementById('pruebaSearch')?.value || '').toLowerCase().trim();
+  const filtroAño = document.getElementById('pruebaFilterAño')?.value || '';
+  const filtroEst = document.getElementById('pruebaFilterEstado')?.value || '';
+
+  // Poblar selector de años (solo primera vez o si está vacío)
+  const selAño = document.getElementById('pruebaFilterAño');
+  if (selAño && selAño.options.length <= 1) {
+    const años = [...new Set(PRUEBAS_OFICIALES_DATA.map(p => p.año).filter(Boolean))].sort();
+    años.forEach(a => { const o = document.createElement('option'); o.value = a; o.textContent = a; selAño.appendChild(o); });
+  }
+
+  // Filtrar
+  const filtered = PRUEBAS_OFICIALES_DATA.filter(p => {
+    if (filtroAño && String(p.año) !== filtroAño) return false;
+    if (filtroEst === 'con_estado' && (!p.estado || p.estado === '')) return false;
+    if (filtroEst === 'sin_estado' && p.estado && p.estado !== '') return false;
+    if (searchVal) {
+      const haystack = [p.codigo, p.descripcion, String(p.año||'')].join(' ').toLowerCase();
+      if (!haystack.includes(searchVal)) return false;
+    }
+    return true;
+  });
+
   const tengo = PRUEBAS_OFICIALES_DATA.filter(p => p.estado && p.estado !== '').length;
   const conFoto = PRUEBAS_OFICIALES_DATA.filter(p => p.delante || p.detras).length;
   document.getElementById('pruebasStats').textContent =
-    `${PRUEBAS_OFICIALES_DATA.length} pruebas · ${tengo} en colección`;
+    `${filtered.length} de ${PRUEBAS_OFICIALES_DATA.length} pruebas · ${tengo} en colección`;
   // Actualizar stat-boxes del header fijo
   const elTotal = document.getElementById('stat-total');
   const elTengo = document.getElementById('stat-tengo');
@@ -4360,7 +4416,7 @@ function renderPruebas() {
   if (elFotos) elFotos.textContent = conFoto;
   const sfBox = document.getElementById('statbox-fotos');
   if (sfBox) sfBox.style.display = '';
-  grid.innerHTML = PRUEBAS_OFICIALES_DATA.map(p => {
+  grid.innerHTML = filtered.map(p => {
     const imgHtml = p.referencia
       ? `<img src="${p.referencia}" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" loading="lazy"><div class="prueba-img-placeholder" style="display:none">🎨</div>`
       : `<div class="prueba-img-placeholder">🎨</div>`;
@@ -4570,9 +4626,13 @@ window.addEventListener('popstate', function(e) {
   if (document.getElementById('seccionPruebas').classList.contains('open')) {
     document.getElementById('seccionPruebas').classList.remove('open');
     document.getElementById('seccionPruebas').style.paddingTop = '';
+    const hEpocas = document.getElementById('header-epocas-btns');
+    const hPruebas = document.getElementById('header-pruebas-btns');
+    if (hEpocas) hEpocas.style.display = 'flex';
+    if (hPruebas) hPruebas.style.display = 'none';
     const tituloEl = document.getElementById('header-epoca-titulo');
     if (tituloEl) tituloEl.innerHTML = '';
-    document.querySelector('.toolbar') && (document.querySelector('.toolbar').style.display = '');
+    document.getElementById('epocas-toolbar') && (document.getElementById('epocas-toolbar').style.display = '');
     document.querySelector('.main') && (document.querySelector('.main').style.display = '');
     const sb = document.getElementById('syncBar');
     if (sb) sb.style.display = '';
