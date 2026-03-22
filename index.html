@@ -588,8 +588,7 @@
   .prueba-desc { font-family:'Playfair Display',serif; font-size:0.85rem; color:var(--ink); line-height:1.3; }
   .prueba-año { font-size:0.72rem; color:var(--sepia); margin-top:4px; }
   /* Header de la sección pruebas */
-  .pruebas-header { display:flex; align-items:center; gap:16px; padding:16px 20px 8px; border-bottom:1px solid rgba(100,149,200,0.15); }
-  .pruebas-header h2 { font-family:'Playfair Display',serif; color:#7ab0e0; font-size:1.3rem; margin:0; }
+  .pruebas-header { display:none; }
   .pruebas-stats { font-size:0.8rem; color:var(--sepia); }
   @media(max-width:600px) {
     .prueba-grid { grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px; padding:10px; }
@@ -674,7 +673,7 @@
   <div class="modal" id="modalPruebaInner" style="max-width:700px">
     <div class="modal-header">
       <div>
-        <div class="modal-edifil" id="pNum" style="color:#7ab0e0"></div>
+        <div class="modal-edifil" id="pNum"></div>
         <div class="modal-title" id="pTitle"></div>
       </div>
       <button class="modal-close" onclick="cerrarModalPrueba()">✕</button>
@@ -710,7 +709,7 @@
         <div class="form-group full"><label class="form-label">Descripción</label><input class="form-input" id="pFDesc"></div>
         <div class="form-group"><label class="form-label">Estado en tu colección</label>
           <select class="form-select" id="pFEstado">
-            <option value="">— No tengo esta prueba —</option>
+            <option value="">-- No tengo esta prueba --</option>
             <option value="Nuevo">Nuevo</option>
             <option value="Nuevo Fijasello">Nuevo Fijasello</option>
             <option value="Usado">Usado</option>
@@ -4117,6 +4116,15 @@ function showToast(msg) {
 // ==================== INIT ====================
 
 function showPortada() {
+  // Cerrar sección pruebas si estuviera abierta
+  const secPruebas = document.getElementById('seccionPruebas');
+  if (secPruebas && secPruebas.classList.contains('open')) {
+    secPruebas.classList.remove('open');
+    const tituloEl = document.getElementById('header-epoca-titulo');
+    if (tituloEl) tituloEl.innerHTML = '';
+    document.querySelector('.toolbar') && (document.querySelector('.toolbar').style.display = '');
+    document.getElementById('stampGrid') && (document.getElementById('stampGrid').style.display = '');
+  }
   const portada = document.getElementById('portada');
   portada.classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -4289,6 +4297,11 @@ function entrarPruebas() {
   document.getElementById('portada').classList.remove('open');
   document.body.style.overflow = '';
   document.getElementById('seccionPruebas').classList.add('open');
+  // Actualizar header fijo igual que las épocas normales
+  const tituloEl = document.getElementById('header-epoca-titulo');
+  if (tituloEl) tituloEl.innerHTML = '<span style="color:#e0b84a;font-style:italic">Pruebas Oficiales y del Artista</span>';
+  const subEl = document.getElementById('header-epoca-sub');
+  if (subEl) { subEl.textContent = ''; subEl.style.display = 'none'; }
   // Ocultar el contenido principal de sellos
   document.querySelector('.toolbar') && (document.querySelector('.toolbar').style.display = 'none');
   document.getElementById('stampGrid') && (document.getElementById('stampGrid').style.display = 'none');
@@ -4308,6 +4321,9 @@ function entrarPruebas() {
 
 function volverPortadaDesdePruebas() {
   document.getElementById('seccionPruebas').classList.remove('open');
+  // Limpiar título del header fijo
+  const tituloEl = document.getElementById('header-epoca-titulo');
+  if (tituloEl) tituloEl.innerHTML = '';
   // Restaurar contenido principal
   document.querySelector('.toolbar') && (document.querySelector('.toolbar').style.display = '');
   document.getElementById('stampGrid') && (document.getElementById('stampGrid').style.display = '');
@@ -4536,6 +4552,8 @@ function quitarFotoPrueba(side) {
 window.addEventListener('popstate', function(e) {
   if (document.getElementById('seccionPruebas').classList.contains('open')) {
     document.getElementById('seccionPruebas').classList.remove('open');
+    const tituloEl = document.getElementById('header-epoca-titulo');
+    if (tituloEl) tituloEl.innerHTML = '';
     document.querySelector('.toolbar') && (document.querySelector('.toolbar').style.display = '');
     showPortada();
   }
