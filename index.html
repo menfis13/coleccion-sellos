@@ -42,6 +42,31 @@
     margin: 0 auto 15px !important;
     filter: drop-shadow(0 6px 20px rgba(184,134,11,0.5)) !important;
   }
+
+  /* --- RECUPERAR CUADRÍCULA DE ÉPOCAS --- */
+.portada-epocas {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)) !important;
+  gap: 12px !important;
+  max-width: 900px !important;
+  margin: 20px auto !important;
+  padding: 0 20px !important;
+}
+
+.epoca-card {
+  background: rgba(184, 134, 11, 0.1);
+  border: 1px solid rgba(184, 134, 11, 0.3);
+  padding: 15px;
+  text-align: center;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.epoca-card:hover {
+  background: rgba(184, 134, 11, 0.2);
+  transform: translateY(-3px);
+}
   
   body.dark-mode { background: #13110d !important; color: var(--ink); }
   body.dark-mode header { background: #0d0b07 !important; }
