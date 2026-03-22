@@ -568,23 +568,21 @@
   .portada-card-sellos { font-size:0.78rem; color:#9a8060; border-top:1px solid rgba(184,134,11,0.12); padding-top:14px; margin-top:14px; display:flex; gap:16px; }
   .portada-card-sellos strong { color:#e0b84a; font-size:1rem; font-family:'Playfair Display',serif; display:block; }
   /* Tarjeta especial para Pruebas Oficiales */
-  .portada-card.pruebas-card { border-color:rgba(100,149,200,0.3); }
-  .portada-card.pruebas-card:hover { border-color:rgba(100,149,200,0.7); box-shadow:0 16px 48px rgba(60,100,180,0.2); }
-  .portada-card.pruebas-card .portada-card-fecha { color:#7ab0e0; }
-  .portada-card.pruebas-card .portada-card-sellos strong { color:#7ab0e0; }
+  .portada-card.pruebas-card { border-color:rgba(184,134,11,0.3); }
+  .portada-card.pruebas-card:hover { border-color:rgba(184,134,11,0.7); box-shadow:0 16px 48px rgba(184,134,11,0.15); }
   /* Sección de Pruebas Oficiales */
   #seccionPruebas { display:none; }
-  #seccionPruebas.open { display:block; padding-top: 16px; }
+  #seccionPruebas.open { display:block; }
   .prueba-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:16px; padding:16px; }
-  .prueba-card { background:var(--cream); border:1px solid rgba(100,149,200,0.2); border-radius:3px; overflow:hidden; cursor:pointer; transition:all 0.2s; position:relative; }
-  .prueba-card:hover { border-color:rgba(100,149,200,0.6); transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,0.15); }
-  .prueba-card.tengo { border-color:rgba(100,149,200,0.5); }
-  .prueba-card.tengo::after { content:'✓'; position:absolute; top:6px; right:8px; color:#7ab0e0; font-size:1rem; font-weight:bold; text-shadow:0 0 4px rgba(0,0,0,0.5); }
+  .prueba-card { background:var(--cream); border:1px solid rgba(184,134,11,0.2); border-radius:3px; overflow:hidden; cursor:pointer; transition:all 0.2s; position:relative; }
+  .prueba-card:hover { border-color:rgba(184,134,11,0.6); transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,0.15); }
+  .prueba-card.tengo { border-color:rgba(184,134,11,0.5); }
+  .prueba-card.tengo::after { content:'✓'; position:absolute; top:6px; right:8px; color:var(--gold-light); font-size:1rem; font-weight:bold; text-shadow:0 0 4px rgba(0,0,0,0.5); }
   .prueba-img-area { width:100%; height:150px; display:flex; align-items:center; justify-content:center; background:#fff; overflow:hidden; }
   .prueba-img-area img { width:100%; height:100%; object-fit:contain; }
   .prueba-img-placeholder { font-size:2rem; opacity:0.2; }
   .prueba-info { padding:10px 12px 12px; }
-  .prueba-num { font-size:0.65rem; letter-spacing:0.15em; color:#7ab0e0; text-transform:uppercase; margin-bottom:3px; }
+  .prueba-num { font-size:0.65rem; letter-spacing:0.15em; color:var(--gold); text-transform:uppercase; margin-bottom:3px; }
   .prueba-desc { font-family:'Playfair Display',serif; font-size:0.85rem; color:var(--ink); line-height:1.3; }
   .prueba-año { font-size:0.72rem; color:var(--sepia); margin-top:4px; }
   /* Header de la sección pruebas */
@@ -4133,7 +4131,7 @@ function showPortada() {
   history.pushState({ view: 'portada' }, '', '');
 
   const container = document.getElementById('portadaEpocas');
-  const tengoProuebas = PRUEBAS_OFICIALES_DATA.filter(p => p.estado === 'Tengo').length;
+  const tengoProuebas = PRUEBAS_OFICIALES_DATA.filter(p => p.estado && p.estado !== '').length;
   const cardPruebas = `
     <div class="portada-card pruebas-card" onclick="entrarPruebas()">
       <img class="portada-card-img" src="https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_32.jpg" onerror="this.style.display='none'" alt="">
@@ -4309,6 +4307,12 @@ function entrarPruebas() {
   document.getElementById('listView') && (document.getElementById('listView').style.display = 'none');
   history.pushState({ view: 'pruebas' }, '', '');
   window.scrollTo(0, 0);
+  // Ajustar padding para que el grid no quede bajo el header fijo en móvil
+  requestAnimationFrame(() => {
+    const hdr = document.querySelector('header');
+    const sec = document.getElementById('seccionPruebas');
+    if (hdr && sec) sec.style.paddingTop = (hdr.offsetHeight + 8) + 'px';
+  });
   renderPruebas();
   // Cargar desde Google Sheets si hay sesión
   if (isEditor() || _googleCredentialToken) loadPruebasFromSheets();
@@ -4359,7 +4363,7 @@ function renderPruebas() {
     const imgHtml = p.referencia
       ? `<img src="${p.referencia}" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" loading="lazy"><div class="prueba-img-placeholder" style="display:none">🎨</div>`
       : `<div class="prueba-img-placeholder">🎨</div>`;
-    return `<div class="prueba-card${p.estado === 'Tengo' ? ' tengo' : ''}" onclick="abrirPrueba('${p.id}')">
+    return `<div class="prueba-card${p.estado && p.estado !== '' ? ' tengo' : ''}" onclick="abrirPrueba('${p.id}')">
       <div class="prueba-img-area">${imgHtml}</div>
       <div class="prueba-info">
         <div class="prueba-num">${etiquetaCodigo(p.codigo)}</div>
