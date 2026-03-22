@@ -664,6 +664,7 @@
     <button onclick="volverPortadaDesdePruebas()" class="header-btn" style="background:transparent;border:1px solid rgba(100,149,200,0.4);color:#7ab0e0;">◀ Épocas</button>
     <h2>🎨 Pruebas Oficiales y del Artista</h2>
     <span class="pruebas-stats" id="pruebasStats"></span>
+    <button onclick="inicializarHoja10()" class="header-btn edit-only" style="background:transparent;border:1px solid rgba(100,149,200,0.4);color:#7ab0e0;font-size:0.7rem" title="Inicializar Hoja 10 con todos los IDs">⚙️ Init Sheets</button>
   </div>
   <div class="prueba-grid" id="pruebaGrid"></div>
 </div>
@@ -2692,6 +2693,42 @@ async function deleteFromSheets(edifil) {
 
 // ==================== PRUEBAS OFICIALES - SHEETS ====================
 const PRUEBAS_SHEET = 'Hoja 10';
+
+async function inicializarHoja10() {
+  if (!isEditor()) return;
+  if (!confirm('Esto enviará todos los IDs de pruebas a Hoja 10.\n¿Continuar?')) return;
+  showToast('Inicializando Hoja 10...');
+  setSyncStatus('syncing', 'Enviando pruebas a Sheets...');
+  let ok = 0, err = 0;
+  for (const prueba of PRUEBAS_OFICIALES_DATA) {
+    try {
+      const payload = {
+        edifil:       prueba.id,
+        año:          prueba.año,
+        descripcion:  prueba.descripcion,
+        color:        prueba.codigo,
+        valor_facial: '',
+        dentado:      '',
+        estado:       prueba.estado || '',
+        notas:        prueba.notas || '',
+        referencia:   '',
+        delante:      prueba.delante || '',
+        detras:       prueba.detras || '',
+        filigrana:    '',
+        precio_nuevo: prueba.precio_nuevo || '',
+        precio_usado: prueba.precio_usado || '',
+      };
+      const url = _cfg().surl + '?action=save&token=' + _cfg().tok +
+                  '&payload=' + encodeURIComponent(JSON.stringify(payload)) +
+                  '&sheet=' + encodeURIComponent(PRUEBAS_SHEET);
+      const res = await fetch(url);
+      const json = await res.json();
+      if (json.status === 'ok') ok++; else err++;
+    } catch(e) { err++; }
+  }
+  setSyncStatus('', `Hoja 10 inicializada: ${ok} OK, ${err} errores`);
+  showToast(`✓ ${ok} pruebas enviadas a Sheets`);
+}
 
 async function loadPruebasFromSheets() {
   setSyncStatus('syncing', 'Cargando pruebas desde Google Sheets...');
