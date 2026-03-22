@@ -3243,14 +3243,16 @@ function renderPruebas() {
   if (ri) ri.textContent = `Mostrando ${filtered.length} de ${PRUEBAS_OFICIALES_DATA.length} pruebas`;
   grid.innerHTML = filtered.map(p => {
     const imgHtml = p.referencia
-      ? `<img src="${p.referencia}" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" loading="lazy"><div class="prueba-img-placeholder" style="display:none">🎨</div>`
+      ? `<img src="${p.referencia}" alt="" loading="lazy">`
       : `<div class="prueba-img-placeholder">🎨</div>`;
-    return `<div class="prueba-card${p.estado && p.estado !== '' ? ' tengo' : ''}" onclick="abrirPrueba('${p.id}')">
-      <div class="prueba-img-area">${imgHtml}</div>
-      <div class="prueba-info">
-        <div class="prueba-num">${etiquetaCodigo(p.codigo)}</div>
-        <div class="prueba-desc">${p.descripcion}</div>
-        <div class="prueba-año">${p.año || '—'}</div>
+    
+    // Al añadir 'sello-card' y 'tengo', el CSS dibujará automáticamente el triángulo
+    return `<div class="sello-card prueba-card ${p.estado ? 'tengo' : ''}" onclick="abrirPrueba('${p.id}')">
+      <div class="sello-img-area">${imgHtml}</div>
+      <div class="sello-info">
+        <div class="sello-num">${etiquetaCodigo(p.codigo)}</div>
+        <div class="sello-desc">${p.descripcion}</div>
+        <div class="sello-año">${p.año || '—'}</div>
       </div>
     </div>`;
   }).join('');
