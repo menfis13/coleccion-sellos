@@ -43,20 +43,30 @@
     filter: drop-shadow(0 6px 20px rgba(184,134,11,0.5)) !important;
   }
 
+  /* --- AJUSTE DE ÉPOCAS ANCHAS --- */
   .portada-epocas {
     display: grid !important;
-    gap: 12px !important;
-    max-width: 95% !important; /* Ahora ocupan casi todo el ancho de la pantalla */
-    margin: 20px auto !important;
-    padding: 0 10px !important; /* Menos margen lateral para que sean más anchas */
-    grid-template-columns: 1fr !important; /* 1 columna en vertical */
+    gap: 16px !important;
+    /* Subimos el ancho al 98% para que use casi toda la pantalla del móvil */
+    max-width: 98% !important; 
+    margin: 25px auto !important;
+    /* Quitamos casi todo el margen de los lados (solo 5px) */
+    padding: 0 5px !important; 
+    grid-template-columns: 1fr !important;
   }
 
-  /* Si el móvil se tumba o es una tablet, 2 columnas */
+  /* Para que el cuadro interior se vea más grande */
+  .epoca-card {
+    padding: 25px 20px !important; /* Más espacio dentro del cuadro */
+    min-height: 120px !important;   /* Un poco más de altura */
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
   @media (min-width: 480px) {
     .portada-epocas {
       grid-template-columns: repeat(2, 1fr) !important;
-      max-width: 850px !important;
+      max-width: 1100px !important; /* En horizontal que también sea más ancho */
     }
   }
 
