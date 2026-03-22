@@ -574,7 +574,7 @@
   .portada-card.pruebas-card .portada-card-sellos strong { color:#7ab0e0; }
   /* Sección de Pruebas Oficiales */
   #seccionPruebas { display:none; }
-  #seccionPruebas.open { display:block; }
+  #seccionPruebas.open { display:block; padding-top: 16px; }
   .prueba-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:16px; padding:16px; }
   .prueba-card { background:var(--cream); border:1px solid rgba(100,149,200,0.2); border-radius:3px; overflow:hidden; cursor:pointer; transition:all 0.2s; position:relative; }
   .prueba-card:hover { border-color:rgba(100,149,200,0.6); transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,0.15); }
@@ -2744,8 +2744,9 @@ async function loadPruebasFromSheets() {
         PRUEBAS_OFICIALES_DATA[idx].descripcion  = s.descripcion;
         PRUEBAS_OFICIALES_DATA[idx].delante      = s.delante;
         PRUEBAS_OFICIALES_DATA[idx].detras       = s.detras;
-        PRUEBAS_OFICIALES_DATA[idx].precio_nuevo = s.precio_nuevo;
-        PRUEBAS_OFICIALES_DATA[idx].precio_usado = s.precio_usado;
+        // Conservar precios del catálogo local si Sheets no tiene valor
+        if (s.precio_nuevo !== null && s.precio_nuevo !== undefined) PRUEBAS_OFICIALES_DATA[idx].precio_nuevo = s.precio_nuevo;
+        if (s.precio_usado !== null && s.precio_usado !== undefined) PRUEBAS_OFICIALES_DATA[idx].precio_usado = s.precio_usado;
       }
     });
 
@@ -4307,6 +4308,7 @@ function entrarPruebas() {
   document.getElementById('stampGrid') && (document.getElementById('stampGrid').style.display = 'none');
   document.getElementById('listView') && (document.getElementById('listView').style.display = 'none');
   history.pushState({ view: 'pruebas' }, '', '');
+  window.scrollTo(0, 0);
   renderPruebas();
   // Cargar desde Google Sheets si hay sesión
   if (isEditor() || _googleCredentialToken) loadPruebasFromSheets();
