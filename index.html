@@ -573,6 +573,7 @@
   /* Sección de Pruebas Oficiales */
   #seccionPruebas { display:none; }
   #seccionPruebas.open { display:block; }
+  #pruebas-toolbar-wrap { position: sticky; top: 0; z-index: 300; background: var(--parchment); border-bottom: 1px solid rgba(92,61,30,0.2); }
   .prueba-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:16px; padding:16px; padding-top:20px; }
   .prueba-card { background:var(--cream); border:1px solid rgba(184,134,11,0.2); border-radius:3px; overflow:hidden; cursor:pointer; transition:all 0.2s; position:relative; }
   .prueba-card:hover { border-color:rgba(184,134,11,0.6); transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,0.15); }
@@ -667,7 +668,7 @@
     <h2>🎨 Pruebas Oficiales y del Artista</h2>
     <span class="pruebas-stats" id="pruebasStats"></span>
   </div>
-  <div style="max-width:1400px;margin:0 auto;">
+  <div id="pruebas-toolbar-wrap">
     <div class="toolbar" id="pruebas-toolbar">
       <div class="search-wrap">
         <span class="search-icon">🔍</span>
@@ -4339,6 +4340,12 @@ function entrarPruebas() {
   if (hPruebas) hPruebas.style.display = 'flex';
   history.pushState({ view: 'pruebas' }, '', '');
   window.scrollTo(0, 0);
+  // Ajustar sticky top de la toolbar al alto del header
+  requestAnimationFrame(() => {
+    const hdrH = document.querySelector('header')?.offsetHeight || 90;
+    const tw = document.getElementById('pruebas-toolbar-wrap');
+    if (tw) tw.style.top = hdrH + 'px';
+  });
   renderPruebas();
   // Cargar desde Google Sheets si hay sesión
   if (isEditor() || _googleCredentialToken) loadPruebasFromSheets();
