@@ -34,40 +34,41 @@
     --shadow: rgba(0,0,0,0.5);
   }
   
-/* --- AJUSTE FINAL: CORONA 260 Y ÉPOCAS ANCHAS --- */
+/* --- DISEÑO TOTAL: CORONA Y ÉPOCAS (PC + MÓVIL) --- */
   .corona-nueva {
-    width: 260px !important; /* Corona más grande como pediste */
+    width: 260px !important;
     height: auto !important;
     display: block !important;
-    margin: 0 auto 5px !important;
-    filter: drop-shadow(0 6px 20px rgba(184,134,11,0.5)) !important;
+    margin: 0 auto 10px !important;
+    filter: drop-shadow(0 8px 25px rgba(184,134,11,0.5)) !important;
   }
 
-  /* --- AJUSTE DE ÉPOCAS ANCHAS --- */
   .portada-epocas {
     display: grid !important;
-    gap: 16px !important;
-    /* Subimos el ancho al 98% para que use casi toda la pantalla del móvil */
-    max-width: 98% !important; 
-    margin: 25px auto !important;
-    /* Quitamos casi todo el margen de los lados (solo 5px) */
-    padding: 0 5px !important; 
-    grid-template-columns: 1fr !important;
+    gap: 25px !important;
+    width: 95% !important; 
+    max-width: 1400px !important; /* Esto es lo que arregla el PC */
+    margin: 35px auto !important;
+    padding: 0 15px !important;
+    grid-template-columns: 1fr !important; /* 1 columna en móvil vertical */
   }
 
-  /* Para que el cuadro interior se vea más grande */
+
+  }
+
   .epoca-card {
-    padding: 25px 20px !important; /* Más espacio dentro del cuadro */
-    min-height: 120px !important;   /* Un poco más de altura */
-    width: 100% !important;
-    box-sizing: border-box !important;
+    background: rgba(184, 134, 11, 0.08) !important;
+    border: 1px solid rgba(184, 134, 11, 0.3) !important;
+    padding: 40px 20px !important; /* Cuadros más altos y espaciosos */
+    border-radius: 8px !important;
+    text-align: center !important;
+    transition: all 0.3s ease !important;
   }
 
-  @media (min-width: 480px) {
-    .portada-epocas {
-      grid-template-columns: repeat(2, 1fr) !important;
-      max-width: 1100px !important; /* En horizontal que también sea más ancho */
-    }
+  .epoca-card:hover {
+    background: rgba(184, 134, 11, 0.15) !important;
+    transform: translateY(-5px) !important;
+  }
   }
 
   /* Estilo visual de las casillas para que se vean bien grandes */
