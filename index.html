@@ -573,7 +573,6 @@
   /* Sección de Pruebas Oficiales */
   #seccionPruebas { display:none; }
   #seccionPruebas.open { display:block; }
-  #pruebas-toolbar-wrap { position: sticky; top: 0; z-index: 300; background: var(--parchment); border-bottom: 1px solid rgba(92,61,30,0.2); }
   .prueba-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:16px; padding:16px; padding-top:20px; }
   .prueba-card { background:var(--cream); border:1px solid rgba(184,134,11,0.2); border-radius:3px; overflow:hidden; cursor:pointer; transition:all 0.2s; position:relative; }
   .prueba-card:hover { border-color:rgba(184,134,11,0.6); transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,0.15); }
@@ -650,6 +649,7 @@
       </div>
       <div id="header-pruebas-btns" style="display:none;align-items:center;gap:6px">
         <button onclick="volverPortadaDesdePruebas()" class="header-btn" style="background:transparent;border:1px solid rgba(184,134,11,0.5);color:var(--gold-light);" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(184,134,11,0.5)'">◀ Épocas</button>
+        <button onclick="window.scrollTo({top:0,behavior:'smooth'})" class="header-btn" style="background:transparent;border:1px solid rgba(184,134,11,0.35);color:#a89070;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold-light)'" onmouseout="this.style.borderColor='rgba(184,134,11,0.35)';this.style.color='#a89070'">↑ Arriba</button>
       </div>
       <div id="authArea"></div>
       <div style="width:1px;height:28px;background:rgba(184,134,11,0.25);margin:0 4px;flex-shrink:0"></div>
@@ -663,25 +663,6 @@
 
 <!-- Sección Pruebas Oficiales y del Artista -->
 <div id="seccionPruebas">
-  <div class="pruebas-header">
-    <button onclick="volverPortadaDesdePruebas()" class="header-btn" style="background:transparent;border:1px solid rgba(100,149,200,0.4);color:#7ab0e0;">◀ Épocas</button>
-    <h2>🎨 Pruebas Oficiales y del Artista</h2>
-    <span class="pruebas-stats" id="pruebasStats"></span>
-  </div>
-  <div id="pruebas-toolbar-wrap">
-    <div class="toolbar" id="pruebas-toolbar">
-      <div class="search-wrap">
-        <span class="search-icon">🔍</span>
-        <input type="text" id="pruebaSearch" placeholder="Buscar prueba, descripción, año…" oninput="renderPruebas()">
-      </div>
-      <select class="filter-select" id="pruebaFilterAño" onchange="renderPruebas()"><option value="">Todos los años</option></select>
-      <select class="filter-select" id="pruebaFilterEstado" onchange="renderPruebas()">
-        <option value="">Todos los estados</option>
-        <option value="con_estado">En mi colección</option>
-        <option value="sin_estado">Sin registrar</option>
-      </select>
-    </div>
-  </div>
   <div class="prueba-grid" id="pruebaGrid"></div>
 </div>
 
@@ -4146,8 +4127,7 @@ function showPortada() {
     if (hPruebas) hPruebas.style.display = 'none';
     const tituloEl = document.getElementById('header-epoca-titulo');
     if (tituloEl) tituloEl.innerHTML = '';
-    document.getElementById('epocas-toolbar') && (document.getElementById('epocas-toolbar').style.display = '');
-    document.querySelector('.main') && (document.querySelector('.main').style.display = '');
+    document.getElementById('gridView') && (document.getElementById('gridView').style.display = ''); document.getElementById('listView') && (document.getElementById('listView').style.display = '');
     const sb = document.getElementById('syncBar');
     if (sb) sb.style.display = '';
   }
@@ -4328,9 +4308,9 @@ function entrarPruebas() {
   if (tituloEl) tituloEl.innerHTML = '<span style="color:#e0b84a;font-style:italic">Pruebas Oficiales y del Artista</span>';
   const subEl = document.getElementById('header-epoca-sub');
   if (subEl) { subEl.textContent = ''; subEl.style.display = 'none'; }
-  // Ocultar el contenido principal de sellos (toolbar + main con gridView/listView)
-  document.getElementById('epocas-toolbar') && (document.getElementById('epocas-toolbar').style.display = 'none');
-  document.querySelector('.main') && (document.querySelector('.main').style.display = 'none');
+  // Ocultar vistas de sellos pero mantener .main para resultsInfo
+  document.getElementById('gridView') && (document.getElementById('gridView').style.display = 'none');
+  document.getElementById('listView') && (document.getElementById('listView').style.display = 'none');
   document.getElementById('syncBar') && (document.getElementById('syncBar').style.display = 'none');
   document.getElementById('readOnlyNotice') && (document.getElementById('readOnlyNotice').style.display = 'none');
   // Intercambiar botones del header
@@ -4340,12 +4320,6 @@ function entrarPruebas() {
   if (hPruebas) hPruebas.style.display = 'flex';
   history.pushState({ view: 'pruebas' }, '', '');
   window.scrollTo(0, 0);
-  // Ajustar sticky top de la toolbar al alto del header
-  requestAnimationFrame(() => {
-    const hdrH = document.querySelector('header')?.offsetHeight || 90;
-    const tw = document.getElementById('pruebas-toolbar-wrap');
-    if (tw) tw.style.top = hdrH + 'px';
-  });
   renderPruebas();
   // Cargar desde Google Sheets si hay sesión
   if (isEditor() || _googleCredentialToken) loadPruebasFromSheets();
@@ -4370,8 +4344,7 @@ function volverPortadaDesdePruebas() {
   const tituloEl = document.getElementById('header-epoca-titulo');
   if (tituloEl) tituloEl.innerHTML = '';
   // Restaurar contenido principal
-  document.getElementById('epocas-toolbar') && (document.getElementById('epocas-toolbar').style.display = '');
-  document.querySelector('.main') && (document.querySelector('.main').style.display = '');
+  document.getElementById('gridView') && (document.getElementById('gridView').style.display = ''); document.getElementById('listView') && (document.getElementById('listView').style.display = '');
   const sb = document.getElementById('syncBar');
   if (sb) sb.style.display = '';
   showPortada();
@@ -4387,22 +4360,10 @@ function etiquetaCodigo(codigo) {
 
 function renderPruebas() {
   const grid = document.getElementById('pruebaGrid');
-  const searchVal = (document.getElementById('pruebaSearch')?.value || '').toLowerCase().trim();
-  const filtroAño = document.getElementById('pruebaFilterAño')?.value || '';
-  const filtroEst = document.getElementById('pruebaFilterEstado')?.value || '';
-
-  // Poblar selector de años (solo primera vez o si está vacío)
-  const selAño = document.getElementById('pruebaFilterAño');
-  if (selAño && selAño.options.length <= 1) {
-    const años = [...new Set(PRUEBAS_OFICIALES_DATA.map(p => p.año).filter(Boolean))].sort();
-    años.forEach(a => { const o = document.createElement('option'); o.value = a; o.textContent = a; selAño.appendChild(o); });
-  }
+  const searchVal = (document.getElementById('searchInput')?.value || '').toLowerCase().trim();
 
   // Filtrar
   const filtered = PRUEBAS_OFICIALES_DATA.filter(p => {
-    if (filtroAño && String(p.año) !== filtroAño) return false;
-    if (filtroEst === 'con_estado' && (!p.estado || p.estado === '')) return false;
-    if (filtroEst === 'sin_estado' && p.estado && p.estado !== '') return false;
     if (searchVal) {
       const haystack = [p.codigo, p.descripcion, String(p.año||'')].join(' ').toLowerCase();
       if (!haystack.includes(searchVal)) return false;
@@ -4412,8 +4373,6 @@ function renderPruebas() {
 
   const tengo = PRUEBAS_OFICIALES_DATA.filter(p => p.estado && p.estado !== '').length;
   const conFoto = PRUEBAS_OFICIALES_DATA.filter(p => p.delante || p.detras).length;
-  document.getElementById('pruebasStats').textContent =
-    `${filtered.length} de ${PRUEBAS_OFICIALES_DATA.length} pruebas · ${tengo} en colección`;
   // Actualizar stat-boxes del header fijo
   const elTotal = document.getElementById('stat-total');
   const elTengo = document.getElementById('stat-tengo');
@@ -4423,6 +4382,9 @@ function renderPruebas() {
   if (elFotos) elFotos.textContent = conFoto;
   const sfBox = document.getElementById('statbox-fotos');
   if (sfBox) sfBox.style.display = '';
+  // Info de resultados reutilizando el mismo elemento de épocas
+  const ri = document.getElementById('resultsInfo');
+  if (ri) ri.textContent = `Mostrando ${filtered.length} de ${PRUEBAS_OFICIALES_DATA.length} pruebas`;
   grid.innerHTML = filtered.map(p => {
     const imgHtml = p.referencia
       ? `<img src="${p.referencia}" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" loading="lazy"><div class="prueba-img-placeholder" style="display:none">🎨</div>`
@@ -4639,8 +4601,7 @@ window.addEventListener('popstate', function(e) {
     if (hPruebas) hPruebas.style.display = 'none';
     const tituloEl = document.getElementById('header-epoca-titulo');
     if (tituloEl) tituloEl.innerHTML = '';
-    document.getElementById('epocas-toolbar') && (document.getElementById('epocas-toolbar').style.display = '');
-    document.querySelector('.main') && (document.querySelector('.main').style.display = '');
+    document.getElementById('gridView') && (document.getElementById('gridView').style.display = ''); document.getElementById('listView') && (document.getElementById('listView').style.display = '');
     const sb = document.getElementById('syncBar');
     if (sb) sb.style.display = '';
     showPortada();
