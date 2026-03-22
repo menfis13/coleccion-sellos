@@ -748,16 +748,16 @@
 <!-- Sección Pruebas Oficiales y del Artista -->
 <div id="seccionPruebas" class="seccion-epoca">
   
-  <div class="epoca-controls" style="margin-top: 20px; padding: 0 15px;">
+  <div class="epoca-controls" style="margin-bottom: 20px; padding: 0 15px;">
     <div id="resultsInfoPruebas" style="margin-bottom: 10px; font-weight: bold; color: var(--gold);"></div>
-    
     <div class="search-container">
       <input type="text" id="searchInputPruebas" placeholder="Buscar pruebas..." oninput="renderPruebas()" 
-             style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--gold); background: var(--cream);">
+             style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--gold); background: var(--cream); color: var(--ink);">
     </div>
   </div>
 
   <div class="prueba-grid" id="pruebaGrid"></div>
+
 </div>
 
 <div class="modal-overlay" id="modalPrueba" onclick="cerrarModalPrueba(event)">
@@ -3267,7 +3267,8 @@ function etiquetaCodigo(codigo) {
 
 function renderPruebas() {
   const grid = document.getElementById('pruebaGrid');
-const searchVal = (document.getElementById('searchInputPruebas')?.value || '').toLowerCase().trim();
+const searchInput = document.getElementById('searchInputPruebas');
+const searchVal = (searchInput?.value || '').toLowerCase().trim();
 const info = document.getElementById('resultsInfoPruebas');
 
   // Filtrar
