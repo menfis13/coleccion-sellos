@@ -2707,21 +2707,23 @@ async function loadPruebasFromSheets() {
       return;
     }
 
+    // Columnas igual que sellos normales:
+    // A=edifil/id, B=año, C=descripcion, D=codigo(color), E=valor_facial, F=dentado, G=estado, H=notas, I=(vacio), J=delante, K=detras, L=filigrana, M=precio_nuevo, N=precio_usado
     const sheetsData = {};
     rows.forEach(row => {
       if (!row.c || !row.c[0] || !row.c[0].v) return;
       const id = row.c[0].v;
       sheetsData[id] = {
         id:           id,
-        codigo:       row.c[1]?.v || '',
+        año:          row.c[1]?.v || null,
         descripcion:  row.c[2]?.v || '',
-        año:          row.c[3]?.v || null,
-        estado:       row.c[4]?.v || null,
-        notas:        row.c[5]?.v || '',
-        delante:      row.c[6]?.v || null,
-        detras:       row.c[7]?.v || null,
-        precio_nuevo: row.c[8]?.v || null,
-        precio_usado: row.c[9]?.v || null,
+        codigo:       row.c[3]?.v || '',
+        estado:       row.c[6]?.v || null,
+        notas:        row.c[7]?.v || '',
+        delante:      row.c[9]?.v || null,
+        detras:       row.c[10]?.v || null,
+        precio_nuevo: row.c[12]?.v || null,
+        precio_usado: row.c[13]?.v || null,
       };
     });
 
@@ -2753,16 +2755,21 @@ async function loadPruebasFromSheets() {
 async function savePruebaToSheets(prueba) {
   setSyncStatus('syncing', 'Guardando prueba en Google Sheets...');
   try {
+    // El Apps Script busca por col A (edifil) y escribe por posición de columna
+    // Orden debe coincidir con cabeceras de Hoja 10: id,codigo,descripcion,año,estado,notas,delante,detras,precio_nuevo,precio_usado
     const payload = {
       edifil:       prueba.id,
-      id:           prueba.id,
-      codigo:       prueba.codigo,
-      descripcion:  prueba.descripcion,
       año:          prueba.año,
+      descripcion:  prueba.descripcion,
+      color:        prueba.codigo,
+      valor_facial: '',
+      dentado:      '',
       estado:       prueba.estado,
       notas:        prueba.notas,
+      referencia:   '',
       delante:      (prueba.delante && prueba.delante.startsWith('data:')) ? null : prueba.delante,
       detras:       (prueba.detras  && prueba.detras.startsWith('data:'))  ? null : prueba.detras,
+      filigrana:    '',
       precio_nuevo: prueba.precio_nuevo,
       precio_usado: prueba.precio_usado,
     };
@@ -4353,19 +4360,20 @@ function setPruebaSlot(side, src) {
   const ids = { referencia: 'pSlotRef', delante: 'pSlotDelante', detras: 'pSlotDetras' };
   const slot = document.getElementById(ids[side]);
   if (!slot) return;
-  const preview = slot.querySelector('.photo-slot-preview');
-  if (!preview) return;
+  const preview = slot.querySelector('.photo-slot-preview') || slot;
+  const existing = preview.querySelector('img');
+  if (existing) existing.remove();
+  slot.classList.remove('has-photo');
+  preview.onclick = null;
   if (src) {
+    const captions = { referencia: 'Imagen de referencia', delante: 'Mi prueba · Cara delantera', detras: 'Mi prueba · Cara trasera' };
     const img = document.createElement('img');
     img.src = src;
-    img.style.cssText = 'width:100%;height:100%;object-fit:contain;cursor:zoom-in';
-    img.onclick = (e) => { e.stopPropagation(); openLightbox(src, ''); };
-    preview.innerHTML = '';
-    preview.appendChild(img);
-  } else {
-    preview.innerHTML = '<span style="font-size:1.5rem;opacity:0.25">🖼️</span>';
+    img.addEventListener('click', (e) => { e.stopPropagation(); openLightbox(src, captions[side]||''); });
+    preview.insertBefore(img, preview.firstChild);
+    slot.classList.add('has-photo');
+    preview.onclick = (e) => { e.stopPropagation(); openLightbox(src, captions[side]||''); };
   }
-  slot.classList.toggle('has-photo', !!src);
 }
 
 function cerrarModalPrueba(e) {
