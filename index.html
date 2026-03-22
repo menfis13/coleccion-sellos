@@ -80,6 +80,48 @@
   background: rgba(184, 134, 11, 0.15) !important;
   transform: translateY(-5px) !important;
 }
+/* --- ARREGLO TRIÁNGULO Y TAMAÑO PRUEBAS OFICIALES --- */
+.prueba-card {
+  position: relative !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  height: auto !important; /* Evita que se estiren hacia abajo */
+  min-height: 280px !important; 
+  background: rgba(184, 134, 11, 0.05) !important;
+  border: 1px solid rgba(184, 134, 11, 0.2) !important;
+  border-radius: 8px !important;
+  padding: 10px !important;
+}
+
+/* El Triángulo Dorado para las Pruebas */
+.prueba-card.tengo::after {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  border-style: solid !important;
+  border-width: 0 35px 35px 0 !important;
+  border-color: transparent #b8860b transparent transparent !important;
+  z-index: 10 !important;
+}
+
+/* Asegurar que la imagen no tape el triángulo */
+.prueba-img-area {
+  position: relative !important;
+  z-index: 1 !important;
+  height: 180px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.prueba-img-area img {
+  max-height: 100% !important;
+  width: auto !important;
+}
   
   body.dark-mode { background: #13110d !important; color: var(--ink); }
   body.dark-mode header { background: #0d0b07 !important; }
@@ -3246,13 +3288,13 @@ function renderPruebas() {
       ? `<img src="${p.referencia}" alt="" loading="lazy">`
       : `<div class="prueba-img-placeholder">🎨</div>`;
     
-    // Al añadir 'sello-card' y 'tengo', el CSS dibujará automáticamente el triángulo
-    return `<div class="sello-card prueba-card ${p.estado ? 'tengo' : ''}" onclick="abrirPrueba('${p.id}')">
-      <div class="sello-img-area">${imgHtml}</div>
-      <div class="sello-info">
-        <div class="sello-num">${etiquetaCodigo(p.codigo)}</div>
-        <div class="sello-desc">${p.descripcion}</div>
-        <div class="sello-año">${p.año || '—'}</div>
+    // Volvemos a 'prueba-card' para que no se estiren, pero mantenemos 'tengo'
+    return `<div class="prueba-card ${p.estado ? 'tengo' : ''}" onclick="abrirPrueba('${p.id}')">
+      <div class="prueba-img-area">${imgHtml}</div>
+      <div class="prueba-info">
+        <div class="prueba-num">${etiquetaCodigo(p.codigo)}</div>
+        <div class="prueba-desc">${p.descripcion}</div>
+        <div class="prueba-año">${p.año || '—'}</div>
       </div>
     </div>`;
   }).join('');
