@@ -573,7 +573,7 @@
   /* Sección de Pruebas Oficiales */
   #seccionPruebas { display:none; }
   #seccionPruebas.open { display:block; }
-  .prueba-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:16px; padding:16px; }
+  .prueba-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:16px; padding:16px; padding-top:20px; }
   .prueba-card { background:var(--cream); border:1px solid rgba(184,134,11,0.2); border-radius:3px; overflow:hidden; cursor:pointer; transition:all 0.2s; position:relative; }
   .prueba-card:hover { border-color:rgba(184,134,11,0.6); transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,0.15); }
   .prueba-card.tengo { border-color:rgba(184,134,11,0.5); }
@@ -4119,10 +4119,13 @@ function showPortada() {
   const secPruebas = document.getElementById('seccionPruebas');
   if (secPruebas && secPruebas.classList.contains('open')) {
     secPruebas.classList.remove('open');
+    secPruebas.style.paddingTop = '';
     const tituloEl = document.getElementById('header-epoca-titulo');
     if (tituloEl) tituloEl.innerHTML = '';
     document.querySelector('.toolbar') && (document.querySelector('.toolbar').style.display = '');
-    document.getElementById('stampGrid') && (document.getElementById('stampGrid').style.display = '');
+    document.querySelector('.main') && (document.querySelector('.main').style.display = '');
+    const sb = document.getElementById('syncBar');
+    if (sb) sb.style.display = '';
   }
   const portada = document.getElementById('portada');
   portada.classList.add('open');
@@ -4301,18 +4304,13 @@ function entrarPruebas() {
   if (tituloEl) tituloEl.innerHTML = '<span style="color:#e0b84a;font-style:italic">Pruebas Oficiales y del Artista</span>';
   const subEl = document.getElementById('header-epoca-sub');
   if (subEl) { subEl.textContent = ''; subEl.style.display = 'none'; }
-  // Ocultar el contenido principal de sellos
+  // Ocultar el contenido principal de sellos (toolbar + main con gridView/listView)
   document.querySelector('.toolbar') && (document.querySelector('.toolbar').style.display = 'none');
-  document.getElementById('stampGrid') && (document.getElementById('stampGrid').style.display = 'none');
-  document.getElementById('listView') && (document.getElementById('listView').style.display = 'none');
+  document.querySelector('.main') && (document.querySelector('.main').style.display = 'none');
+  document.getElementById('syncBar') && (document.getElementById('syncBar').style.display = 'none');
+  document.getElementById('readOnlyNotice') && (document.getElementById('readOnlyNotice').style.display = 'none');
   history.pushState({ view: 'pruebas' }, '', '');
   window.scrollTo(0, 0);
-  // Ajustar padding para que el grid no quede bajo el header fijo en móvil
-  requestAnimationFrame(() => {
-    const hdr = document.querySelector('header');
-    const sec = document.getElementById('seccionPruebas');
-    if (hdr && sec) sec.style.paddingTop = (hdr.offsetHeight + 8) + 'px';
-  });
   renderPruebas();
   // Cargar desde Google Sheets si hay sesión
   if (isEditor() || _googleCredentialToken) loadPruebasFromSheets();
@@ -4327,12 +4325,15 @@ function entrarPruebas() {
 
 function volverPortadaDesdePruebas() {
   document.getElementById('seccionPruebas').classList.remove('open');
+  document.getElementById('seccionPruebas').style.paddingTop = '';
   // Limpiar título del header fijo
   const tituloEl = document.getElementById('header-epoca-titulo');
   if (tituloEl) tituloEl.innerHTML = '';
   // Restaurar contenido principal
   document.querySelector('.toolbar') && (document.querySelector('.toolbar').style.display = '');
-  document.getElementById('stampGrid') && (document.getElementById('stampGrid').style.display = '');
+  document.querySelector('.main') && (document.querySelector('.main').style.display = '');
+  const sb = document.getElementById('syncBar');
+  if (sb) sb.style.display = '';
   showPortada();
 }
 
@@ -4568,9 +4569,13 @@ function quitarFotoPrueba(side) {
 window.addEventListener('popstate', function(e) {
   if (document.getElementById('seccionPruebas').classList.contains('open')) {
     document.getElementById('seccionPruebas').classList.remove('open');
+    document.getElementById('seccionPruebas').style.paddingTop = '';
     const tituloEl = document.getElementById('header-epoca-titulo');
     if (tituloEl) tituloEl.innerHTML = '';
     document.querySelector('.toolbar') && (document.querySelector('.toolbar').style.display = '');
+    document.querySelector('.main') && (document.querySelector('.main').style.display = '');
+    const sb = document.getElementById('syncBar');
+    if (sb) sb.style.display = '';
     showPortada();
   }
 });
