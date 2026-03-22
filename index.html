@@ -680,12 +680,14 @@
       <button class="modal-close" onclick="cerrarModalPrueba()">✕</button>
     </div>
     <div class="modal-body">
+      <div id="precio-prueba-modal"></div>
       <div class="photo-section">
         <div class="photo-slot" id="pSlotRef"><div class="photo-slot-preview"></div>
           <div style="text-align:center;font-size:0.62rem;color:var(--sepia);padding:4px 0 3px;letter-spacing:0.07em;border-top:1px solid rgba(92,61,30,0.1);background:#faf7f2">REFERENCIA</div>
         </div>
         <div class="photo-slot" id="pSlotDelante"><div class="photo-slot-preview"></div>
           <div style="text-align:center;font-size:0.62rem;color:var(--sepia);padding:4px 0 3px;letter-spacing:0.07em;border-top:1px solid rgba(92,61,30,0.1);background:#faf7f2">ANVERSO</div>
+          <span class="drop-hint edit-only">📋 pegar · arrastrar</span>
           <div class="photo-actions edit-only" id="pOverlayDelante">
             <button onclick="event.stopPropagation(); triggerPruebaPhoto('delante')"><span class="btn-icon">📷</span><span>Cámara</span></button>
             <button onclick="event.stopPropagation(); triggerPruebaPhotoGallery('delante')"><span class="btn-icon">🖼️</span><span>Galería</span></button>
@@ -694,6 +696,7 @@
         </div>
         <div class="photo-slot" id="pSlotDetras"><div class="photo-slot-preview"></div>
           <div style="text-align:center;font-size:0.62rem;color:var(--sepia);padding:4px 0 3px;letter-spacing:0.07em;border-top:1px solid rgba(92,61,30,0.1);background:#faf7f2">REVERSO</div>
+          <span class="drop-hint edit-only">📋 pegar · arrastrar</span>
           <div class="photo-actions edit-only" id="pOverlayDetras">
             <button onclick="event.stopPropagation(); triggerPruebaPhoto('detras')"><span class="btn-icon">📷</span><span>Cámara</span></button>
             <button onclick="event.stopPropagation(); triggerPruebaPhotoGallery('detras')"><span class="btn-icon">🖼️</span><span>Galería</span></button>
@@ -702,22 +705,26 @@
         </div>
       </div>
       <div class="form-grid">
-        <div class="form-group"><label class="form-label">Número</label><input class="form-input" id="pFNum" readonly style="pointer-events:none;background:#f5f0e8"></div>
+        <div class="form-group"><label class="form-label">Nº Prueba</label><input class="form-input" id="pFNum" readonly style="pointer-events:none;background:#f5f0e8"></div>
         <div class="form-group"><label class="form-label">Año</label><input class="form-input" id="pFAño" type="number" min="1975" max="2030"></div>
-        <div class="form-group" style="grid-column:1/-1"><label class="form-label">Descripción</label><input class="form-input" id="pFDesc"></div>
-        <div class="form-group"><label class="form-label">Estado</label>
+        <div class="form-group full"><label class="form-label">Descripción</label><input class="form-input" id="pFDesc"></div>
+        <div class="form-group"><label class="form-label">Estado en tu colección</label>
           <select class="form-select" id="pFEstado">
-            <option value="">— Sin registrar —</option>
-            <option value="Tengo">Tengo</option>
-            <option value="Busco">Busco</option>
+            <option value="">— No tengo esta prueba —</option>
+            <option value="Nuevo">Nuevo</option>
+            <option value="Nuevo Fijasello">Nuevo Fijasello</option>
+            <option value="Usado">Usado</option>
+            <option value="Usado Fijasello">Usado Fijasello</option>
           </select>
         </div>
-        <div class="form-group" style="grid-column:1/-1"><label class="form-label">Notas</label><textarea class="form-textarea" id="pFNotas" rows="2"></textarea></div>
+        <div class="form-group full"><label class="form-label">Notas personales</label><textarea class="form-textarea" id="pFNotas" placeholder="Observaciones, procedencia, valor estimado..."></textarea></div>
       </div>
-      <div class="form-actions">
-        <button class="btn btn-danger edit-only" onclick="eliminarPrueba()">🗑 Eliminar</button>
-        <div style="flex:1"></div>
-        <button class="btn btn-primary edit-only" onclick="guardarPrueba()">Guardar</button>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger edit-only" onclick="eliminarPrueba()">🗑 Eliminar</button>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-secondary" onclick="cerrarModalPrueba()">Cancelar</button>
+        <button class="btn btn-primary edit-only" onclick="guardarPrueba()">Guardar prueba</button>
       </div>
     </div>
   </div>
@@ -2693,6 +2700,7 @@ async function deleteFromSheets(edifil) {
 // ==================== PRUEBAS OFICIALES - SHEETS ====================
 const PRUEBAS_SHEET = 'Hoja 10';
 
+
 async function loadPruebasFromSheets() {
   setSyncStatus('syncing', 'Cargando pruebas desde Google Sheets...');
   try {
@@ -3330,9 +3338,11 @@ function initPhotoDragDrop() {
   // Paste global: Ctrl+V cuando el modal está abierto
   document.addEventListener('paste', (e) => {
     if (!isEditor()) return;
-    // Solo actuar si el modal de sello está visible
-    const modal = document.getElementById('stampModal');
-    if (!modal || modal.style.display === 'none' || modal.style.display === '') return;
+    const modalSello = document.getElementById('modalOverlay');
+    const modalPrueba = document.getElementById('modalPrueba');
+    const selloAbierto = modalSello?.classList.contains('open');
+    const pruebaAbierta = modalPrueba?.classList.contains('open');
+    if (!selloAbierto && !pruebaAbierta) return;
 
     const items = e.clipboardData?.items;
     if (!items) return;
@@ -3341,10 +3351,18 @@ function initPhotoDragDrop() {
       if (item.type.startsWith('image/')) {
         const file = item.getAsFile();
         if (!file) continue;
-        // Si no hay un target activo, preguntar con un toast y usar 'delante' por defecto
-        const target = currentPhotoTarget || 'delante';
-        processFileAsPhoto(file, target);
-        showToast('📋 Imagen pegada en ' + (target === 'delante' ? 'Anverso' : 'Reverso'));
+        if (pruebaAbierta) {
+          const side = window._currentPruebaPhotoSide || 'delante';
+          currentPhotoTarget = 'prueba_' + side;
+          window._currentPruebaPhotoSide = side;
+          const fakeInput = { files: [file] };
+          handlePhoto({ target: fakeInput });
+          showToast('📋 Imagen pegada en ' + (side === 'delante' ? 'Anverso' : 'Reverso'));
+        } else {
+          const target = currentPhotoTarget || 'delante';
+          processFileAsPhoto(file, target);
+          showToast('📋 Imagen pegada en ' + (target === 'delante' ? 'Anverso' : 'Reverso'));
+        }
         e.preventDefault();
         return;
       }
@@ -4337,15 +4355,45 @@ function abrirPrueba(id) {
   document.getElementById('pFEstado').value = p.estado || '';
   document.getElementById('pFNotas').value = p.notas || '';
 
-  // Foto referencia
+  // Precio
+  const precioEl = document.getElementById('precio-prueba-modal');
+  if (precioEl) {
+    if (p.precio_nuevo || p.precio_usado) {
+      precioEl.innerHTML = `<div style="font-size:0.75rem;color:var(--sepia);padding:4px 0 8px;display:flex;gap:16px">
+        ${p.precio_nuevo ? '<span>Nuevo: <strong>' + p.precio_nuevo + ' €</strong></span>' : ''}
+        ${p.precio_usado ? '<span>Usado: <strong>' + p.precio_usado + ' €</strong></span>' : ''}
+      </div>`;
+    } else { precioEl.innerHTML = ''; }
+  }
+
+  // Fotos
   setPruebaSlot('referencia', p.referencia);
   setPruebaSlot('delante', p.delante);
   setPruebaSlot('detras', p.detras);
 
-  // Permisos edición
+  // Drag & drop / paste en slots de prueba
   const editable = isEditor();
-  ['pFAño','pFDesc','pFNotas'].forEach(id => {
-    const el = document.getElementById(id);
+  ['pSlotDelante','pSlotDetras'].forEach(slotId => {
+    const slot = document.getElementById(slotId);
+    if (!slot || !editable) return;
+    const side = slotId === 'pSlotDelante' ? 'delante' : 'detras';
+    slot.ondragover = e => { e.preventDefault(); slot.classList.add('drag-over'); };
+    slot.ondragleave = () => slot.classList.remove('drag-over');
+    slot.ondrop = e => {
+      e.preventDefault(); slot.classList.remove('drag-over');
+      const file = e.dataTransfer.files[0];
+      if (file && file.type.startsWith('image/')) {
+        currentPhotoTarget = 'prueba_' + side;
+        window._currentPruebaPhotoSide = side;
+        const fakeInput = { files: [file] };
+        handlePhoto({ target: fakeInput });
+      }
+    };
+  });
+
+  // Permisos edición
+  ['pFAño','pFDesc','pFNotas'].forEach(fid => {
+    const el = document.getElementById(fid);
     if (el) { el.readOnly = !editable; el.style.background = editable ? '' : '#f5f0e8'; }
   });
   const sel = document.getElementById('pFEstado');
