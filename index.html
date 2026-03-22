@@ -34,29 +34,37 @@
     --shadow: rgba(0,0,0,0.5);
   }
   
-/* --- DISEÑO FINAL CORONA Y ÉPOCAS --- */
+/* --- AJUSTE FINAL: CORONA 260 Y ÉPOCAS ANCHAS --- */
   .corona-nueva {
-    width: 220px !important;
+    width: 260px !important; /* Corona más grande como pediste */
     height: auto !important;
     display: block !important;
-    margin: 0 auto 10px !important;
+    margin: 0 auto 5px !important;
     filter: drop-shadow(0 6px 20px rgba(184,134,11,0.5)) !important;
   }
 
   .portada-epocas {
     display: grid !important;
-    gap: 15px !important;
-    max-width: 800px !important;
-    margin: 25px auto !important;
-    padding: 0 20px !important;
-    grid-template-columns: 1fr !important; /* Por defecto: 1 columna (vertical) */
+    gap: 12px !important;
+    max-width: 95% !important; /* Ahora ocupan casi todo el ancho de la pantalla */
+    margin: 20px auto !important;
+    padding: 0 10px !important; /* Menos margen lateral para que sean más anchas */
+    grid-template-columns: 1fr !important; /* 1 columna en vertical */
   }
 
-  /* Si el móvil se tumba (apaisado), se ponen 2 columnas */
+  /* Si el móvil se tumba o es una tablet, 2 columnas */
   @media (min-width: 480px) {
     .portada-epocas {
       grid-template-columns: repeat(2, 1fr) !important;
+      max-width: 850px !important;
     }
+  }
+
+  /* Estilo visual de las casillas para que se vean bien grandes */
+  .epoca-card {
+    padding: 20px 15px !important; /* Más relleno interno para que se vean imponentes */
+    font-size: 1.1rem !important;
+  }
   }
 
 .epoca-card {
