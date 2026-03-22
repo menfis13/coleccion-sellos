@@ -34,63 +34,51 @@
     --shadow: rgba(0,0,0,0.5);
   }
   
-/* --- DISEÑO TOTAL: CORONA Y ÉPOCAS (PC + MÓVIL) --- */
-  .corona-nueva {
-    width: 260px !important;
-    height: auto !important;
-    display: block !important;
-    margin: 0 auto 10px !important;
-    filter: drop-shadow(0 8px 25px rgba(184,134,11,0.5)) !important;
-  }
+/* ==========================================
+   DISEÑO FINAL: CORONA Y CUADRICULA PC/MOVIL
+   ========================================== */
+.corona-nueva {
+  width: 260px !important;
+  height: auto !important;
+  display: block !important;
+  margin: 0 auto 10px !important;
+  filter: drop-shadow(0 8px 25px rgba(184,134,11,0.5)) !important;
+}
 
+.portada-epocas {
+  display: grid !important;
+  grid-template-columns: 1fr !important; /* 1 columna en móvil vertical */
+  gap: 25px !important;
+  width: 95% !important; 
+  max-width: 1400px !important; /* Ancho total para PC */
+  margin: 30px auto !important;
+  padding: 0 15px !important;
+}
+
+/* Activa las 2 columnas en PC y móvil horizontal */
+@media screen and (min-width: 480px) {
   .portada-epocas {
-    display: grid !important;
-    gap: 25px !important;
-    width: 95% !important; 
-    max-width: 1400px !important; /* Esto es lo que arregla el PC */
-    margin: 35px auto !important;
-    padding: 0 15px !important;
-    grid-template-columns: 1fr !important; /* 1 columna en móvil vertical */
+    grid-template-columns: repeat(2, 1fr) !important;
   }
-
-
-  }
-
-  .epoca-card {
-    background: rgba(184, 134, 11, 0.08) !important;
-    border: 1px solid rgba(184, 134, 11, 0.3) !important;
-    padding: 40px 20px !important; /* Cuadros más altos y espaciosos */
-    border-radius: 8px !important;
-    text-align: center !important;
-    transition: all 0.3s ease !important;
-  }
-
-  .epoca-card:hover {
-    background: rgba(184, 134, 11, 0.15) !important;
-    transform: translateY(-5px) !important;
-  }
-  }
-
-  /* Estilo visual de las casillas para que se vean bien grandes */
-  .epoca-card {
-    padding: 20px 15px !important; /* Más relleno interno para que se vean imponentes */
-    font-size: 1.1rem !important;
-  }
-  }
+}
 
 .epoca-card {
-  background: rgba(184, 134, 11, 0.1);
-  border: 1px solid rgba(184, 134, 11, 0.3);
-  padding: 15px;
-  text-align: center;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  background: rgba(184, 134, 11, 0.08) !important;
+  border: 1px solid rgba(184, 134, 11, 0.3) !important;
+  padding: 45px 20px !important; /* Cuadros grandes y elegantes */
+  border-radius: 8px !important;
+  text-align: center !important;
+  transition: all 0.3s ease !important;
+  cursor: pointer !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
 .epoca-card:hover {
-  background: rgba(184, 134, 11, 0.2);
-  transform: translateY(-3px);
+  background: rgba(184, 134, 11, 0.15) !important;
+  transform: translateY(-5px) !important;
 }
   
   body.dark-mode { background: #13110d !important; color: var(--ink); }
