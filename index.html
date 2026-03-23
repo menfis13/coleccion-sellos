@@ -3,128 +3,91 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Colección Filatélica de Menfis</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+<title>Sellos</title>
+
 <style>
-  :root {
-    --cream: #f5f0e8; --ink: #1a1208; --gold-light: #d4a843; --gold: #b8860b; --sepia: #5c3d1e; --shadow: rgba(26,18,8,0.15);
-  }
-  body { font-family: 'Crimson Pro', serif; background: var(--cream); color: var(--ink); margin:0; padding-top:90px; }
-  header { position: fixed; top:0; left:0; right:0; background: var(--ink); color: var(--cream); z-index:400; padding:20px; display:flex; justify-content:space-between; align-items:center; }
-  .header-title h1 { margin:0; font-family:'Playfair Display',serif; color: var(--gold-light);}
-  .toolbar { display:flex; gap:8px; padding:10px 20px; background: var(--cream); position: sticky; top:70px; z-index:300; flex-wrap:wrap; align-items:center;}
-  .search-wrap input { padding:8px 12px; border-radius:3px; border:1px solid var(--gold); }
-  .filter-select, .view-btn { padding:6px 10px; border-radius:3px; border:1px solid var(--gold); cursor:pointer; }
-  .grid-view { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:16px; margin:16px;}
-  .stamp-card { background:white; border:1px solid rgba(92,61,30,0.15); border-radius:4px; overflow:hidden; cursor:pointer; }
-  .stamp-img-area img { width:100%; height:160px; object-fit:contain; }
-  .stamp-info { padding:8px; font-size:0.85rem; }
-  .stamp-edifil { font-weight:bold; color: var(--gold); }
-  .stamp-meta { font-size:0.75rem; color: var(--sepia); }
-  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); justify-content:center; align-items:center; z-index:500; }
-  .modal { background: var(--cream); max-width:700px; width:90%; padding:20px; border-radius:4px; position:relative; }
-  .modal-close { position:absolute; top:10px; right:10px; cursor:pointer; background:none; border:none; font-size:1.5rem; }
+body{margin:0;font-family:Arial;background:#f5f0e8}
+header{position:fixed;top:0;left:0;right:0;background:#111;color:#fff;padding:10px;z-index:100}
+#grid{margin-top:70px;display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;padding:10px}
+.card{background:#fff;border:1px solid #ccc;padding:5px}
+.card img{width:100%;height:140px;object-fit:contain}
 </style>
 </head>
+
 <body>
 
 <header>
-  <div class="header-title"><h1>Colección Filatélica de Menfis</h1></div>
-  <div class="header-buttons">
-    <button onclick="toggleView('grid')">⊞</button>
-    <button onclick="toggleView('list')">☰</button>
-  </div>
+<select id="epocaSelect"></select>
 </header>
 
-<div class="toolbar">
-  <div class="search-wrap"><input type="text" id="searchInput" placeholder="Buscar..."></div>
-  <select class="filter-select" id="filterYear"></select>
-  <select class="filter-select" id="filterEstado"></select>
-  <select class="filter-select" id="filterColor"></select>
-</div>
-
-<div class="grid-view" id="gridView"></div>
-
-<div class="modal-overlay" id="modalOverlay">
-  <div class="modal" id="modalContent">
-    <button class="modal-close" onclick="closeModal()">✕</button>
-    <div id="modalBody"></div>
-  </div>
-</div>
+<div id="grid"></div>
 
 <script>
-const SHEET_ID = '1KKTKamweQ0HQ85P9g8hy-CG4irFrJC_97_5qrEFmZ5E';
-const API_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=`;
+const SHEET_ID = "1KKTKamweQ0HQ85P9g8hy-CG4irFrJC_97_5qrEFmZ5E";
 
-// Listado de hojas (épocas)
-const sheets = ['Hoja 1','Hoja 2','Hoja 3','Hoja 4','Hoja 5','Hoja 6','Hoja 7','Hoja 8','Hoja 9','Hoja 10']; // añadir las que tengas, incluyendo 'Pruebas'
+async function cargarHoja(nombre){
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(nombre)}`;
+  const res = await fetch(url);
+  const text = await res.text();
+  const json = JSON.parse(text.match(/setResponse\((.*)\)/s)[1]);
 
-async function loadAllSheets(sheetNames) {
-  const allData = {};
-  for (const sheetName of sheetNames) {
-    const res = await fetch(API_URL + encodeURIComponent(sheetName));
-    const text = await res.text();
-    const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\((.*)\);?/s)[1]);
-    const rows = json.table.rows;
-    const cols = json.table.cols.map(c => c.label);
-    allData[sheetName] = rows.map(r => {
-      const obj = {};
-      cols.forEach((col,i)=> obj[col] = r.c[i]?.v ?? '');
-      return obj;
-    });
-  }
-  return allData;
+  const cols = json.table.cols.map(c=>c.label);
+  const rows = json.table.rows.map(r=>{
+    let obj={};
+    cols.forEach((c,i)=> obj[c]=r.c[i]?.v || "");
+    return obj;
+  });
+
+  return rows;
 }
 
-function renderEpoca(epocaName, data) {
-  const container = document.getElementById('gridView');
-  container.innerHTML = '';
-  data.forEach(stamp => {
-    const card = document.createElement('div');
-    card.className = 'stamp-card';
-    card.innerHTML = `
-      <div class="stamp-img-area">
-        <img src="${stamp.referencia}" class="stamp-photo" />
-      </div>
-      <div class="stamp-info">
-        <div class="stamp-edifil">${stamp.edifil}</div>
-        <div class="stamp-desc">${stamp.descripcion}</div>
-        <div class="stamp-meta">${stamp.color} | ${stamp.año}</div>
+function render(data){
+  const grid = document.getElementById("grid");
+  grid.innerHTML="";
+
+  data.forEach(s=>{
+    const img = s.referencia || "";
+
+    grid.innerHTML += `
+      <div class="card">
+        <img src="${img}">
+        <div>${s.edifil || ""}</div>
+        <div>${s.descripcion || ""}</div>
+        <div>${s.año || ""}</div>
       </div>
     `;
-    container.appendChild(card);
-    card.onclick = () => openModal(stamp);
   });
 }
 
-function openModal(stamp) {
-  const modal = document.getElementById('modalOverlay');
-  const body = document.getElementById('modalBody');
-  body.innerHTML = `
-    <h2>${stamp.descripcion} (${stamp.año})</h2>
-    <img src="${stamp.referencia}" style="width:100%;margin-bottom:10px;">
-    <p>Color: ${stamp.color}</p>
-    <p>Valor: ${stamp.valor_facial}</p>
-    <p>Estado: ${stamp.estado}</p>
-    <p>Notas: ${stamp.notas}</p>
-  `;
-  modal.style.display = 'flex';
-}
+async function init(){
 
-function closeModal() { document.getElementById('modalOverlay').style.display = 'none'; }
+  // 👇 NOMBRES EXACTOS DE TUS HOJAS
+  const hojas = [
+    "Hoja 1","Hoja 2","Hoja 3","Hoja 4","Hoja 5",
+    "Hoja 6","Hoja 7","Hoja 8","Hoja 9","Hoja 10"
+  ];
 
-function toggleView(view) {
-  document.getElementById('gridView').style.display = view==='grid' ? 'grid' : 'none';
-}
+  const select = document.getElementById("epocaSelect");
 
-async function init() {
-  const data = await loadAllSheets(sheets);
-  // Renderiza la primera época por defecto
-  renderEpoca(sheets[0], data[sheets[0]]);
-  // Opcional: puedes añadir selector de época y renderEpoca(sheets[i], data[sheets[i]]);
+  hojas.forEach(h=>{
+    const opt=document.createElement("option");
+    opt.value=h;
+    opt.textContent=h;
+    select.appendChild(opt);
+  });
+
+  select.onchange = async ()=>{
+    const data = await cargarHoja(select.value);
+    render(data);
+  };
+
+  // carga inicial
+  const data = await cargarHoja(hojas[0]);
+  render(data);
 }
 
 init();
 </script>
+
 </body>
 </html>
