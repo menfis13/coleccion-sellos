@@ -746,7 +746,7 @@
 </header>
 
 <!-- Sección Pruebas Oficiales y del Artista -->
-<div id="seccionPruebas" class="seccion-epoca">
+<div id="seccionPruebas" class="seccion-epoca" style="display: flex !important; flex-direction: column !important;">
   
   <div class="epoca-controls" style="margin-bottom: 20px; padding: 0 15px;">
     <div id="resultsInfoPruebas" style="margin-bottom: 10px; font-weight: bold; color: var(--gold);"></div>
@@ -3267,15 +3267,20 @@ function renderPruebas() {
 
   grid.innerHTML = filtered.map(p => {
     const imgUrl = p.referencia || p.delante || 'img/no-image.png';
+    
+    // ESTA LÍNEA ES LA QUE PONE EL TRIÁNGULO ROJO
+    // Si p.estado existe y no está vacío, añade la clase 'tengo'
+    const claseTengo = (p.estado && p.estado.length > 0) ? 'tengo' : '';
+    
     return `
-      <div class="prueba-card ${p.estado ? 'tengo' : ''}" onclick="abrirPrueba('${p.id}')">
-        <div class="prueba-img-area">
+      <div class="stamp-card ${claseTengo}" onclick="abrirPrueba('${p.id}')">
+        <div class="stamp-img-area">
           <img src="${imgUrl}" alt="" loading="lazy">
         </div>
-        <div class="prueba-info">
-          <div class="prueba-num">${etiquetaCodigo(p.codigo)}</div>
-          <div class="prueba-desc">${p.descripcion}</div>
-          <div class="prueba-año">${p.año || '—'}</div>
+        <div class="stamp-info">
+          <div class="stamp-num">${etiquetaCodigo(p.codigo)}</div>
+          <div class="stamp-title">${p.descripcion}</div>
+          <div class="stamp-year">${p.año || '—'}</div>
         </div>
       </div>`;
   }).join('');
