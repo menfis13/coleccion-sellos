@@ -746,7 +746,7 @@
 </header>
 
 <!-- Sección Pruebas Oficiales y del Artista -->
-<div id="seccionPruebas" class="seccion-epoca" style="display: flex !important; flex-direction: column !important;">
+<div id="seccionPruebas" class="seccion-epoca">
   
   <div class="epoca-controls" style="margin-bottom: 20px; padding: 0 15px;">
     <div id="resultsInfoPruebas" style="margin-bottom: 10px; font-weight: bold; color: var(--gold);"></div>
@@ -3206,83 +3206,108 @@ function toggleDarkMode() {
 let currentPruebaId = null;
 
 function entrarPruebas() {
+  // Ocultar portada y app principal, mostrar sección pruebas
   document.getElementById('portada').classList.remove('open');
   document.body.style.overflow = '';
   document.getElementById('seccionPruebas').classList.add('open');
-  
+  // Actualizar header fijo igual que las épocas normales
   const tituloEl = document.getElementById('header-epoca-titulo');
   if (tituloEl) tituloEl.innerHTML = '<span style="color:#e0b84a;font-style:italic">Pruebas Oficiales y del Artista</span>';
-  
   const subEl = document.getElementById('header-epoca-sub');
   if (subEl) { subEl.textContent = ''; subEl.style.display = 'none'; }
-
+  // Ocultar vistas de sellos pero mantener .main para resultsInfo
   document.getElementById('gridView') && (document.getElementById('gridView').style.display = 'none');
   document.getElementById('listView') && (document.getElementById('listView').style.display = 'none');
-  
+  document.getElementById('syncBar') && (document.getElementById('syncBar').style.display = 'none');
+  document.getElementById('readOnlyNotice') && (document.getElementById('readOnlyNotice').style.display = 'none');
+  // Intercambiar botones del header
   const hEpocas = document.getElementById('header-epocas-btns');
   const hPruebas = document.getElementById('header-pruebas-btns');
   if (hEpocas) hEpocas.style.display = 'none';
   if (hPruebas) hPruebas.style.display = 'flex';
-
   history.pushState({ view: 'pruebas' }, '', '');
   window.scrollTo(0, 0);
   renderPruebas();
+  // Cargar desde Google Sheets si hay sesión
+  if (isEditor() || _googleCredentialToken) loadPruebasFromSheets();
+  // Móvil
+  if (window.innerWidth <= 600) {
+    const ap = document.getElementById('authPortada');
+    if (ap) ap.style.display = 'none';
+    const av = document.getElementById('headerAvatar');
+    if (av && isEditor()) av.style.display = '';
+  }
 }
 
 function volverPortadaDesdePruebas() {
   document.getElementById('seccionPruebas').classList.remove('open');
+  document.getElementById('seccionPruebas').style.paddingTop = '';
+  // Restaurar botones del header
   const hEpocas = document.getElementById('header-epocas-btns');
   const hPruebas = document.getElementById('header-pruebas-btns');
   if (hEpocas) hEpocas.style.display = 'flex';
   if (hPruebas) hPruebas.style.display = 'none';
+  // Limpiar título del header fijo
+  const tituloEl = document.getElementById('header-epoca-titulo');
+  if (tituloEl) tituloEl.innerHTML = '';
+  // Restaurar contenido principal
+  document.getElementById('gridView') && (document.getElementById('gridView').style.display = ''); document.getElementById('listView') && (document.getElementById('listView').style.display = '');
+  const sb = document.getElementById('syncBar');
+  if (sb) sb.style.display = '';
   showPortada();
 }
 
 function etiquetaCodigo(codigo) {
-  if (!codigo) return 'S/N';
-  if (codigo.startsWith('CALC-')) return '🖨️ ' + codigo.replace('CALC-','');
-  if (codigo.startsWith('ESP-'))  return '⭐ ' + codigo.replace('ESP-','');
-  if (codigo.startsWith('ABONADOS-')) return '📋 ' + codigo.replace('ABONADOS-','');
-  return 'Nº ' + codigo;
-}
+    if (codigo.startsWith('CALC-')) return '🖨️ Calcográfica ' + codigo.replace('CALC-','');
+    if (codigo.startsWith('ESP-'))  return '⭐ Prueba Especial ' + codigo.replace('ESP-','');
+    if (codigo.startsWith('ABONADOS-')) return '📋 Abonados ' + codigo.replace('ABONADOS-','');
+    if (codigo.startsWith('SN-'))   return 'S/N';
+    return 'Prueba nº ' + codigo;
+  }
 
 function renderPruebas() {
   const grid = document.getElementById('pruebaGrid');
-  const searchInput = document.getElementById('searchInputPruebas');
-  const info = document.getElementById('resultsInfoPruebas');
-  
-  if (!grid) return;
-  grid.innerHTML = '';
+const searchInput = document.getElementById('searchInputPruebas');
+const searchVal = (searchInput?.value || '').toLowerCase().trim();
+const info = document.getElementById('resultsInfoPruebas');
 
-  const searchVal = (searchInput?.value || '').toLowerCase().trim();
-
+  // Filtrar
   const filtered = PRUEBAS_OFICIALES_DATA.filter(p => {
-    const haystack = [p.codigo, p.descripcion, String(p.año||'')].join(' ').toLowerCase();
-    return haystack.includes(searchVal);
+    if (searchVal) {
+      const haystack = [p.codigo, p.descripcion, String(p.año||'')].join(' ').toLowerCase();
+      if (!haystack.includes(searchVal)) return false;
+    }
+    return true;
   });
 
-  if (info) {
-    info.textContent = `Mostrando ${filtered.length} de ${PRUEBAS_OFICIALES_DATA.length} pruebas`;
-  }
-
+  const tengo = PRUEBAS_OFICIALES_DATA.filter(p => p.estado && p.estado !== '').length;
+  const conFoto = PRUEBAS_OFICIALES_DATA.filter(p => p.delante || p.detras).length;
+  // Actualizar stat-boxes del header fijo
+  const elTotal = document.getElementById('stat-total');
+  const elTengo = document.getElementById('stat-tengo');
+  const elFotos = document.getElementById('stat-fotos');
+  if (elTotal) elTotal.textContent = PRUEBAS_OFICIALES_DATA.length;
+  if (elTengo) elTengo.textContent = tengo;
+  if (elFotos) elFotos.textContent = conFoto;
+  const sfBox = document.getElementById('statbox-fotos');
+  if (sfBox) sfBox.style.display = '';
+  // Info de resultados reutilizando el mismo elemento de épocas
+  const ri = document.getElementById('resultsInfo');
+  if (ri) ri.textContent = `Mostrando ${filtered.length} de ${PRUEBAS_OFICIALES_DATA.length} pruebas`;
   grid.innerHTML = filtered.map(p => {
-    const imgUrl = p.referencia || p.delante || 'img/no-image.png';
+    const imgHtml = p.referencia
+      ? `<img src="${p.referencia}" alt="" loading="lazy">`
+      : `<div class="prueba-img-placeholder">🎨</div>`;
     
-    // ESTA LÍNEA ES LA QUE PONE EL TRIÁNGULO ROJO
-    // Si p.estado existe y no está vacío, añade la clase 'tengo'
-    const claseTengo = (p.estado && p.estado.length > 0) ? 'tengo' : '';
-    
-    return `
-      <div class="stamp-card ${claseTengo}" onclick="abrirPrueba('${p.id}')">
-        <div class="stamp-img-area">
-          <img src="${imgUrl}" alt="" loading="lazy">
-        </div>
-        <div class="stamp-info">
-          <div class="stamp-num">${etiquetaCodigo(p.codigo)}</div>
-          <div class="stamp-title">${p.descripcion}</div>
-          <div class="stamp-year">${p.año || '—'}</div>
-        </div>
-      </div>`;
+    // Volvemos a 'prueba-card' para que no se estiren, pero mantenemos 'tengo'
+    return `<div class="prueba-card ${p.estado ? 'tengo' : ''}" onclick="abrirPrueba('${p.id}')">
+      <div class="prueba-img-area">${imgHtml}</div>
+      <div class="prueba-info">
+        <div class="prueba-num">${etiquetaCodigo(p.codigo)}</div>
+        <div class="prueba-desc">${p.descripcion}</div>
+        <div class="prueba-año">${p.año || '—'}</div>
+      </div>
+    </div>`;
   }).join('');
 }
 
@@ -3293,15 +3318,56 @@ function abrirPrueba(id) {
 
   document.getElementById('pNum').textContent = etiquetaCodigo(p.codigo);
   document.getElementById('pTitle').textContent = p.descripcion;
-  
-  const fAño = document.getElementById('pFAño'); if(fAño) fAño.value = p.año || '';
-  const fDesc = document.getElementById('pFDesc'); if(fDesc) fDesc.value = p.descripcion || '';
-  const fEst = document.getElementById('pFEstado'); if(fEst) fEst.value = p.estado || '';
-  const fNot = document.getElementById('pFNotas'); if(fNot) fNot.value = p.notas || '';
+  document.getElementById('pFNum').value = p.codigo;
+  document.getElementById('pFAño').value = p.año || '';
+  document.getElementById('pFDesc').value = p.descripcion;
+  document.getElementById('pFEstado').value = p.estado || '';
+  document.getElementById('pFNotas').value = p.notas || '';
 
+  // Precio
+  const precioEl = document.getElementById('precio-prueba-modal');
+  if (precioEl) {
+    if (p.precio_nuevo || p.precio_usado) {
+      precioEl.innerHTML = `<div style="font-size:0.75rem;color:var(--sepia);padding:4px 0 8px;display:flex;gap:16px">
+        ${p.precio_nuevo ? '<span>Nuevo: <strong>' + p.precio_nuevo + ' €</strong></span>' : ''}
+        ${p.precio_usado ? '<span>Usado: <strong>' + p.precio_usado + ' €</strong></span>' : ''}
+      </div>`;
+    } else { precioEl.innerHTML = ''; }
+  }
+
+  // Fotos
   setPruebaSlot('referencia', p.referencia);
   setPruebaSlot('delante', p.delante);
   setPruebaSlot('detras', p.detras);
+
+  // Drag & drop / paste en slots de prueba
+  const editable = isEditor();
+  ['pSlotDelante','pSlotDetras'].forEach(slotId => {
+    const slot = document.getElementById(slotId);
+    if (!slot || !editable) return;
+    const side = slotId === 'pSlotDelante' ? 'delante' : 'detras';
+    slot.ondragover = e => { e.preventDefault(); slot.classList.add('drag-over'); };
+    slot.ondragleave = () => slot.classList.remove('drag-over');
+    slot.ondrop = e => {
+      e.preventDefault(); slot.classList.remove('drag-over');
+      const file = e.dataTransfer.files[0];
+      if (file && file.type.startsWith('image/')) {
+        currentPhotoTarget = 'prueba_' + side;
+        window._currentPruebaPhotoSide = side;
+        const fakeInput = { files: [file] };
+        handlePhoto({ target: fakeInput });
+      }
+    };
+  });
+
+  // Permisos edición
+  ['pFAño','pFDesc','pFNotas'].forEach(fid => {
+    const el = document.getElementById(fid);
+    if (el) { el.readOnly = !editable; el.style.background = editable ? '' : '#f5f0e8'; }
+  });
+  const sel = document.getElementById('pFEstado');
+  if (sel) sel.disabled = !editable;
+  document.querySelectorAll('.edit-only').forEach(el => { el.style.display = editable ? '' : 'none'; });
 
   document.getElementById('modalPrueba').classList.add('open');
   actualizarNavPrueba();
@@ -3314,10 +3380,16 @@ function setPruebaSlot(side, src) {
   const preview = slot.querySelector('.photo-slot-preview') || slot;
   const existing = preview.querySelector('img');
   if (existing) existing.remove();
+  slot.classList.remove('has-photo');
+  preview.onclick = null;
   if (src) {
+    const captions = { referencia: 'Imagen de referencia', delante: 'Mi prueba · Cara delantera', detras: 'Mi prueba · Cara trasera' };
     const img = document.createElement('img');
     img.src = src;
+    img.addEventListener('click', (e) => { e.stopPropagation(); openLightbox(src, captions[side]||''); });
     preview.insertBefore(img, preview.firstChild);
+    slot.classList.add('has-photo');
+    preview.onclick = (e) => { e.stopPropagation(); openLightbox(src, captions[side]||''); };
   }
 }
 
@@ -3327,13 +3399,43 @@ function cerrarModalPrueba(e) {
   currentPruebaId = null;
 }
 
+function guardarPrueba() {
+  if (!isEditor()) return;
+  const idx = PRUEBAS_OFICIALES_DATA.findIndex(p => p.id === currentPruebaId);
+  if (idx < 0) return;
+  PRUEBAS_OFICIALES_DATA[idx].año = parseInt(document.getElementById('pFAño').value) || null;
+  PRUEBAS_OFICIALES_DATA[idx].descripcion = document.getElementById('pFDesc').value;
+  PRUEBAS_OFICIALES_DATA[idx].estado = document.getElementById('pFEstado').value || null;
+  PRUEBAS_OFICIALES_DATA[idx].notas = document.getElementById('pFNotas').value;
+  // Guardar en localStorage
+  try { localStorage.setItem('pruebas_oficiales', JSON.stringify(PRUEBAS_OFICIALES_DATA)); } catch(e) {}
+  // Guardar en Google Sheets
+  savePruebaToSheets(PRUEBAS_OFICIALES_DATA[idx]);
+  renderPruebas();
+}
+
+function eliminarPrueba() {
+  if (!isEditor()) return;
+  if (!confirm('¿Eliminar los datos de esta prueba?')) return;
+  const idx = PRUEBAS_OFICIALES_DATA.findIndex(p => p.id === currentPruebaId);
+  if (idx < 0) return;
+  PRUEBAS_OFICIALES_DATA[idx].estado = null;
+  PRUEBAS_OFICIALES_DATA[idx].notas = '';
+  PRUEBAS_OFICIALES_DATA[idx].delante = null;
+  PRUEBAS_OFICIALES_DATA[idx].detras = null;
+  try { localStorage.setItem('pruebas_oficiales', JSON.stringify(PRUEBAS_OFICIALES_DATA)); } catch(e) {}
+  savePruebaToSheets(PRUEBAS_OFICIALES_DATA[idx]);
+  cerrarModalPrueba();
+  renderPruebas();
+  showToast('Datos eliminados');
+}
+
 function navegarPrueba(dir) {
   const idx = PRUEBAS_OFICIALES_DATA.findIndex(p => p.id === currentPruebaId);
   if (idx < 0) return;
   const next = idx + dir;
-  if (next >= 0 && next < PRUEBAS_OFICIALES_DATA.length) {
-    abrirPrueba(PRUEBAS_OFICIALES_DATA[next].id);
-  }
+  if (next < 0 || next >= PRUEBAS_OFICIALES_DATA.length) return;
+  abrirPrueba(PRUEBAS_OFICIALES_DATA[next].id);
 }
 
 function actualizarNavPrueba() {
@@ -3344,9 +3446,76 @@ function actualizarNavPrueba() {
   if (btnN) btnN.disabled = idx >= PRUEBAS_OFICIALES_DATA.length - 1;
 }
 
+function triggerPruebaPhoto(side) {
+  currentPhotoTarget = 'prueba_' + side;
+  window._currentPruebaPhotoSide = side;
+  window._fromCamera = true;
+  document.getElementById('fileCamera').click();
+}
+function triggerPruebaPhotoGallery(side) {
+  currentPhotoTarget = 'prueba_' + side;
+  window._currentPruebaPhotoSide = side;
+  window._fromCamera = false;
+  document.getElementById('fileGallery').click();
+}
+function quitarFotoPrueba(side) {
+  const idx = PRUEBAS_OFICIALES_DATA.findIndex(p => p.id === currentPruebaId);
+  if (idx < 0) return;
+  PRUEBAS_OFICIALES_DATA[idx][side] = null;
+  setPruebaSlot(side, null);
+  try { localStorage.setItem('pruebas_oficiales', JSON.stringify(PRUEBAS_OFICIALES_DATA)); } catch(e) {}
+}
+
+// Restaurar datos de pruebas desde localStorage al cargar
+(function restaurarPruebas() {
+  try {
+    const saved = localStorage.getItem('pruebas_oficiales');
+    if (!saved) return;
+    const savedData = JSON.parse(saved);
+    savedData.forEach(saved => {
+      const idx = PRUEBAS_OFICIALES_DATA.findIndex(p => p.id === saved.id);
+      if (idx >= 0) {
+        PRUEBAS_OFICIALES_DATA[idx].estado = saved.estado;
+        PRUEBAS_OFICIALES_DATA[idx].notas = saved.notas;
+        PRUEBAS_OFICIALES_DATA[idx].año = saved.año;
+        PRUEBAS_OFICIALES_DATA[idx].descripcion = saved.descripcion;
+        PRUEBAS_OFICIALES_DATA[idx].delante = saved.delante || null;
+        PRUEBAS_OFICIALES_DATA[idx].detras = saved.detras || null;
+      }
+    });
+  } catch(e) {}
+})();
+
+// Swipe táctil en modal de pruebas
+(function() {
+  let tx = 0, ty = 0;
+  document.addEventListener('touchstart', (e) => {
+    if (!document.getElementById('modalPrueba')?.classList.contains('open')) return;
+    tx = e.touches[0].clientX; ty = e.touches[0].clientY;
+  }, { passive: true });
+  document.addEventListener('touchend', (e) => {
+    if (!document.getElementById('modalPrueba')?.classList.contains('open')) return;
+    const dx = e.changedTouches[0].clientX - tx;
+    const dy = e.changedTouches[0].clientY - ty;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) navegarPrueba(dx < 0 ? 1 : -1);
+  }, { passive: true });
+})();
+
+// Historial: volver desde pruebas
 window.addEventListener('popstate', function(e) {
   if (document.getElementById('seccionPruebas').classList.contains('open')) {
-    volverPortadaDesdePruebas();
+    document.getElementById('seccionPruebas').classList.remove('open');
+    document.getElementById('seccionPruebas').style.paddingTop = '';
+    const hEpocas = document.getElementById('header-epocas-btns');
+    const hPruebas = document.getElementById('header-pruebas-btns');
+    if (hEpocas) hEpocas.style.display = 'flex';
+    if (hPruebas) hPruebas.style.display = 'none';
+    const tituloEl = document.getElementById('header-epoca-titulo');
+    if (tituloEl) tituloEl.innerHTML = '';
+    document.getElementById('gridView') && (document.getElementById('gridView').style.display = ''); document.getElementById('listView') && (document.getElementById('listView').style.display = '');
+    const sb = document.getElementById('syncBar');
+    if (sb) sb.style.display = '';
+    showPortada();
   }
 });
 // ── FIN PRUEBAS OFICIALES ─────────────────────────────────────────────────────
