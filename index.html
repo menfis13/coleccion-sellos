@@ -25,11 +25,19 @@ header{position:fixed;top:0;left:0;right:0;background:#111;color:#fff;padding:10
 <script>
 const SHEET_ID = "1KKTKamweQ0HQ85P9g8hy-CG4irFrJC_97_5qrEFmZ5E";
 
-async function cargarHoja(nombre){
-  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(nombre)}`;
+// 🔴 USA GID (esto evita fallos con nombres)
+const hojas = [
+  {nombre:"Hoja 1", gid:0},
+  {nombre:"Hoja 2", gid:123456789},   // ← cambia estos
+  {nombre:"Hoja 3", gid:123456789},
+  {nombre:"Hoja 4", gid:123456789}
+];
+
+async function cargarHoja(gid){
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${gid}`;
   const res = await fetch(url);
   const text = await res.text();
-  const json = JSON.parse(text.match(/setResponse\\((.*)\\)/s)[1]);
+  const json = JSON.parse(text.match(/setResponse\((.*)\)/s)[1]);
 
   const cols = json.table.cols.map(c=>c.label);
   const rows = json.table.rows.map(r=>{
@@ -41,15 +49,11 @@ async function cargarHoja(nombre){
   return rows;
 }
 
-// 🔴 GENERADOR DE URL DE CLOUDINARY (CORRECTO)
 function getImage(edifil){
   let clean = String(edifil).toUpperCase();
-
   let num = clean.match(/\d+/)?.[0] || "0";
   if (num.length < 3) num = num.padStart(3,'0');
-
   let sufijo = clean.match(/[A-Z]+/)?.[0] || "";
-
   return `https://res.cloudinary.com/do4ltpfbo/image/upload/sello_${num}${sufijo}.jpg`;
 }
 
@@ -72,29 +76,22 @@ function render(data){
 }
 
 async function init(){
-
-  // 👉 AÑADE AQUÍ TODAS TUS HOJAS (incluye PRUEBAS si existe)
-  const hojas = [
-    "Hoja 1","Hoja 2","Hoja 3","Hoja 4","Hoja 5",
-    "Hoja 6","Hoja 7","Hoja 8","Hoja 9","Hoja 10"
-  ];
-
   const select = document.getElementById("epocaSelect");
 
-  hojas.forEach(h=>{
+  hojas.forEach((h,i)=>{
     const opt=document.createElement("option");
-    opt.value=h;
-    opt.textContent=h;
+    opt.value=i;
+    opt.textContent=h.nombre;
     select.appendChild(opt);
   });
 
   select.onchange = async ()=>{
-    const data = await cargarHoja(select.value);
+    const data = await cargarHoja(hojas[select.value].gid);
     render(data);
   };
 
   // carga inicial
-  const data = await cargarHoja(hojas[0]);
+  const data = await cargarHoja(hojas[0].gid);
   render(data);
 }
 
