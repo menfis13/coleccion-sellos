@@ -3257,57 +3257,47 @@ function volverPortadaDesdePruebas() {
   showPortada();
 }
 
-function etiquetaCodigo(codigo) {
-    if (codigo.startsWith('CALC-')) return '🖨️ Calcográfica ' + codigo.replace('CALC-','');
-    if (codigo.startsWith('ESP-'))  return '⭐ Prueba Especial ' + codigo.replace('ESP-','');
-    if (codigo.startsWith('ABONADOS-')) return '📋 Abonados ' + codigo.replace('ABONADOS-','');
-    if (codigo.startsWith('SN-'))   return 'S/N';
-    return 'Prueba nº ' + codigo;
-  }
+ffunction etiquetaCodigo(codigo) {
+  if (!codigo) return 'S/N';
+  if (codigo.startsWith('CALC-')) return '🖨️ ' + codigo.replace('CALC-','');
+  if (codigo.startsWith('ESP-'))  return '⭐ ' + codigo.replace('ESP-','');
+  if (codigo.startsWith('ABONADOS-')) return '📋 ' + codigo.replace('ABONADOS-','');
+  return 'Nº ' + codigo;
+}
 
 function renderPruebas() {
   const grid = document.getElementById('pruebaGrid');
-const searchInput = document.getElementById('searchInputPruebas');
-const searchVal = (searchInput?.value || '').toLowerCase().trim();
-const info = document.getElementById('resultsInfoPruebas');
+  const searchInput = document.getElementById('searchInputPruebas');
+  const info = document.getElementById('resultsInfoPruebas');
+  
+  if (!grid) return;
+  const searchVal = (searchInput?.value || '').toLowerCase().trim();
 
-  // Filtrar
+  // Filtrado
   const filtered = PRUEBAS_OFICIALES_DATA.filter(p => {
-    if (searchVal) {
-      const haystack = [p.codigo, p.descripcion, String(p.año||'')].join(' ').toLowerCase();
-      if (!haystack.includes(searchVal)) return false;
-    }
-    return true;
+    const haystack = [p.codigo, p.descripcion, String(p.año||'')].join(' ').toLowerCase();
+    return haystack.includes(searchVal);
   });
 
-  const tengo = PRUEBAS_OFICIALES_DATA.filter(p => p.estado && p.estado !== '').length;
-  const conFoto = PRUEBAS_OFICIALES_DATA.filter(p => p.delante || p.detras).length;
-  // Actualizar stat-boxes del header fijo
-  const elTotal = document.getElementById('stat-total');
-  const elTengo = document.getElementById('stat-tengo');
-  const elFotos = document.getElementById('stat-fotos');
-  if (elTotal) elTotal.textContent = PRUEBAS_OFICIALES_DATA.length;
-  if (elTengo) elTengo.textContent = tengo;
-  if (elFotos) elFotos.textContent = conFoto;
-  const sfBox = document.getElementById('statbox-fotos');
-  if (sfBox) sfBox.style.display = '';
-  // Info de resultados reutilizando el mismo elemento de épocas
-  const ri = document.getElementById('resultsInfo');
-  if (ri) ri.textContent = `Mostrando ${filtered.length} de ${PRUEBAS_OFICIALES_DATA.length} pruebas`;
+  // Texto informativo arriba
+  if (info) {
+    info.textContent = `Mostrando ${filtered.length} de ${PRUEBAS_OFICIALES_DATA.length} pruebas`;
+  }
+
+  // Dibujar el Grid
   grid.innerHTML = filtered.map(p => {
-    const imgHtml = p.referencia
-      ? `<img src="${p.referencia}" alt="" loading="lazy">`
-      : `<div class="prueba-img-placeholder">🎨</div>`;
-    
-    // Volvemos a 'prueba-card' para que no se estiren, pero mantenemos 'tengo'
-    return `<div class="prueba-card ${p.estado ? 'tengo' : ''}" onclick="abrirPrueba('${p.id}')">
-      <div class="prueba-img-area">${imgHtml}</div>
-      <div class="prueba-info">
-        <div class="prueba-num">${etiquetaCodigo(p.codigo)}</div>
-        <div class="prueba-desc">${p.descripcion}</div>
-        <div class="prueba-año">${p.año || '—'}</div>
-      </div>
-    </div>`;
+    const imgUrl = p.referencia || p.delante || 'img/no-image.png';
+    return `
+      <div class="prueba-card ${p.estado ? 'tengo' : ''}" onclick="abrirPrueba('${p.id}')">
+        <div class="prueba-img-area">
+          <img src="${imgUrl}" alt="" loading="lazy">
+        </div>
+        <div class="prueba-info">
+          <div class="prueba-num">${etiquetaCodigo(p.codigo)}</div>
+          <div class="prueba-desc">${p.descripcion}</div>
+          <div class="prueba-año">${p.año || '—'}</div>
+        </div>
+      </div>`;
   }).join('');
 }
 
