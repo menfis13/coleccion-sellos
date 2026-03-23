@@ -29,7 +29,7 @@ async function cargarHoja(nombre){
   const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(nombre)}`;
   const res = await fetch(url);
   const text = await res.text();
-  const json = JSON.parse(text.match(/setResponse\((.*)\)/s)[1]);
+  const json = JSON.parse(text.match(/setResponse\\((.*)\\)/s)[1]);
 
   const cols = json.table.cols.map(c=>c.label);
   const rows = json.table.rows.map(r=>{
@@ -41,17 +41,29 @@ async function cargarHoja(nombre){
   return rows;
 }
 
+// 🔴 GENERADOR DE URL DE CLOUDINARY (CORRECTO)
+function getImage(edifil){
+  let clean = String(edifil).toUpperCase();
+
+  let num = clean.match(/\d+/)?.[0] || "0";
+  if (num.length < 3) num = num.padStart(3,'0');
+
+  let sufijo = clean.match(/[A-Z]+/)?.[0] || "";
+
+  return `https://res.cloudinary.com/do4ltpfbo/image/upload/sello_${num}${sufijo}.jpg`;
+}
+
 function render(data){
   const grid = document.getElementById("grid");
   grid.innerHTML="";
 
   data.forEach(s=>{
-    const img = s.referencia || "";
+    const img = getImage(s.edifil);
 
     grid.innerHTML += `
       <div class="card">
-        <img src="${img}">
-        <div>${s.edifil || ""}</div>
+        <img src="${img}" onerror="this.src='https://via.placeholder.com/150?text=No+Img'">
+        <div><b>${s.edifil || ""}</b></div>
         <div>${s.descripcion || ""}</div>
         <div>${s.año || ""}</div>
       </div>
@@ -61,7 +73,7 @@ function render(data){
 
 async function init(){
 
-  // 👇 NOMBRES EXACTOS DE TUS HOJAS
+  // 👉 AÑADE AQUÍ TODAS TUS HOJAS (incluye PRUEBAS si existe)
   const hojas = [
     "Hoja 1","Hoja 2","Hoja 3","Hoja 4","Hoja 5",
     "Hoja 6","Hoja 7","Hoja 8","Hoja 9","Hoja 10"
