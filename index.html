@@ -1663,14 +1663,8 @@ function saltarEdifil() {
     return;
   }
 
-  // Buscar en otras épocas
-  let epocaDestino = null;
-  for (const [epId, ep] of Object.entries(EPOCAS)) {
-    if (epId !== currentEpoca && ep.data.find(s => s.edifil === edifil)) {
-      epocaDestino = epId;
-      break;
-    }
-  }
+  // Buscar en otras épocas usando el mapa precargado
+  const epocaDestino = edifilEpocaMap[edifil] || null;
   if (!epocaDestino) {
     showToast('Edifil nº ' + edifil + ' no encontrado en ninguna época');
     return;
@@ -1720,7 +1714,7 @@ function scrollAndHighlight(edifil) {
   }
   if (target) {
     const top = target.getBoundingClientRect().top + window.scrollY - 140;
-    window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+    window.scrollTo({ top: Math.max(0, top), behavior: 'auto' }); // salto instantáneo
     // Quitar resaltado tras 5 segundos
     setTimeout(() => target.classList.remove('search-highlight'), 5000);
   }
@@ -2916,6 +2910,7 @@ function switchEpoca(epocaId) {
 
 // Mostrar portada al inicio — esperar contadores de Sheets antes de renderizar
 const epocasTotales = {};
+const edifilEpocaMap = {}; // edifil -> epochId (construido en precargarContadores)
 
 async function precargarContadores() {
   const promesas = Object.values(EPOCAS).map(async ep => {
@@ -2925,9 +2920,13 @@ async function precargarContadores() {
       const text = await res.text();
       const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\((.*)\);?$/s)[1]);
       const rows = json.table?.rows || [];
-      epocasTotales[ep.id] = rows.filter(row => row.c && row.c[0] && row.c[0].v).length;
+      const validRows = rows.filter(row => row.c && row.c[0] && row.c[0].v);
+      epocasTotales[ep.id] = validRows.length;
       let count = 0;
-      rows.forEach(row => { if (row.c && row.c[6] && row.c[6].v) count++; });
+      validRows.forEach(row => {
+        if (ep.id !== 'pruebas') edifilEpocaMap[row.c[0].v] = ep.id; // mapear edifil -> época
+        if (row.c[6] && row.c[6].v) count++;
+      });
       epocasContadores[ep.id] = count;
     } catch(e) {}
   });
