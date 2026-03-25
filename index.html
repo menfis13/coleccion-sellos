@@ -2536,25 +2536,27 @@ async function handlePhoto(event) {
             showToast('Foto guardada ✓');
           } else {
           const idx = stamps.findIndex(s => s.edifil === currentStampId);
-          if (idx >= 0) {
-            stamps[idx][currentPhotoTarget] = json.secure_url;
-            setPhotoSlot(currentPhotoTarget, json.secure_url);
-            // Auto-estado: si no tenía estado, marcar como Nuevo automáticamente
-            let autoEstadoMsg = '';
-            if (!stamps[idx].estado) {
-              stamps[idx].estado = 'Nuevo';
-              const fEstado = document.getElementById('fEstado');
-              if (fEstado) fEstado.value = 'Nuevo';
-              autoEstadoMsg = ' · marcado como Nuevo ✓';
-              // Actualizar contadores de la cabecera
-              renderStamps();
-            }
-            await saveToSheets(stamps[idx]);
-            saveLocal();
-            renderStamps();
-          }
-          setSyncStatus('', 'Foto guardada en Cloudinary ✓');
-          showToast('Foto guardada ✓' + autoEstadoMsg);
+          let autoEstadoMsg = '';
+
+if (idx >= 0) {
+  stamps[idx][currentPhotoTarget] = json.secure_url;
+  setPhotoSlot(currentPhotoTarget, json.secure_url);
+
+  if (!stamps[idx].estado) {
+    stamps[idx].estado = 'Nuevo';
+    const fEstado = document.getElementById('fEstado');
+    if (fEstado) fEstado.value = 'Nuevo';
+    autoEstadoMsg = ' · marcado como Nuevo ✓';
+    renderStamps();
+  }
+
+  await saveToSheets(stamps[idx]);
+  saveLocal();
+  renderStamps();
+}
+
+setSyncStatus('', 'Foto guardada en Cloudinary ✓');
+showToast('Foto guardada ✓' + autoEstadoMsg);
           }
         } else {
           console.error('Cloudinary error:', json);
