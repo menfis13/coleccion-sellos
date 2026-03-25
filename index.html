@@ -2988,8 +2988,7 @@ function entrarPruebas() {
   document.getElementById('readOnlyNotice') && (document.getElementById('readOnlyNotice').style.display = 'none');
   // Ocultar toolbar de épocas (búsqueda/filtros normales) — tiene su propio buscador
   const toolbarWrap = document.getElementById('epocas-toolbar-wrap');
-  if (toolbarWrap) toolbarWrap.style.display = ''; 
-  
+  if (toolbarWrap) toolbarWrap.style.display = 'none';
   // Intercambiar botones del header
   const hEpocas = document.getElementById('header-epocas-btns');
   const hPruebas = document.getElementById('header-pruebas-btns');
