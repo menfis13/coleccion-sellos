@@ -662,7 +662,10 @@
   .portada-card.pruebas-card:hover { border-color:rgba(184,134,11,0.7); box-shadow:0 16px 48px rgba(184,134,11,0.15); }
   /* Sección de Pruebas Oficiales */
   #seccionPruebas { display:none; }
-  #seccionPruebas.open { display:block; }
+  #seccionPruebas.open {
+  display: block;
+  padding-top: 100px; /* ajusta si hace falta */
+}
   .prueba-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:16px; padding:16px; padding-top:20px; }
   .prueba-card { background:var(--cream); border:1px solid rgba(184,134,11,0.2); border-radius:3px; overflow:hidden; cursor:pointer; transition:all 0.2s; position:relative; }
   .prueba-card:hover { border-color:rgba(184,134,11,0.6); transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,0.15); }
@@ -3005,6 +3008,11 @@ function entrarPruebas() {
     if (ap) ap.style.display = 'none';
     const av = document.getElementById('headerAvatar');
     if (av && isEditor()) av.style.display = '';
+
+const header = document.querySelector('header');
+const sec = document.getElementById('seccionPruebas');
+if (header && sec) {
+  sec.style.paddingTop = header.offsetHeight + 'px';
   }
 }
 
