@@ -830,7 +830,7 @@
   🔒 Modo solo lectura — inicia sesión con tu cuenta de Google para editar la colección
 </div>
 
-<div style="max-width:1400px;margin:0 auto;">
+<div id="epocas-toolbar-wrap" style="max-width:1400px;margin:0 auto;">
   <div class="toolbar" id="epocas-toolbar">
     <div class="search-wrap">
       <span class="search-icon">🔍</span>
@@ -1483,7 +1483,6 @@ let activeStatFilter = null; // 'tengo' | 'fotos' | null
 
 function toggleStatFilter(tipo) {
   if (tipo === 'total') {
-    // Total siempre limpia el filtro
     activeStatFilter = null;
   } else {
     activeStatFilter = (activeStatFilter === tipo) ? null : tipo;
@@ -1492,7 +1491,9 @@ function toggleStatFilter(tipo) {
   document.getElementById('statbox-total').classList.toggle('active-filter', activeStatFilter === null && tipo === 'total' && false);
   document.getElementById('statbox-tengo').classList.toggle('active-filter', activeStatFilter === 'tengo');
   document.getElementById('statbox-fotos').classList.toggle('active-filter', activeStatFilter === 'fotos');
-  renderStamps();
+  // Si estamos en pruebas, filtrar pruebas; si no, filtrar sellos normales
+  const inPruebas = document.getElementById('seccionPruebas').classList.contains('open');
+  if (inPruebas) renderPruebas(); else renderStamps();
 }
 
 // ==================== FILTERS ====================
@@ -2827,6 +2828,9 @@ function showPortada() {
 function entrarEpoca(epocaId) {
   // Las Pruebas Oficiales usan su propia sección y funciones
   if (epocaId === 'pruebas') { entrarPruebas(); return; }
+  // Asegurar que el toolbar de épocas está visible (por si veníamos de pruebas)
+  const tw = document.getElementById('epocas-toolbar-wrap');
+  if (tw) tw.style.display = '';
   currentEpoca = epocaId;
   document.getElementById('portada').classList.remove('open');
   document.body.style.overflow = '';
@@ -2980,6 +2984,9 @@ function entrarPruebas() {
   document.getElementById('listView') && (document.getElementById('listView').style.display = 'none');
   document.getElementById('syncBar') && (document.getElementById('syncBar').style.display = 'none');
   document.getElementById('readOnlyNotice') && (document.getElementById('readOnlyNotice').style.display = 'none');
+  // Ocultar toolbar de épocas (búsqueda/filtros normales) — tiene su propio buscador
+  const toolbarWrap = document.getElementById('epocas-toolbar-wrap');
+  if (toolbarWrap) toolbarWrap.style.display = 'none';
   // Intercambiar botones del header
   const hEpocas = document.getElementById('header-epocas-btns');
   const hPruebas = document.getElementById('header-pruebas-btns');
@@ -3014,6 +3021,9 @@ function volverPortadaDesdePruebas() {
   document.getElementById('gridView') && (document.getElementById('gridView').style.display = ''); document.getElementById('listView') && (document.getElementById('listView').style.display = '');
   const sb = document.getElementById('syncBar');
   if (sb) sb.style.display = '';
+  // Restaurar toolbar de épocas
+  const tw = document.getElementById('epocas-toolbar-wrap');
+  if (tw) tw.style.display = '';
   showPortada();
 }
 
@@ -3033,6 +3043,9 @@ const info = document.getElementById('resultsInfoPruebas');
 
   // Filtrar
   const filtered = PRUEBAS_OFICIALES_DATA.filter(p => {
+    // Filtro por stat-box activo
+    if (activeStatFilter === 'tengo' && !p.estado) return false;
+    if (activeStatFilter === 'fotos' && !p.delante && !p.detras) return false;
     if (searchVal) {
       const haystack = [p.codigo, p.descripcion, String(p.año||'')].join(' ').toLowerCase();
       if (!haystack.includes(searchVal)) return false;
