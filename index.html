@@ -112,15 +112,22 @@
 .prueba-img-area {
   position: relative !important;
   z-index: 1 !important;
-  height: 180px !important;
+  height: auto !important;
+  min-height: 100px !important;
+  max-height: 220px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
+  overflow: hidden !important;
 }
 
 .prueba-img-area img {
-  max-height: 100% !important;
+  max-width: 100% !important;
+  max-height: 220px !important;
   width: auto !important;
+  height: auto !important;
+  object-fit: contain !important;
+  display: block !important;
 }
   
   body.dark-mode { background: #13110d !important; color: var(--ink); }
@@ -3088,7 +3095,10 @@ function entrarPruebas() {
   document.body.style.overflow = '';
   const secPruebas = document.getElementById('seccionPruebas');
   secPruebas.classList.add('open');
-  secPruebas.style.paddingTop = (window.innerWidth <= 600) ? '16px' : '24px';
+  // Calcular el alto real del header para no quedar tapado
+  const headerEl = document.querySelector('header');
+  const headerH = headerEl ? headerEl.offsetHeight : 92;
+  secPruebas.style.paddingTop = (headerH + 12) + 'px';
   // Actualizar header fijo igual que las épocas normales
   const tituloEl = document.getElementById('header-epoca-titulo');
   if (tituloEl) tituloEl.innerHTML = '<span style="color:#e0b84a;font-style:italic">Pruebas Oficiales y del Artista</span>';
