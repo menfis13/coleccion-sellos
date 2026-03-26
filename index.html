@@ -3357,37 +3357,9 @@ async function cargarPreciosDesdeSheets() {
         }
     } catch (error) {
         console.error("Error al obtener precios de Sheets:", error);
+    }
+}
 
-
-
-// --- FUNCIONALIDAD PARA CAMBIAR DE VISTA (CUADRÍCULA / LISTA) ---
-document.addEventListener('DOMContentLoaded', () => {
-  const btnGrid = document.getElementById('btn-grid');
-  const btnList = document.getElementById('id-list'); 
-  const gridView = document.getElementById('gridView');
-  const listView = document.getElementById('listView');
-
-  if (btnGrid && btnList) {
-    // Función para activar Cuadrícula
-    btnGrid.addEventListener('click', () => {
-      btnGrid.classList.add('active');
-      btnList.classList.remove('active');
-      if(gridView) gridView.classList.add('active');
-      if(listView) listView.classList.remove('active');
-      localStorage.setItem('stampView', 'grid');
-    });
-
-    // Función para activar Lista
-    btnList.addEventListener('click', () => {
-      btnList.classList.add('active');
-      btnGrid.classList.remove('active');
-      if(listView) listView.classList.add('active');
-      if(gridView) gridView.classList.remove('active');
-      localStorage.setItem('stampView', 'list');
-    });
-  }
-});
-// --- FIN DE LA PROGRAMACIÓN ---
 </script>
 
 <div id="cropModal">
