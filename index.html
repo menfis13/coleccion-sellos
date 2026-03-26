@@ -785,8 +785,9 @@
   <input type="text" id="searchInputPruebas" placeholder="Buscar pruebas..." oninput="renderPruebas()">
 
   <div class="right-buttons">
-    <button onclick="setView('grid')" title="Cuadrícula">🔲</button>
-    <button onclick="setView('list')" title="Lista">📄</button>
+    <button onclick="document.getElementById('pruebaGrid').classList.remove('list'); document.getElementById('pruebaGrid').classList.add('grid')" title="Cuadrícula">🔲</button>
+
+<button onclick="document.getElementById('pruebaGrid').classList.remove('grid'); document.getElementById('pruebaGrid').classList.add('list')" title="Lista">📄</button>
   </div>
 
 </div>
