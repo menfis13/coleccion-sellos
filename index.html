@@ -695,22 +695,80 @@
 .pruebas-toolbar input {
   width: 33%;
   min-width: 120px;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid var(--gold);
+  padding: 9px 14px;
+  border-radius: 2px;
+  border: 1px solid rgba(92,61,30,0.3);
   background: var(--cream);
   color: var(--ink);
+  font-family: 'Crimson Pro', serif;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
 }
-
-.pruebas-toolbar .right-buttons {
-  display: flex;
-  gap: 6px;
-}
+.pruebas-toolbar input:focus { border-color: var(--gold); }
 
 @media (max-width:600px) {
-  .pruebas-toolbar input {
-    width: 45%;
-  }
+  .pruebas-toolbar input { width: 45%; }
+}
+
+/* Vista lista de pruebas */
+#pruebaGrid.vista-lista {
+  display: flex !important;
+  flex-direction: column;
+  gap: 0;
+  padding: 0 16px 16px;
+}
+#pruebaGrid.vista-lista .prueba-card {
+  display: grid !important;
+  grid-template-columns: 70px 1fr;
+  min-height: unset !important;
+  height: 64px !important;
+  border-radius: 0 !important;
+  border-bottom: 1px solid rgba(184,134,11,0.12) !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-top: none !important;
+  padding: 0 !important;
+}
+#pruebaGrid.vista-lista .prueba-card:first-child {
+  border-top: 1px solid rgba(184,134,11,0.12) !important;
+}
+#pruebaGrid.vista-lista .prueba-img-area {
+  height: 64px !important;
+  width: 70px;
+  border-right: 1px solid rgba(184,134,11,0.1);
+}
+#pruebaGrid.vista-lista .prueba-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 14px;
+}
+#pruebaGrid.vista-lista .prueba-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.8rem;
+  color: var(--gold);
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 52px;
+}
+#pruebaGrid.vista-lista .prueba-desc {
+  font-size: 0.9rem;
+  color: var(--ink);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#pruebaGrid.vista-lista .prueba-año {
+  font-size: 0.8rem;
+  color: var(--sepia);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+/* Triángulo en lista */
+#pruebaGrid.vista-lista .prueba-card.tengo::after {
+  border-width: 0 22px 22px 0 !important;
 }
 
 </style>
@@ -784,10 +842,9 @@
   
   <input type="text" id="searchInputPruebas" placeholder="Buscar pruebas..." oninput="renderPruebas()">
 
-  <div class="right-buttons">
-    <button onclick="document.getElementById('pruebaGrid').classList.remove('list'); document.getElementById('pruebaGrid').classList.add('grid')" title="Cuadrícula">🔲</button>
-
-<button onclick="document.getElementById('pruebaGrid').classList.remove('grid'); document.getElementById('pruebaGrid').classList.add('list')" title="Lista">📄</button>
+  <div class="view-toggle">
+    <button class="view-btn active" id="pruebaBtnGrid" onclick="setPruebaView('grid')" title="Cuadrícula">⊞</button>
+    <button class="view-btn" id="pruebaBtnList" onclick="setPruebaView('list')" title="Lista">≡</button>
   </div>
 
 </div>
@@ -3007,6 +3064,23 @@ function toggleDarkMode() {
 
 // ── PRUEBAS OFICIALES Y DEL ARTISTA ──────────────────────────────────────────
 let currentPruebaId = null;
+let pruebaVista = 'grid'; // 'grid' | 'list'
+
+function setPruebaView(modo) {
+  pruebaVista = modo;
+  const grid = document.getElementById('pruebaGrid');
+  const btnGrid = document.getElementById('pruebaBtnGrid');
+  const btnList = document.getElementById('pruebaBtnList');
+  if (modo === 'list') {
+    grid.classList.add('vista-lista');
+    if (btnGrid) btnGrid.classList.remove('active');
+    if (btnList) btnList.classList.add('active');
+  } else {
+    grid.classList.remove('vista-lista');
+    if (btnGrid) btnGrid.classList.add('active');
+    if (btnList) btnList.classList.remove('active');
+  }
+}
 
 function entrarPruebas() {
   // Ocultar portada y app principal, mostrar sección pruebas
