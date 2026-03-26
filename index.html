@@ -3363,7 +3363,7 @@ async function cargarPreciosDesdeSheets() {
 // --- FUNCIONALIDAD PARA CAMBIAR DE VISTA (CUADRÍCULA / LISTA) ---
 document.addEventListener('DOMContentLoaded', () => {
   const btnGrid = document.getElementById('btn-grid');
-  const btnList = document.getElementById('id-list'); // Nota: en tu HTML se llama id-list
+  const btnList = document.getElementById('id-list'); 
   const gridView = document.getElementById('gridView');
   const listView = document.getElementById('listView');
 
@@ -3372,9 +3372,8 @@ document.addEventListener('DOMContentLoaded', () => {
     btnGrid.addEventListener('click', () => {
       btnGrid.classList.add('active');
       btnList.classList.remove('active');
-      gridView.classList.add('active');
-      listView.classList.remove('active');
-      // Opcional: Guardar preferencia
+      if(gridView) gridView.classList.add('active');
+      if(listView) listView.classList.remove('active');
       localStorage.setItem('stampView', 'grid');
     });
 
@@ -3382,14 +3381,13 @@ document.addEventListener('DOMContentLoaded', () => {
     btnList.addEventListener('click', () => {
       btnList.classList.add('active');
       btnGrid.classList.remove('active');
-      listView.classList.add('active');
-      gridView.classList.remove('active');
-      // Opcional: Guardar preferencia
+      if(listView) listView.classList.add('active');
+      if(gridView) gridView.classList.remove('active');
       localStorage.setItem('stampView', 'list');
     });
   }
 });
-  
+// --- FIN DE LA PROGRAMACIÓN ---
 </script>
 
 <div id="cropModal">
