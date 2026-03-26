@@ -2975,7 +2975,9 @@ function entrarPruebas() {
   // Ocultar portada y app principal, mostrar sección pruebas
   document.getElementById('portada').classList.remove('open');
   document.body.style.overflow = '';
-  document.getElementById('seccionPruebas').classList.add('open');
+  const secPruebas = document.getElementById('seccionPruebas');
+  secPruebas.classList.add('open');
+  secPruebas.style.paddingTop = (window.innerWidth <= 600) ? '16px' : '24px';
   // Actualizar header fijo igual que las épocas normales
   const tituloEl = document.getElementById('header-epoca-titulo');
   if (tituloEl) tituloEl.innerHTML = '<span style="color:#e0b84a;font-style:italic">Pruebas Oficiales y del Artista</span>';
