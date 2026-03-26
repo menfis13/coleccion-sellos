@@ -1412,10 +1412,13 @@ async function loadFromSheets() {
       stamps = [];
       setSyncStatus('', 'Google Sheets vacío para esta época.');
     } else {
+      // LOG DIAGNÓSTICO
+      const lastRows = rows.slice(-10);
+      console.log('ÚLTIMAS 10 FILAS DE SHEETS (col A):', lastRows.map(r => r?.c?.[0]));
       stamps = rows.map(row => {
         if (!row.c || !row.c[0]) return null;
         const edifil = row.c[0].v ?? row.c[0].f ?? null;
-        if (!edifil && edifil !== 0) return null;
+        if (edifil === null || edifil === undefined || edifil === '') return null;
         return {
           edifil,
           año:          row.c[1]?.v || null,
@@ -1434,7 +1437,9 @@ async function loadFromSheets() {
           variante:     /[a-zA-Z]/.test(String(edifil)),
         };
       }).filter(Boolean);
-      setSyncStatus('', `Sincronizado con Google Sheets — ${stamps.length} registros`);
+      const variantes = stamps.filter(s => s.variante);
+      console.log('VARIANTES ENCONTRADAS:', variantes.map(s => s.edifil));
+      setSyncStatus('', `Sincronizado — ${stamps.length} registros, ${variantes.length} variantes`);
     }
   } catch(e) {
     console.error(e);
