@@ -1,622 +1,3380 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Colección Filatélica de Menfis</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Colección Filatélica de Menfis</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+  :root {
+    --cream: #f5f0e8;
+    --parchment: #ede5d0;
+    --ink: #1a1208;
+    --sepia: #5c3d1e;
+    --gold: #b8860b;
+    --gold-light: #d4a843;
+    --rust: #8b3a2a;
+    --sage: #4a5e4a;
+    --shadow: rgba(26,18,8,0.15);
+  }
 
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            padding: 20px;
-            transition: background-color 0.3s, color 0.3s;
-        }
+  /* ══════════════════════════════════
+     MODO OSCURO
+  ══════════════════════════════════ */
+  body.dark-mode {
+    --cream: #1a1610;
+    --parchment: #221e16;
+    --ink: #e8e0d0;
+    --sepia: #c4a882;
+    --gold: #c8960f;
+    --gold-light: #e0b84a;
+    --rust: #c0604a;
+    --sage: #7a9a7a;
+    --shadow: rgba(0,0,0,0.5);
+  }
+  
+/* ==========================================
+   DISEÑO FINAL: CORONA Y CUADRICULA PC/MOVIL
+   ========================================== */
+.corona-nueva {
+  width: 260px !important;
+  height: auto !important;
+  display: block !important;
+  margin: 0 auto 10px !important;
+  filter: drop-shadow(0 8px 25px rgba(184,134,11,0.5)) !important;
+}
 
-        body.dark-mode {
-            background-color: #1a1a1a;
-            color: #e0e0e0;
-        }
+.portada-epocas {
+  display: grid !important;
+  grid-template-columns: 1fr !important; /* 1 columna en móvil vertical */
+  gap: 25px !important;
+  width: 95% !important; 
+  max-width: 1000px !important; /* Ancho total para PC */
+  margin: 30px auto !important;
+  padding: 0 15px !important;
+}
 
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+/* Activa las 2 columnas en PC y móvil horizontal */
+@media screen and (min-width: 480px) {
+  .portada-epocas {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
 
-        .header img {
-            max-width: 100px;
-            margin-bottom: 10px;
-        }
+.epoca-card {
+  background: rgba(184, 134, 11, 0.08) !important;
+  border: 1px solid rgba(184, 134, 11, 0.3) !important;
+  padding: 45px 20px !important; /* Cuadros grandes y elegantes */
+  border-radius: 8px !important;
+  text-align: center !important;
+  transition: all 0.3s ease !important;
+  cursor: pointer !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
 
-        .search-container {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
+.epoca-card:hover {
+  background: rgba(184, 134, 11, 0.15) !important;
+  transform: translateY(-5px) !important;
+}
+/* --- ARREGLO TRIÁNGULO Y TAMAÑO PRUEBAS OFICIALES --- */
+.prueba-card {
+  position: relative !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  height: auto !important; /* Evita que se estiren hacia abajo */
+  min-height: 280px !important; 
+  background: rgba(184, 134, 11, 0.05) !important;
+  border: 1px solid rgba(184, 134, 11, 0.2) !important;
+  border-radius: 8px !important;
+  padding: 10px !important;
+}
 
-        .search-bar {
-            flex: 1;
-            min-width: 200px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-        }
+/* El Triángulo Rojo para las Pruebas */
+.prueba-card.tengo::after {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  border-style: solid !important;
+  border-width: 0 35px 35px 0 !important;
+  border-color: transparent #d32f2f transparent transparent !important;
+  z-index: 10 !important;
+}
 
-        body.dark-mode .search-bar {
-            background: #333;
-            border-color: #555;
-            color: white;
-        }
+/* Asegurar que la imagen no tape el triángulo */
+.prueba-img-area {
+  position: relative !important;
+  z-index: 1 !important;
+  height: 180px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
 
-        .view-buttons {
-            display: flex;
-            gap: 5px;
-        }
+.prueba-img-area img {
+  max-height: 100% !important;
+  width: auto !important;
+}
+  
+  body.dark-mode { background: #13110d !important; color: var(--ink); }
+  body.dark-mode header { background: #0d0b07 !important; }
+  body.dark-mode .sync-bar { background: #0d150d !important; }
+  body.dark-mode .sync-bar.syncing { background: #120f06 !important; }
+  body.dark-mode .sync-bar.error  { background: #150a0a !important; }
+  body.dark-mode .read-only-notice { background: rgba(184,134,11,0.06) !important; border-color: rgba(184,134,11,0.15) !important; }
+  body.dark-mode .toolbar { background: #1e1a12 !important; border-bottom-color: rgba(184,134,11,0.2) !important; }
+  body.dark-mode .search-wrap input,
+  body.dark-mode .filter-select { background: #13110d !important; color: var(--ink) !important; border-color: rgba(184,134,11,0.25) !important; }
+  body.dark-mode .search-wrap input::placeholder { color: #6a5a40; }
+  body.dark-mode .view-toggle { border-color: rgba(184,134,11,0.3) !important; }
+  body.dark-mode .view-btn { background: #13110d !important; color: #8a7050 !important; border: none !important; }
+  body.dark-mode .view-btn.active { background: #b8860b !important; color: #0d0b07 !important; }
+  /* Tarjetas de sellos */
+  body.dark-mode .stamp-card { background: #1e1a12 !important; border-color: rgba(184,134,11,0.18) !important; }
+  body.dark-mode .stamp-card.tengo::after { border-color: transparent #c8960f transparent transparent !important; filter: drop-shadow(-2px 2px 3px rgba(184,134,11,0.4)) !important; }
+  body.dark-mode .stamp-img-area { background: #1e1a12 !important; }
+  body.dark-mode .stamp-photo { background: #1e1a12 !important; }
+  body.dark-mode .stamp-tag { background: #2a2318 !important; }
+  /* Tabla lista */
+  body.dark-mode .list-table { background: #1e1a12 !important; border-color: rgba(184,134,11,0.15) !important; }
+  body.dark-mode .list-table th { background: #0d0b07 !important; }
+  body.dark-mode .list-table th:hover { background: #151210 !important; }
+  body.dark-mode .list-table td { border-bottom-color: rgba(184,134,11,0.08) !important; }
+  body.dark-mode .list-table tr:hover td { background: rgba(30,26,18,0.9) !important; }
+  body.dark-mode .list-table tr:nth-child(even) td { background: rgba(34,30,22,0.5) !important; }
+  /* Modal */
+  body.dark-mode .modal { background: #1a1610 !important; }
+  body.dark-mode .modal-header { border-bottom-color: rgba(184,134,11,0.15) !important; }
+  body.dark-mode .modal-footer { border-top-color: rgba(184,134,11,0.1) !important; }
+  body.dark-mode .form-input,
+  body.dark-mode .form-select,
+  body.dark-mode .form-textarea { background: #13110d !important; color: var(--ink) !important; border-color: rgba(184,134,11,0.25) !important; }
+  body.dark-mode .photo-slot { border-color: rgba(184,134,11,0.2) !important; background: #13110d !important; }
+  body.dark-mode .photo-actions button { background: #1e1a12 !important; color: #c4a882 !important; }
+  body.dark-mode .photo-actions button:hover { background: #2a2318 !important; }
+  /* Botones */
+  body.dark-mode .btn-primary { background: #c8960f !important; color: #0d0b07 !important; }
+  body.dark-mode .btn-primary:hover { background: #e0b84a !important; }
+  body.dark-mode .btn-secondary { border-color: rgba(184,134,11,0.3) !important; color: #c4a882 !important; }
+  body.dark-mode .btn-secondary:hover { background: #2a2318 !important; }
 
-        .view-btn {
-            padding: 10px 15px;
-            border: 1px solid #ccc;
-            background: white;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 18px;
-            transition: all 0.3s;
-        }
+  /* ══════════════════════════════════
+     BOTÓN MODO OSCURO (inline, tras Añadir sello)
+  ══════════════════════════════════ */
+  /* ══════════════════════════════════
+     RESALTADO BÚSQUEDA
+  ══════════════════════════════════ */
+  @keyframes highlightPulse {
+    0%   { box-shadow: 0 0 0 0 rgba(184,134,11,0.7), 0 8px 24px var(--shadow); }
+    40%  { box-shadow: 0 0 0 10px rgba(184,134,11,0.15), 0 8px 24px var(--shadow); }
+    100% { box-shadow: 0 0 0 0 rgba(184,134,11,0), 0 8px 24px var(--shadow); }
+  }
+  .stamp-card.search-highlight {
+    outline: 2px solid var(--gold);
+    animation: highlightPulse 1.4s ease 2;
+  }
+  .list-table tr.search-highlight td {
+    background: rgba(184,134,11,0.12) !important;
+    outline: 2px solid var(--gold);
+    outline-offset: -2px;
+  }
 
-        .view-btn:hover {
-            background: #e0e0e0;
-        }
+  #edifilJump::-webkit-outer-spin-button,
+  #edifilJump::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  #edifilJump { -moz-appearance: textfield; }
+  #edifilJump::placeholder { color: #6a5040; }
 
-        body.dark-mode .view-btn {
-            background: #333;
-            border-color: #555;
-            color: white;
-        }
+  #darkModeBtn {
+    position: relative;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid rgba(184,134,11,0.35);
+    background: transparent;
+    color: #a89070;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.2s, border-color 0.2s, color 0.2s, background 0.2s;
+  }
+  #darkModeBtn:hover {
+    transform: scale(1.12);
+    border-color: var(--gold);
+    color: var(--gold-light);
+    background: rgba(184,134,11,0.08);
+  }
+  #darkModeBtn .dm-tip {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: #1a1208;
+    color: #d4a843;
+    font-family: 'Crimson Pro', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+    padding: 4px 10px;
+    border-radius: 2px;
+    border: 1px solid rgba(184,134,11,0.25);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.18s;
+    z-index: 100;
+  }
+  #darkModeBtn:hover .dm-tip { opacity: 1; }
 
-        .view-btn.activo {
-            background: #007bff;
-            color: white;
-            border-color: #007bff;
-        }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { overflow-x: hidden; max-width: 100%; }
+  body { font-family: 'Crimson Pro', Georgia, serif; background: var(--cream); color: var(--ink); min-height: 100vh; padding-top: 90px; }
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 1000; opacity: 0.6;
+  }
 
-        /* =============================================
-           ESTILOS PARA VISTA CUADRÍCULA (POR DEFECTO)
-           ============================================= */
-        .contenedor-sellos,
-        .contenedor-pruebas,
-        [class*="contenedor"],
-        .tabla-sellos,
-        .tabla-pruebas,
-        table.stamps-table {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-        }
+  header { background: var(--ink); color: var(--cream); position: fixed; top: 0; left: 0; right: 0; z-index: 400; overflow: hidden; padding-left: env(safe-area-inset-left); padding-right: env(safe-area-inset-right); }
+  header::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--sepia), var(--gold), var(--gold-light), var(--gold), var(--sepia)); }
+  .header-inner { max-width: 1400px; margin: 0 auto; padding: 28px 32px 24px; display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; position: relative; }
+  .header-title { text-align: center; position: absolute; left: 50%; transform: translateX(-50%); pointer-events: none; }
+  .header-title h1 { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: var(--cream); }
+  .header-title h1 span { color: var(--gold-light); font-style: italic; }
+  .header-subtitle { font-size: 0.85rem; color: #a89070; letter-spacing: 0.15em; text-transform: uppercase; margin-top: 4px; }
+  .header-stats { display: flex; gap: 24px; align-items: center; }
+  .stat-box { text-align: center; border: 1px solid rgba(184,134,11,0.3); padding: 8px 16px; border-radius: 2px; cursor: pointer; transition: background 0.2s, border-color 0.2s, transform 0.15s; user-select: none; }
+  .stat-box:hover { background: rgba(184,134,11,0.1); border-color: var(--gold); transform: translateY(-1px); }
+  .stat-box.active-filter { background: rgba(184,134,11,0.18); border-color: var(--gold-light); box-shadow: 0 0 0 1px var(--gold-light); }
+  .stat-box.active-filter .stat-label { color: var(--gold-light); }
+  .stat-num { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--gold-light); display: block; }
+  .stat-label { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: #a89070; transition: color 0.2s; }
+  .header-btn, .btn-add-header { width: 72px; height: 46px; padding: 0; font-family: 'Crimson Pro', serif; font-size: 0.85rem; font-weight: 600; cursor: pointer; border-radius: 2px; transition: all 0.2s; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; text-align: center; white-space: nowrap; }
+  .btn-add-header { background: var(--gold); color: var(--ink); border: none; white-space: normal; line-height: 1.2; }
+  .btn-add-header:hover { background: var(--gold-light); }
 
-        /* Tablas en vista cuadrícula */
-        table.stamps-table {
-            display: table;
-            width: 100%;
-        }
+  .sync-bar { background: #1e2a1e; color: #7ab87a; padding: 8px 32px; font-size: 0.8rem; letter-spacing: 0.08em; display: flex; align-items: center; gap: 10px; }
+  .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: #7ab87a; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
+  .sync-bar.syncing { color: var(--gold-light); background: #1e1a0e; }
+  .sync-bar.syncing .sync-dot { background: var(--gold-light); }
+  .sync-bar.error { color: #e07070; background: #1e0e0e; }
+  .sync-bar.error .sync-dot { background: #e07070; animation: none; }
 
-        table.stamps-table tr {
-            display: table-row;
-        }
+  .toolbar { background: var(--parchment); border-bottom: 1px solid rgba(92,61,30,0.2); padding: 14px 32px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; max-width: 1400px; margin: 0 auto; }
+  .search-wrap { position: relative; flex: 1; min-width: 200px; max-width: 340px; }
+  .search-wrap input { width: 100%; padding: 9px 14px 9px 36px; border: 1px solid rgba(92,61,30,0.3); background: var(--cream); font-family: 'Crimson Pro', serif; font-size: 1rem; color: var(--ink); border-radius: 2px; outline: none; transition: border-color 0.2s; }
+  .search-wrap input:focus { border-color: var(--gold); }
+  .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--sepia); font-size: 0.9rem; pointer-events: none; }
+  .filter-select { padding: 9px 14px; border: 1px solid rgba(92,61,30,0.3); background: var(--cream); font-family: 'Crimson Pro', serif; font-size: 0.95rem; color: var(--ink); border-radius: 2px; cursor: pointer; outline: none; }
+  .view-toggle { display: flex; border: 1px solid rgba(92,61,30,0.3); border-radius: 2px; overflow: hidden; margin-left: auto; }
+  .view-btn { padding: 9px 14px; background: var(--cream); border: none; cursor: pointer; color: var(--sepia); font-size: 1rem; transition: background 0.2s, color 0.2s; }
+  .view-btn.active { background: #1a1208; color: #d4a843; }
 
-        table.stamps-table td {
-            display: table-cell;
-        }
+  .main { max-width: 1400px; margin: 0 auto; padding: 24px 32px; }
+  .results-info { font-size: 0.85rem; color: var(--sepia); letter-spacing: 0.05em; margin-bottom: 16px; text-transform: uppercase; }
 
-        /* =============================================
-           ESTILOS PARA VISTA LISTA
-           ============================================= */
-        .contenedor-sellos.vista-lista,
-        .contenedor-pruebas.vista-lista,
-        [class*="contenedor"].vista-lista,
-        .tabla-sellos.vista-lista,
-        .tabla-pruebas.vista-lista {
-            display: flex !important;
-            flex-direction: column !important;
-            gap: 10px !important;
-        }
+  .grid-view { display: none; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 20px; }
+  .grid-view.active { display: grid; }
+  .list-view { display: none; }
+  .list-view.active { display: block; }
 
-        /* Tablas en vista lista */
-        table.stamps-table.vista-lista {
-            display: table !important;
-        }
+  .stamp-card { background: white; border: 1px solid rgba(92,61,30,0.15); border-radius: 3px; overflow: hidden; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 2px 8px var(--shadow); position: relative; }
+  .stamp-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px var(--shadow); }
+  .stamp-img-area { position: relative; background: #ffffff; min-height: 160px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .stamp-photo { width: 100%; height: 160px; object-fit: contain; display: block; background: #ffffff; }
+  /* Sellos poseídos: esquina doblada dorada estilo álbum */
+  .stamp-card.tengo::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 0; height: 0;
+    border-style: solid;
+    border-width: 0 32px 32px 0;
+    border-color: transparent #b8860b transparent transparent;
+    z-index: 5;
+    filter: drop-shadow(-2px 2px 3px rgba(184,134,11,0.35));
+  }
+  .stamp-card.variante::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 0; height: 0;
+    border-style: solid;
+    border-width: 32px 32px 0 0;
+    border-color: #2a6496 transparent transparent transparent;
+    z-index: 5;
+    filter: drop-shadow(2px 2px 3px rgba(42,100,150,0.35));
+  }
+  body.dark-mode .stamp-card.variante::before {
+    border-color: #3a8fd4 transparent transparent transparent !important;
+    filter: drop-shadow(2px 2px 3px rgba(58,143,212,0.4)) !important;
+  }
+  /* Variantes: esquina azul superior izquierda */
+  .stamp-card.variante::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 0; height: 0;
+    border-style: solid;
+    border-width: 28px 28px 0 0;
+    border-color: #2a6496 transparent transparent transparent;
+    z-index: 5;
+    filter: drop-shadow(2px 2px 3px rgba(42,100,150,0.35));
+  }
+  body.dark-mode .stamp-card.variante::before { border-color: #3a84c8 transparent transparent transparent !important; filter: drop-shadow(2px 2px 3px rgba(58,132,200,0.4)) !important; }
+  .stamp-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 20px; color: rgba(92,61,30,0.4); text-align: center; height: 160px; }
+  .stamp-placeholder-num { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: rgba(92,61,30,0.25); font-weight: 700; }
+  .stamp-info { padding: 12px 14px 14px; }
+  .stamp-edifil { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: 2px; }
+  .stamp-desc { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--ink); margin-bottom: 6px; line-height: 1.3; }
+  .stamp-meta { display: flex; flex-wrap: wrap; gap: 4px; font-size: 0.8rem; color: var(--sepia); }
+  .stamp-tag { background: var(--parchment); padding: 2px 7px; border-radius: 1px; font-size: 0.75rem; display: flex; align-items: center; gap: 4px; }
+  .stamp-color-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; border: 1px solid rgba(0,0,0,0.15); flex-shrink: 0; }
 
-        table.stamps-table.vista-lista tr {
-            display: table-row !important;
-        }
+  .list-table { width: 100%; border-collapse: collapse; background: white; border: 1px solid rgba(92,61,30,0.15); border-radius: 3px; overflow: hidden; box-shadow: 0 2px 8px var(--shadow); }
+  .list-table th { background: var(--ink); color: var(--gold-light); font-family: 'Playfair Display', serif; font-weight: 400; font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 12px 16px; text-align: left; cursor: pointer; user-select: none; }
+  .list-table th:hover { background: #2a1f10; }
+  .list-table td { padding: 10px 16px; border-bottom: 1px solid rgba(92,61,30,0.08); font-size: 0.95rem; vertical-align: middle; }
+  .list-table td:last-child { padding: 6px 12px; }
+  .list-table tr:last-child td { border-bottom: none; }
+  .list-table tr:hover td { background: rgba(245,240,232,0.7); cursor: pointer; }
+  .list-table tr:nth-child(even) td { background: rgba(237,229,208,0.2); }
 
-        /* Items individuales en vista lista */
-        .contenedor-sellos.vista-lista .sello-item,
-        .contenedor-pruebas.vista-lista .prueba-item,
-        [class*="contenedor"].vista-lista .sello-item,
-        [class*="contenedor"].vista-lista .prueba-item {
-            width: 100% !important;
-            display: flex !important;
-            align-items: center !important;
-            border-bottom: 1px solid #ccc !important;
-            padding: 10px !important;
-            flex-direction: row !important;
-        }
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(26,18,8,0.75); z-index: 500; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(2px); }
+  /* Botones navegación modal anterior/siguiente */
+  .modal-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(20,14,6,0.75);
+    border: 1px solid rgba(184,134,11,0.35);
+    color: var(--gold-light);
+    font-size: 1.4rem;
+    width: 38px; height: 64px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    border-radius: 3px;
+    z-index: 510;
+    transition: background 0.15s, border-color 0.15s;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .modal-nav:hover { background: rgba(184,134,11,0.18); border-color: var(--gold); }
+  .modal-nav:active { background: rgba(184,134,11,0.3); }
+  .modal-nav.prev { left: 6px; }
+  .modal-nav.next { right: 6px; }
+  .modal-nav:disabled { opacity: 0.2; cursor: default; pointer-events: none; }
+  @media (max-width: 600px) {
+    .modal-nav { width: 32px; height: 52px; font-size: 1.1rem; }
+    .modal-nav.prev { left: 2px; }
+    .modal-nav.next { right: 2px; }
+  }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--cream); max-width: 680px; width: 100%; max-height: 90vh; overflow-y: auto; border-radius: 3px; box-shadow: 0 24px 80px rgba(0,0,0,0.4); border-top: 4px solid var(--gold); animation: modalIn 0.25s ease; }
+  @keyframes modalIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .modal-header { padding: 24px 28px 16px; border-bottom: 1px solid rgba(92,61,30,0.15); display: flex; justify-content: space-between; align-items: flex-start; }
+  .modal-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--ink); }
+  .modal-edifil { font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 2px; }
+  .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--sepia); padding: 0; line-height: 1; }
+  .modal-body { padding: 24px 28px; }
 
-        .sello-item, .prueba-item {
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 15px;
-            transition: all 0.3s ease;
-        }
+  .photo-section { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+  .photo-slot { border: 2px dashed rgba(92,61,30,0.25); border-radius: 3px; min-height: 180px; display: flex; flex-direction: column; align-items: stretch; justify-content: flex-start; transition: border-color 0.2s; position: relative; overflow: hidden; background: #ffffff; }
+  .photo-slot:hover { border-color: var(--gold); }
+  .photo-slot-preview { flex: 1; position: relative; display: flex; align-items: center; justify-content: center; min-height: 110px; cursor: zoom-in; }
+  .photo-slot-preview img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; background: transparent; }
+  .photo-slot-icon { font-size: 1.5rem; opacity: 0.3; z-index: 1; }
+  .photo-actions { display: flex; gap: 0; border-top: 1px solid rgba(92,61,30,0.12); z-index: 3; flex-shrink: 0; }
+  .photo-actions button { flex: 1; background: #faf7f2; color: var(--sepia); border: none; border-right: 1px solid rgba(92,61,30,0.12); padding: 7px 2px; font-family: 'Crimson Pro', serif; font-size: 0.67rem; cursor: pointer; font-weight: 600; transition: background 0.15s, color 0.15s; line-height: 1.3; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .photo-actions button:last-child { border-right: none; }
+  .photo-actions button:hover { background: var(--parchment); color: var(--ink); }
+  .photo-actions button .btn-icon { font-size: 1rem; }
+  .photo-actions button.btn-quitar { color: #c0392b; }
+  .photo-actions button.btn-quitar:hover { background: #fdf0ee; color: #8b3a2a; }
 
-        body.dark-mode .sello-item,
-        body.dark-mode .prueba-item {
-            background: #2a2a2a;
-            border-color: #444;
-        }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-group { display: flex; flex-direction: column; gap: 5px; }
+  .form-group.full { grid-column: 1 / -1; }
+  .form-label { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sepia); font-weight: 600; }
+  .form-input, .form-select, .form-textarea { padding: 9px 12px; border: 1px solid rgba(92,61,30,0.25); background: white; font-family: 'Crimson Pro', serif; font-size: 1rem; color: var(--ink); border-radius: 2px; outline: none; transition: border-color 0.2s; }
+  .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--gold); }
+  .form-textarea { min-height: 70px; resize: vertical; }
 
-        .sello-item img,
-        .prueba-item img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 4px;
-        }
+  .modal-footer { padding: 16px 28px 24px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(92,61,30,0.1); gap: 12px; flex-wrap: wrap; }
+  .btn { padding: 10px 22px; font-family: 'Crimson Pro', serif; font-size: 1rem; font-weight: 600; cursor: pointer; border-radius: 2px; border: none; transition: all 0.2s; }
+  .btn-primary { background: var(--ink); color: var(--gold-light); }
+  .btn-primary:hover { background: var(--sepia); }
+  .btn-danger { background: none; color: var(--rust); border: 1px solid var(--rust); }
+  .btn-danger:hover { background: var(--rust); color: white; }
+  .btn-secondary { background: none; color: var(--sepia); border: 1px solid rgba(92,61,30,0.3); }
+  .btn-secondary:hover { background: var(--parchment); }
 
-        .contenedor-sellos.vista-lista .sello-item img,
-        .contenedor-pruebas.vista-lista .prueba-item img {
-            max-width: 100px !important;
-            max-height: 100px !important;
-            margin-right: 15px !important;
-        }
+  input[type="file"] { display: none; }
+  /* Drag & Drop / Paste en slots de foto */
+  .photo-slot.drag-over {
+    outline: 2.5px dashed var(--gold) !important;
+    background: rgba(184,134,11,0.07) !important;
+    transition: outline 0.15s, background 0.15s;
+  }
+  .photo-slot .drop-hint {
+    position: absolute;
+    bottom: 28px;
+    left: 0; right: 0;
+    text-align: center;
+    font-size: 0.65rem;
+    color: var(--sepia);
+    opacity: 0.55;
+    pointer-events: none;
+    letter-spacing: 0.05em;
+  }
 
-        /* Navegación de épocas */
-        .epoca-nav {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
+  .lightbox { display: none; position: fixed; inset: 0; background: rgba(10,7,3,0.93); z-index: 900; align-items: center; justify-content: center; cursor: zoom-out; backdrop-filter: blur(4px); touch-action: none; }
+  .lightbox.open { display: flex; }
+  .lightbox img { max-width: 92vw; max-height: 88vh; object-fit: contain; border-radius: 3px; box-shadow: 0 32px 100px rgba(0,0,0,0.8); animation: lbIn 0.2s ease; cursor: default; transition: transform 0.12s cubic-bezier(0.25, 0.46, 0.45, 0.94); will-change: transform; }
+  @keyframes lbIn { from { transform: scale(0.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .lightbox-caption { position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.5); font-family: 'Crimson Pro', serif; font-size: 0.9rem; letter-spacing: 0.12em; text-transform: uppercase; pointer-events: none; white-space: nowrap; }
+  .lightbox-close { position: absolute; top: 20px; right: 24px; background: none; border: none; color: rgba(255,255,255,0.4); font-size: 2rem; cursor: pointer; line-height: 1; transition: color 0.2s; z-index: 10; }
+  .lightbox-close:hover { color: white; }
 
-        .epoca-btn {
-            padding: 10px 20px;
-            background: white;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
+  .color-negro { background: #222; } .color-lila, .color-violeta { background: #9b59b6; } .color-rojo { background: #c0392b; } .color-azul { background: #2980b9; } .color-verde { background: #27ae60; } .color-naranja { background: #e67e22; } .color-rosa { background: #e91e8c; } .color-amarillo { background: #f1c40f; } .color-gris { background: #95a5a6; } .color-castaño { background: #795548; } .color-cobre { background: #b87333; } .color-default { background: var(--sepia); }
 
-        .epoca-btn:hover {
-            background: #007bff;
-            color: white;
-        }
+  .saving-toast { position: fixed; bottom: 24px; right: 24px; background: var(--ink); color: var(--gold-light); padding: 12px 20px; border-radius: 3px; font-family: 'Crimson Pro', serif; font-size: 0.9rem; z-index: 800; transform: translateY(80px); transition: transform 0.3s; box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+  .saving-toast.show { transform: translateY(0); }
 
-        body.dark-mode .epoca-btn {
-            background: #333;
-            border-color: #555;
-            color: white;
-        }
+  @media (max-width: 640px) {
+    .header-inner {
+      padding: 12px 14px 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px 0;
+    }
+    .header-title {
+      position: static;
+      transform: none;
+      width: 100%;
+      order: 1;
+      text-align: center;
+    }
+    .header-title .header-subtitle { font-size: 0.7rem; }
+    .header-title h1 { font-size: 1.05rem; }
+    .header-stats { display: none; }
+    .header-inner > div:last-child {
+      order: 2;
+      width: 100%;
+      justify-content: center;
+      gap: 8px;
+    }
+    .header-inner > div:last-child > div[style*="width:1px"] { display: none; }
+    body { padding-top: 70px; }
+    #darkModeBtn { width: 28px; height: 28px; font-size: 0.8rem; }
+    .toolbar { padding: 12px 16px; }
+    .main { padding: 16px; }
+    .form-grid { grid-template-columns: 1fr; }
+    .photo-section { grid-template-columns: 1fr; }
+  }
 
-        /* Modal y formularios */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-        }
+  /* Móvil en horizontal (landscape) */
+  @media (max-height: 500px) and (orientation: landscape) {
+    .header-inner {
+      padding: 6px 14px 5px;
+      padding-left: max(14px, env(safe-area-inset-left));
+      padding-right: max(14px, env(safe-area-inset-right));
+      flex-wrap: nowrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+    }
+    .header-title {
+      position: static;
+      transform: none;
+      flex: 1;
+      text-align: center;
+      order: 0;
+    }
+    .header-title .header-subtitle { display: none; }
+    .header-title h1, #header-epoca-titulo { font-size: 1rem !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px; }
+    .header-stats { display: flex; gap: 5px; flex-shrink: 0; order: 1; }
+    .stat-box { padding: 3px 8px; }
+    .stat-num { font-size: 0.95rem; }
+    .stat-label { font-size: 0.52rem; }
+    #statbox-fotos { display: none; }
+    .header-inner > div:last-child {
+      flex-shrink: 0;
+      width: auto;
+      order: 2;
+      justify-content: flex-end;
+      gap: 5px;
+    }
+    .header-inner > div:last-child > div[style*="width:1px"] { display: none; }
+    .header-btn, .btn-add-header { width: 58px; height: 36px; font-size: 0.78rem; }
+    body {
+      padding-top: 70px;
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    #darkModeBtn { width: 26px; height: 26px; font-size: 0.75rem; }
+    .toolbar {
+      padding: 8px 12px;
+      padding-left: max(12px, env(safe-area-inset-left));
+      padding-right: max(12px, env(safe-area-inset-right));
+    }
+    .main {
+      padding: 10px 14px;
+      padding-left: max(14px, env(safe-area-inset-left));
+      padding-right: max(14px, env(safe-area-inset-right));
+    }
+  }
 
-        .modal-content {
-            background: white;
-            margin: 5% auto;
-            padding: 20px;
-            border-radius: 10px;
-            max-width: 600px;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
+  /* AUTH */
+  .auth-area { display: flex; align-items: center; gap: 12px; }
+  .auth-user { display: flex; align-items: center; gap: 10px; }
+  .auth-avatar { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--gold); object-fit: cover; }
+  .auth-name { font-size: 0.85rem; color: #a89070; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .btn-logout { background: none; border: 1px solid rgba(184,134,11,0.3); color: #a89070; padding: 5px 12px; font-family: 'Crimson Pro', serif; font-size: 0.8rem; cursor: pointer; border-radius: 2px; transition: all 0.2s; }
+  .btn-logout:hover { border-color: var(--rust); color: var(--rust); }
+  .btn-login-google { background: white; color: #444; border: none; padding: 8px 16px; font-family: 'Crimson Pro', serif; font-size: 0.9rem; font-weight: 600; cursor: pointer; border-radius: 2px; display: flex; align-items: center; gap: 8px; transition: box-shadow 0.2s; }
+  .btn-login-google:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+  .btn-login-google svg { flex-shrink: 0; }
+  .read-only-notice { background: rgba(184,134,11,0.08); border: 1px solid rgba(184,134,11,0.2); color: #a89070; padding: 6px 32px; font-size: 0.78rem; text-align: center; letter-spacing: 0.08em; }
+  .edit-only { } /* controlled via JS */
+  /* ── FILIGRANA ── */
+  .filigrana-badge {
+    display: inline-flex; align-items: center; gap: 3px;
+    font-size: 0.6rem; letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 2px 6px; border-radius: 2px; font-family: 'Crimson Pro', serif;
+    font-weight: 600;
+  }
+  .filigrana-badge.requerida { background: rgba(184,134,11,0.12); color: var(--gold); border: 1px solid rgba(184,134,11,0.3); }
+  .filigrana-badge.ok        { background: rgba(74,94,74,0.12); color: var(--sage); border: 1px solid rgba(74,94,74,0.3); }
+  .filigrana-badge.alerta    { background: rgba(139,58,42,0.12); color: var(--rust); border: 1px solid rgba(139,58,42,0.3); }
+  .filigrana-aviso {
+    margin: 8px 0 4px; padding: 8px 12px; border-radius: 2px;
+    font-family: 'Crimson Pro', serif; font-size: 0.88rem; line-height: 1.4;
+  }
+  .filigrana-aviso.requerida { background: rgba(184,134,11,0.08); border-left: 3px solid var(--gold); color: var(--sepia); }
+  .filigrana-aviso.ok        { background: rgba(74,94,74,0.08); border-left: 3px solid var(--sage); color: var(--sage); }
+  .filigrana-aviso.alerta    { background: rgba(139,58,42,0.08); border-left: 3px solid var(--rust); color: var(--rust); }
+  /* ── PRECIOS EDIFIL ── */
+  .precio-edifil { margin:6px 0 8px; padding:8px 12px; border-radius:2px; background:rgba(184,134,11,0.06); border:1px solid rgba(184,134,11,0.2); display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+  .precio-edifil-titulo { font-family:'Crimson Pro',serif; font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); font-weight:600; flex-shrink:0; }
+  .precio-edifil-valores { display:flex; gap:16px; flex-wrap:wrap; }
+  .precio-item { text-align:center; }
+  .precio-item-label { font-size:0.65rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--sepia); display:block; }
+  .precio-item-valor { font-family:'Playfair Display',serif; font-size:1rem; color:var(--ink); font-weight:700; }
+  .precio-nota { font-size:0.63rem; color:var(--sepia); opacity:0.6; margin-left:auto; font-style:italic; align-self:flex-end; }
+  #cropModal { display:none; position:fixed; inset:0; background:#0d0a06; z-index:9999; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:16px; box-sizing:border-box; }
+  #cropModal.open { display:flex; }
+  #cropHeader { color:#c8a96e; font-family:'Playfair Display',serif; font-size:1.1rem; letter-spacing:0.05em; }
+  #cropHint { color:#6a5a40; font-family:'Crimson Pro',serif; font-size:0.82rem; letter-spacing:0.06em; }
+  #cropWrap { position:relative; flex-shrink:1; overflow:visible; touch-action:none; display:inline-block; }
+  #cropBg { display:block; max-width:90vw; max-height:62vh; }
+  #cropOverlay { position:absolute; top:0; left:0; cursor:crosshair; touch-action:none; }
+  .crop-btns { display:flex; gap:12px; flex-shrink:0; }
+  .crop-btns button { padding:11px 28px; font-family:'Crimson Pro',serif; font-size:1rem; font-weight:600; border:none; border-radius:2px; cursor:pointer; letter-spacing:0.04em; }
+  #btnCropOk  { background:#b8860b; color:#1a1208; }
+  #btnCropSkip{ background:none; border:1px solid rgba(184,134,11,0.35); color:#7a6040; }
+  #btnCropRotate { background:none; border:1px solid rgba(184,134,11,0.35); color:#c8a96e; padding:11px 18px; font-size:1.2rem; line-height:1; cursor:pointer; border-radius:2px; font-weight:600; transition: border-color 0.2s; }
+  #btnCropRotate:hover { border-color: var(--gold); }
 
-        body.dark-mode .modal-content {
-            background: #2a2a2a;
-            color: #e0e0e0;
-        }
+  @media (max-width: 600px) {
+    /* Cabecera: tres filas compactas */
+    body { padding-top: 92px; }
+    .header-inner {
+      padding: 8px 14px 6px;
+      flex-wrap: wrap;
+      gap: 5px;
+      align-items: center;
+      justify-content: space-between;
+    }
+    /* Fila 1: Título centrado, sin subtítulo "Colección Filatélica de Menfis" */
+    .header-title {
+      position: static;
+      transform: none;
+      order: 1;
+      width: 100%;
+      text-align: center;
+      pointer-events: auto;
+    }
+    .header-title h1, #header-epoca-titulo { font-size: 1rem !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .header-subtitle { display: none; }
+    /* Fila 2: Total + En colección iguales, Con foto oculto */
+    .header-stats { order: 2; gap: 8px; flex-shrink: 0; width: 100%; justify-content: center; display: flex; }
+    .stat-box { padding: 4px 8px; }
+    .stat-num { font-size: 1.1rem; }
+    .stat-label { font-size: 0.6rem; }
+    #statbox-fotos { display: none; }
+    /* Fila 3: Botones a la derecha */
+    .header-inner > div:last-child { order: 3; flex-shrink: 0; width: 100%; justify-content: flex-end; display: flex; gap: 6px; }
+    /* Toolbar: buscador en fila completa */
+    .toolbar { padding: 8px 12px; gap: 8px; }
+    .search-wrap { min-width: 0; max-width: 100%; flex: 1 1 100%; order: -1; }
+    .main { padding: 12px 14px; }
+  }
+  @media (max-width: 600px) {
+    #portada.open { justify-content: flex-start; padding-top: 0; }
+    .portada-inner { padding: 32px 20px 80px; }
+    .portada-corona { font-size: 2rem; margin-bottom: 10px; }
+    .portada-titulo { font-size: clamp(1.6rem, 7vw, 2.2rem); margin-bottom: 6px; }
+    .portada-sub { font-size: 0.72rem; margin-bottom: 32px; }
+    .portada-divisor { margin: 0 auto 32px; }
+    .portada-epocas { grid-template-columns: 1fr; gap: 14px; margin-bottom: 24px; }
+    .portada-card { padding: 20px 18px; }
+    .portada-card-img { width: 60px; height: 60px; }
+    .portada-card-nombre { font-size: 1.15rem; }
+    .portada-footer { font-size: 0.65rem; margin-top: 24px; }
+    #authPortada { bottom: 16px; right: 16px; }
+  }
+  /* ── PORTADA ── (colores fijos: la portada siempre tiene fondo oscuro) */
+  #portada { display:none; position:fixed; inset:0; z-index:800; background:#0d0b07; overflow-y:auto; }
+  #portada.open { display:flex; flex-direction:column; align-items:center; justify-content:flex-start; min-height:100vh; padding-top:60px; }
+  .portada-bg { position:fixed; inset:0; background: radial-gradient(ellipse at 20% 50%, rgba(184,134,11,0.08) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(92,61,30,0.12) 0%, transparent 50%); pointer-events:none; }
+  .portada-inner { max-width:900px; width:100%; padding:60px 32px; text-align:center; position:relative; z-index:1; }
+  .portada-corona { font-size:3rem; margin-bottom:16px; animation: flotar 3s ease-in-out infinite; }
+  @keyframes flotar { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+  .portada-titulo { font-family:'Playfair Display',serif; font-size:clamp(2rem,5vw,3.5rem); color:#f0e8d8; font-weight:700; line-height:1.15; margin-bottom:8px; text-align:center; width:100%; }
+  .portada-titulo span { color:#e0b84a; font-style:italic; display:block; text-align:center; width:100%; }
+  .portada-sub { font-size:0.85rem; letter-spacing:0.2em; text-transform:uppercase; color:#8a7a5a; margin-bottom:60px; }
+  .portada-divisor { width:120px; height:1px; background:linear-gradient(90deg,transparent,#b8860b,transparent); margin:0 auto 60px; }
+  .portada-epocas { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:24px; margin-bottom:48px; }
+  .portada-card { background:rgba(255,255,255,0.03); border:1px solid rgba(184,134,11,0.2); border-radius:4px; padding:32px 28px; cursor:pointer; transition:all 0.3s; position:relative; overflow:hidden; text-align:left; }
+  .portada-card::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(184,134,11,0.05),transparent); opacity:0; transition:opacity 0.3s; }
+  .portada-card:hover { border-color:rgba(184,134,11,0.6); transform:translateY(-4px); box-shadow:0 16px 48px rgba(0,0,0,0.4); }
+  .portada-card:hover::before { opacity:1; }
+  .portada-card.active { border-color:#b8860b; box-shadow:0 0 0 1px #b8860b, 0 16px 48px rgba(184,134,11,0.15); }
+  .portada-card-fecha { font-size:0.7rem; letter-spacing:0.18em; text-transform:uppercase; color:#c8960f; margin-bottom:8px; }
+  .portada-card-nombre { font-family:'Playfair Display',serif; font-size:1.4rem; color:#f0e8d8; margin-bottom:6px; line-height:1.2; }
+  .portada-card-sub { font-size:0.82rem; color:#8a7a5a; margin-bottom:20px; }
+  .portada-card-img { width:80px; height:80px; object-fit:contain; float:right; margin:-8px -4px 0 16px; opacity:0.85; border-radius:2px; outline:none; border:none; box-shadow:none; }
+  .portada-card-sellos { font-size:0.78rem; color:#9a8060; border-top:1px solid rgba(184,134,11,0.12); padding-top:14px; margin-top:14px; display:flex; gap:16px; }
+  .portada-card-sellos strong { color:#e0b84a; font-size:1rem; font-family:'Playfair Display',serif; display:block; }
+  /* Tarjeta especial para Pruebas Oficiales */
+  .portada-card.pruebas-card { border-color:rgba(184,134,11,0.3); }
+  .portada-card.pruebas-card:hover { border-color:rgba(184,134,11,0.7); box-shadow:0 16px 48px rgba(184,134,11,0.15); }
+  /* Sección de Pruebas Oficiales */
+  #seccionPruebas { display:none; }
+  #seccionPruebas.open { display:block; }
+  .prueba-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:16px; padding:16px; padding-top:20px; }
+  .prueba-card { background:var(--cream); border:1px solid rgba(184,134,11,0.2); border-radius:3px; overflow:hidden; cursor:pointer; transition:all 0.2s; position:relative; }
+  .prueba-card:hover { border-color:rgba(184,134,11,0.6); transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,0.15); }
+  .prueba-card.tengo { border-color:rgba(184,134,11,0.5); }
+  .prueba-card.tengo::after { content:'✓'; position:absolute; top:6px; right:8px; color:var(--gold-light); font-size:1rem; font-weight:bold; text-shadow:0 0 4px rgba(0,0,0,0.5); }
+  .prueba-img-area { width:100%; height:150px; display:flex; align-items:center; justify-content:center; background:#fff; overflow:hidden; }
+  .prueba-img-area img { width:100%; height:100%; object-fit:contain; }
+  .prueba-img-placeholder { font-size:2rem; opacity:0.2; }
+  .prueba-info { padding:10px 12px 12px; }
+  .prueba-num { font-size:0.65rem; letter-spacing:0.15em; color:var(--gold); text-transform:uppercase; margin-bottom:3px; }
+  .prueba-desc { font-family:'Playfair Display',serif; font-size:0.85rem; color:var(--ink); line-height:1.3; }
+  .prueba-año { font-size:0.72rem; color:var(--sepia); margin-top:4px; }
+  /* Header de la sección pruebas */
+  .pruebas-header { display:none; }
+  .pruebas-stats { font-size:0.8rem; color:var(--sepia); }
+  @media(max-width:600px) {
+    .prueba-grid { grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px; padding:10px; }
+  }
+  .portada-entrar:hover { background:#e0b84a; transform:translateY(-1px); }
+  .portada-footer { font-size:0.72rem; color:#6a5a3a; letter-spacing:0.1em; text-transform:uppercase; margin-top:48px; }
 
-        .form-group {
-            margin-bottom: 15px;
-        }
+/* ===== TOOLBAR PRUEBAS ===== */
+.pruebas-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
 
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
+.pruebas-toolbar input {
+  width: 33%;
+  min-width: 120px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--gold);
+  background: var(--cream);
+  color: var(--ink);
+}
 
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
+.pruebas-toolbar .right-buttons {
+  display: flex;
+  gap: 6px;
+}
 
-        body.dark-mode .form-group input,
-        body.dark-mode .form-group select,
-        body.dark-mode .form-group textarea {
-            background: #333;
-            border-color: #555;
-            color: white;
-        }
+@media (max-width:600px) {
+  .pruebas-toolbar input {
+    width: 45%;
+  }
+}
 
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-right: 10px;
-        }
-
-        .btn-primary {
-            background: #007bff;
-            color: white;
-        }
-
-        .btn-secondary {
-            background: #6c757d;
-            color: white;
-        }
-
-        .btn-danger {
-            background: #dc3545;
-            color: white;
-        }
-
-        /* Estado de conexión */
-        .connection-status {
-            padding: 10px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            text-align: center;
-        }
-
-        .connection-status.connecting {
-            background: #fff3cd;
-            color: #856404;
-        }
-
-        .connection-status.readonly {
-            background: #f8d7da;
-            color: #721c24;
-        }
-
-        .connection-status.connected {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .search-container {
-                flex-direction: column;
-            }
-
-            .search-bar {
-                width: 100%;
-            }
-
-            .contenedor-sellos,
-            .contenedor-pruebas {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+</style>
 </head>
 <body>
-    <div class="header">
-        <img src="https://res.cloudinary.com/do4ltpfbo/image/upload/v1774202113/corona.png" alt="Corona">
-        <h1>🏛️ Colección Filatélica de Menfis</h1>
-        <p>Sellos de España</p>
-    </div>
 
-    <!-- Estado de conexión con Google Sheets -->
-    <div id="connection-status" class="connection-status connecting">
-        🔒 Conectando con Google Sheets...
-    </div>
 
-    <!-- Navegación de épocas -->
-    <div class="epoca-nav" id="epoca-nav">
-        <button class="epoca-btn" data-epoca="todos">— Total —</button>
-        <button class="epoca-btn" data-epoca="tengo">Tengo</button>
-        <button class="epoca-btn" data-epoca="foto">Con foto</button>
-        <button class="epoca-btn" data-epoca="epoca1">Época 1</button>
-        <button class="epoca-btn" data-epoca="epoca2">Época 2</button>
-        <button class="epoca-btn" data-epoca="pruebas">Pruebas Oficiales</button>
-    </div>
+<!-- ── Botón modo oscuro (en header) ── -->
 
-    <!-- Barra de búsqueda y botones de vista -->
-    <div class="search-container">
-        <input type="text" class="search-bar" id="buscador" placeholder="🔍 Buscar sellos...">
-        <div class="view-buttons">
-            <button class="view-btn activo" id="btn-grid" title="Vista cuadrícula">⊞</button>
-            <button class="view-btn" id="btn-list" title="Vista lista">☰</button>
+<div id="portada">
+  <div class="portada-bg"></div>
+  <div class="portada-inner">
+    <div class="portada-corona">
+  <img src="https://res.cloudinary.com/do4ltpfbo/image/upload/v1774202113/corona.png" class="corona-nueva" alt="Corona Real">
+</div>
+    </div>
+    <div class="portada-titulo">Colección Filatélica<span>de Menfis</span></div>
+    <div class="portada-sub">Sellos de España</div>
+    <div class="portada-divisor"></div>
+    <div class="portada-epocas" id="portadaEpocas"></div>
+    <div class="portada-footer">Haz clic en una época para entrar directamente</div>
+    <div id="authPortada" style="position:fixed;bottom:24px;right:28px;z-index:10"></div>
+  </div>
+</div>
+
+<header>
+  <div class="header-inner">
+    <div class="header-title">
+      <div class="header-subtitle">Colección Filatélica de Menfis</div>
+      <h1 id="header-epoca-titulo" style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:#f0e8d8"></h1>
+      <div class="header-subtitle" id="header-epoca-sub" style="display:none"></div>
+    </div>
+    <div class="header-stats">
+      <div class="stat-box" id="statbox-total" onclick="toggleStatFilter('total')" title="Ver todos los sellos"><span class="stat-num" id="stat-total">—</span><span class="stat-label">Total</span></div>
+      <div class="stat-box" id="statbox-tengo" onclick="toggleStatFilter('tengo')" title="Ver sellos en mi colección"><span class="stat-num" id="stat-tengo">—</span><span class="stat-label">Tengo</span></div>
+      <div class="stat-box" id="statbox-fotos" onclick="toggleStatFilter('fotos')" title="Ver sellos con foto"><span class="stat-num" id="stat-fotos">—</span><span class="stat-label">Con foto</span></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+      <div id="header-epocas-btns" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+        <button onclick="showPortada()" class="header-btn" style="background:transparent;border:1px solid rgba(184,134,11,0.5);color:var(--gold-light);" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(184,134,11,0.5)'">◀ Épocas</button>
+        <button onclick="irAlPrimerSello()" class="header-btn" title="Ir al primer sello" style="background:transparent;border:1px solid rgba(184,134,11,0.35);color:#a89070;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold-light)'" onmouseout="this.style.borderColor='rgba(184,134,11,0.35)';this.style.color='#a89070'">↑ Arriba</button>
+        <div style="position:relative;flex-shrink:0">
+          <span style="position:absolute;left:7px;top:50%;transform:translateY(-50%);color:#8a7050;font-size:0.85rem;pointer-events:none">#</span>
+          <input type="number" id="edifilJump" min="1" placeholder="Edifil…"
+            style="width:72px;height:46px;padding:0 6px 0 20px;background:rgba(255,255,255,0.07);border:1px solid rgba(184,134,11,0.35);color:#d4c8a8;font-family:'Crimson Pro',serif;font-size:0.85rem;border-radius:2px;outline:none;-moz-appearance:textfield"
+            oninput="this.style.borderColor=this.value?'var(--gold)':'rgba(184,134,11,0.35)'"
+            onkeydown="if(event.key==='Enter'){saltarEdifil();}"
+            onblur="saltarEdifil()">
         </div>
-        <button class="view-btn" id="btn-darkmode" title="Modo oscuro">🌙</button>
-        <button class="view-btn" id="btn-arriba" title="Ir arriba">↑ Arriba</button>
+      </div>
+      <div id="header-pruebas-btns" style="display:none;align-items:center;gap:6px">
+        <button onclick="volverPortadaDesdePruebas()" class="header-btn" style="background:transparent;border:1px solid rgba(184,134,11,0.5);color:var(--gold-light);" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(184,134,11,0.5)'">◀ Épocas</button>
+        <button onclick="window.scrollTo({top:0,behavior:'smooth'})" class="header-btn" style="background:transparent;border:1px solid rgba(184,134,11,0.35);color:#a89070;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold-light)'" onmouseout="this.style.borderColor='rgba(184,134,11,0.35)';this.style.color='#a89070'">↑ Arriba</button>
+      </div>
+      <div id="authArea"></div>
+      <div style="width:1px;height:28px;background:rgba(184,134,11,0.25);margin:0 4px;flex-shrink:0"></div>
+      <button id="darkModeBtn" onclick="toggleDarkMode()" title="Cambiar modo claro/oscuro">
+        <span id="darkModeIcon">🌙</span>
+        <span class="dm-tip" id="darkModeTip">Modo oscuro</span>
+      </button>
     </div>
+  </div>
+</header>
 
-    <!-- Contenedor principal de sellos -->
-    <div class="contenedor-sellos" id="contenedor-sellos">
-        <!-- Los sellos se cargarán dinámicamente desde Google Sheets -->
+<!-- Sección Pruebas Oficiales y del Artista -->
+<div id="seccionPruebas" class="seccion-epoca">
+  
+  <div class="epoca-controls" style="margin-bottom: 20px; padding: 0 15px;">
+    <div id="resultsInfoPruebas" style="margin-bottom: 10px; font-weight: bold; color: var(--gold);"></div>
+   <div class="pruebas-toolbar">
+  
+  <input type="text" id="searchInputPruebas" placeholder="Buscar pruebas..." oninput="renderPruebas()">
+
+  <div class="right-buttons">
+    <button onclick="document.getElementById('pruebaGrid').classList.remove('list'); document.getElementById('pruebaGrid').classList.add('grid')" title="Cuadrícula">🔲</button>
+
+<button onclick="document.getElementById('pruebaGrid').classList.remove('grid'); document.getElementById('pruebaGrid').classList.add('list')" title="Lista">📄</button>
+  </div>
+
+</div>
+  </div>
+
+  <div class="prueba-grid" id="pruebaGrid"></div>
+
+</div>
+
+<div class="modal-overlay" id="modalPrueba" onclick="cerrarModalPrueba(event)">
+  <button class="modal-nav prev" id="pruebNavPrev" onclick="event.stopPropagation(); navegarPrueba(-1)">‹</button>
+  <div class="modal" id="modalPruebaInner" style="max-width:700px">
+    <div class="modal-header">
+      <div>
+        <div class="modal-edifil" id="pNum"></div>
+        <div class="modal-title" id="pTitle"></div>
+      </div>
+      <button class="modal-close" onclick="cerrarModalPrueba()">✕</button>
     </div>
-
-    <!-- Contenedor de pruebas oficiales -->
-    <div class="contenedor-pruebas" id="contenedor-pruebas" style="display: none;">
-        <!-- Las pruebas se cargarán dinámicamente desde Google Sheets -->
-    </div>
-
-    <!-- Modal para editar sello -->
-    <div class="modal" id="modal-sello">
-        <div class="modal-content">
-            <h2>Editar Sello</h2>
-            <div class="form-group">
-                <label>Nº Edifil</label>
-                <input type="text" id="edifil">
-            </div>
-            <div class="form-group">
-                <label>Año</label>
-                <input type="text" id="anio">
-            </div>
-            <div class="form-group">
-                <label>Descripción</label>
-                <input type="text" id="descripcion">
-            </div>
-            <div class="form-group">
-                <label>Color</label>
-                <input type="text" id="color">
-            </div>
-            <div class="form-group">
-                <label>Valor Facial</label>
-                <input type="text" id="valor">
-            </div>
-            <div class="form-group">
-                <label>Dentado</label>
-                <select id="dentado">
-                    <option value="">-- Seleccionar --</option>
-                    <option value="sin">Sin dentar</option>
-                    <option value="14">Dentado 14</option>
-                    <option value="11.5">Dentado 11½</option>
-                    <option value="14x13.5">Dentado 14x13½</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Estado</label>
-                <select id="estado">
-                    <option value="">-- No tengo este sello --</option>
-                    <option value="nuevo">Nuevo</option>
-                    <option value="usado">Usado</option>
-                    <option value="fijasello">Fijasello</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Notas personales</label>
-                <textarea id="notas"></textarea>
-            </div>
-            <button class="btn btn-primary" id="guardar-sello">Guardar sello</button>
-            <button class="btn btn-danger" id="eliminar-sello">🗑 Eliminar</button>
-            <button class="btn btn-secondary" id="cancelar-sello">Cancelar</button>
+    <div class="modal-body">
+      <div id="precio-prueba-modal"></div>
+      <div class="photo-section">
+        <div class="photo-slot" id="pSlotRef"><div class="photo-slot-preview"></div>
+          <div style="text-align:center;font-size:0.62rem;color:var(--sepia);padding:4px 0 3px;letter-spacing:0.07em;border-top:1px solid rgba(92,61,30,0.1);background:#faf7f2">REFERENCIA</div>
         </div>
-    </div>
-
-    <!-- Modal para editar prueba -->
-    <div class="modal" id="modal-prueba">
-        <div class="modal-content">
-            <h2>Editar Prueba</h2>
-            <div class="form-group">
-                <label>Nº Prueba</label>
-                <input type="text" id="prueba-num">
-            </div>
-            <div class="form-group">
-                <label>Año</label>
-                <input type="text" id="prueba-anio">
-            </div>
-            <div class="form-group">
-                <label>Descripción</label>
-                <input type="text" id="prueba-descripcion">
-            </div>
-            <div class="form-group">
-                <label>Estado</label>
-                <select id="prueba-estado">
-                    <option value="">-- No tengo esta prueba --</option>
-                    <option value="nuevo">Nuevo</option>
-                    <option value="usado">Usado</option>
-                    <option value="fijasello">Fijasello</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Notas personales</label>
-                <textarea id="prueba-notas"></textarea>
-            </div>
-            <button class="btn btn-primary" id="guardar-prueba">Guardar prueba</button>
-            <button class="btn btn-danger" id="eliminar-prueba">🗑 Eliminar</button>
-            <button class="btn btn-secondary" id="cancelar-prueba">Cancelar</button>
+        <div class="photo-slot" id="pSlotDelante"><div class="photo-slot-preview"></div>
+          <div style="text-align:center;font-size:0.62rem;color:var(--sepia);padding:4px 0 3px;letter-spacing:0.07em;border-top:1px solid rgba(92,61,30,0.1);background:#faf7f2">ANVERSO</div>
+          <span class="drop-hint edit-only">📋 pegar · arrastrar</span>
+          <div class="photo-actions edit-only" id="pOverlayDelante">
+            <button onclick="event.stopPropagation(); triggerPruebaPhoto('delante')"><span class="btn-icon">📷</span><span>Cámara</span></button>
+            <button onclick="event.stopPropagation(); triggerPruebaPhotoGallery('delante')"><span class="btn-icon">🖼️</span><span>Galería</span></button>
+            <button class="btn-quitar" onclick="event.stopPropagation(); quitarFotoPrueba('delante')"><span class="btn-icon">🗑️</span><span>Quitar</span></button>
+          </div>
         </div>
+        <div class="photo-slot" id="pSlotDetras"><div class="photo-slot-preview"></div>
+          <div style="text-align:center;font-size:0.62rem;color:var(--sepia);padding:4px 0 3px;letter-spacing:0.07em;border-top:1px solid rgba(92,61,30,0.1);background:#faf7f2">REVERSO</div>
+          <span class="drop-hint edit-only">📋 pegar · arrastrar</span>
+          <div class="photo-actions edit-only" id="pOverlayDetras">
+            <button onclick="event.stopPropagation(); triggerPruebaPhoto('detras')"><span class="btn-icon">📷</span><span>Cámara</span></button>
+            <button onclick="event.stopPropagation(); triggerPruebaPhotoGallery('detras')"><span class="btn-icon">🖼️</span><span>Galería</span></button>
+            <button class="btn-quitar" onclick="event.stopPropagation(); quitarFotoPrueba('detras')"><span class="btn-icon">🗑️</span><span>Quitar</span></button>
+          </div>
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label">Nº Prueba</label><input class="form-input" id="pFNum" readonly style="pointer-events:none;background:#f5f0e8"></div>
+        <div class="form-group"><label class="form-label">Año</label><input class="form-input" id="pFAño" type="number" min="1975" max="2030"></div>
+        <div class="form-group full"><label class="form-label">Descripción</label><input class="form-input" id="pFDesc"></div>
+        <div class="form-group"><label class="form-label">Estado en tu colección</label>
+          <select class="form-select" id="pFEstado">
+            <option value="">-- No tengo esta prueba --</option>
+            <option value="Nuevo">Nuevo</option>
+            <option value="Nuevo Fijasello">Nuevo Fijasello</option>
+            <option value="Usado">Usado</option>
+            <option value="Usado Fijasello">Usado Fijasello</option>
+          </select>
+        </div>
+        <div class="form-group full"><label class="form-label">Notas personales</label><textarea class="form-textarea" id="pFNotas" placeholder="Observaciones, procedencia, valor estimado..."></textarea></div>
+      </div>
     </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger edit-only" onclick="eliminarPrueba()">🗑 Eliminar</button>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-secondary" onclick="cerrarModalPrueba()">Cancelar</button>
+        <button class="btn btn-primary edit-only" onclick="guardarPrueba()">Guardar prueba</button>
+      </div>
+    </div>
+  </div>
+  <button class="modal-nav next" id="pruebNavNext" onclick="event.stopPropagation(); navegarPrueba(1)">›</button>
+</div>
 
-    <!-- =============================================
-         JAVASCRIPT - EL "CEREBRO" DE LA PÁGINA
-         ============================================= -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            
-            // =============================================
-            // 1. BOTONES DE VISTA (CUADRÍCULA / LISTA)
-            // =============================================
-            const btnGrid = document.getElementById('btn-grid');
-            const btnList = document.getElementById('btn-list');
-            
-            // Busca TODOS los contenedores de la página
-            const todosContenedores = document.querySelectorAll(
-                '.contenedor-sellos, .contenedor-pruebas, [class*="contenedor"]'
-            );
+<div id="syncBar" class="sync-bar">
+  <div class="sync-dot"></div>
+  <span id="syncMsg">Conectando con Google Sheets...</span>
+</div>
+<div class="read-only-notice" id="readOnlyNotice" style="display:none">
+  🔒 Modo solo lectura — inicia sesión con tu cuenta de Google para editar la colección
+</div>
 
-            // Función: Activar vista CUADRÍCULA
-            function activarVistaGrid() {
-                todosContenedores.forEach(cont => {
-                    cont.classList.remove('vista-lista');
-                });
-                btnGrid.classList.add('activo');
-                btnList.classList.remove('activo');
+<div id="epocas-toolbar-wrap" style="max-width:1400px;margin:0 auto;">
+  <div class="toolbar" id="epocas-toolbar">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Buscar descripción, color, año…" oninput="onSearchInput()">
+    </div>
+    <select class="filter-select" id="filterYear" onchange="renderStamps()"><option value="">Todos los años</option></select>
+    <select class="filter-select" id="filterEstado" onchange="renderStamps()">
+      <option value="">Todos los estados</option>
+      <option value="con_estado">Con estado registrado</option>
+      <option value="sin_estado">Sin estado</option>
+    </select>
+    <select class="filter-select" id="filterColor" onchange="renderStamps()"><option value="">Todos los colores</option></select>
+    <div class="view-toggle">
+      <button class="view-btn active" id="btnGrid" onclick="setView('grid')" title="Cuadrícula">⊞</button>
+      <button class="view-btn" id="btnList" onclick="setView('list')" title="Lista">☰</button>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="results-info" id="resultsInfo"></div>
+  <div class="grid-view active" id="gridView"></div>
+  <div class="list-view" id="listView">
+    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
+    <table class="list-table">
+      <thead><tr>
+        <th onclick="sortBy('edifil')">Edifil ↕</th>
+        <th onclick="sortBy('año')">Año ↕</th>
+        <th>Descripción</th><th>Color</th><th>Valor Facial</th><th>Dentado</th><th>Estado</th><th style="width:56px">Imagen</th>
+      </tr></thead>
+      <tbody id="listBody"></tbody>
+    </table>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <button class="modal-nav prev" id="modalNavPrev" onclick="event.stopPropagation(); navegarSello(-1)" title="Sello anterior (←)">‹</button>
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div><div class="modal-edifil" id="mEdifil"></div><div class="modal-title" id="mTitle"></div></div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="filigrana-aviso-modal"></div>
+      <div id="precio-edifil-modal"></div>
+      <div class="photo-section">
+        <div class="photo-slot" id="slotReferencia">
+          <div class="photo-slot-preview"></div>
+          <div style="text-align:center;font-size:0.62rem;color:var(--sepia);padding:4px 0 3px;letter-spacing:0.07em;border-top:1px solid rgba(92,61,30,0.1);background:#faf7f2">REFERENCIA</div>
+        </div>
+        <div class="photo-slot" id="slotDelante">
+          <div class="photo-slot-preview"></div>
+          <div style="text-align:center;font-size:0.62rem;color:var(--sepia);padding:4px 0 3px;letter-spacing:0.07em;border-top:1px solid rgba(92,61,30,0.1);background:#faf7f2">ANVERSO</div>
+          <span class="drop-hint edit-only">📋 pegar · arrastrar</span>
+          <div class="photo-actions edit-only" id="overlayDelante">
+            <button onclick="event.stopPropagation(); triggerPhotoCamera('delante')"><span class="btn-icon">📷</span><span>Cámara</span></button>
+            <button onclick="event.stopPropagation(); triggerPhotoGallery('delante')"><span class="btn-icon">🖼️</span><span>Galería</span></button>
+            <button class="btn-quitar" onclick="event.stopPropagation(); removePhoto('delante')"><span class="btn-icon">🗑️</span><span>Quitar</span></button>
+          </div>
+        </div>
+        <div class="photo-slot" id="slotDetras">
+          <div class="photo-slot-preview"></div>
+          <div style="text-align:center;font-size:0.62rem;color:var(--sepia);padding:4px 0 3px;letter-spacing:0.07em;border-top:1px solid rgba(92,61,30,0.1);background:#faf7f2">REVERSO</div>
+          <span class="drop-hint edit-only">📋 pegar · arrastrar</span>
+          <div class="photo-actions edit-only" id="overlayDetras">
+            <button onclick="event.stopPropagation(); triggerPhotoCamera('detras')"><span class="btn-icon">📷</span><span>Cámara</span></button>
+            <button onclick="event.stopPropagation(); triggerPhotoGallery('detras')"><span class="btn-icon">🖼️</span><span>Galería</span></button>
+            <button class="btn-quitar" onclick="event.stopPropagation(); removePhoto('detras')"><span class="btn-icon">🗑️</span><span>Quitar</span></button>
+          </div>
+        </div>
+      </div>
+      <!-- Inputs ocultos para cámara y galería -->
+      <input type="file" id="fileCamera" accept="image/*" capture="environment" onchange="handlePhoto(event)" style="display:none;">
+      <input type="file" id="fileGallery" accept="image/*" onchange="handlePhoto(event)" style="display:none;">
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label">Nº Edifil</label><input class="form-input" type="text" id="fEdifil" placeholder="Ej: 48 ó 48A"></div>
+        <div class="form-group"><label class="form-label">Año</label><input class="form-input" type="number" id="fAño" placeholder="Ej: 1856"></div>
+        <div class="form-group full"><label class="form-label">Descripción</label><input class="form-input" type="text" id="fDesc" placeholder="Ej: Isabel II"></div>
+        <div class="form-group"><label class="form-label">Color</label><input class="form-input" type="text" id="fColor" placeholder="Ej: azul"></div>
+        <div class="form-group"><label class="form-label">Valor Facial</label><input class="form-input" type="text" id="fValor" placeholder="Ej: 4 cuartos"></div>
+        <div class="form-group"><label class="form-label">Dentado</label>
+          <select class="form-select" id="fDentado">
+            <option value="">-- Seleccionar --</option>
+            <option value="Sin dentar">Sin dentar</option>
+            <option value="Dentado 14">Dentado 14</option>
+            <option value="Dentado 11½">Dentado 11½</option>
+            <option value="Dentado 14x13½">Dentado 14x13½</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Estado en tu colección</label>
+          <select class="form-select" id="fEstado">
+            <option value="">-- No tengo este sello --</option>
+            <option value="Nuevo">Nuevo</option>
+            <option value="Nuevo Fijasello">Nuevo Fijasello</option>
+            <option value="Usado">Usado</option>
+            <option value="Usado Fijasello">Usado Fijasello</option>
+          </select>
+        </div>
+        <div class="form-group" id="grupoFiligrana" style="display:none"><label class="form-label">Filigrana</label>
+          <select class="form-select" id="fFiligrana">
+            <option value="">-- No aplica --</option>
+          </select>
+        </div>
+        <div class="form-group full"><label class="form-label">Notas personales</label><textarea class="form-textarea" id="fNotas" placeholder="Observaciones, procedencia, valor estimado..."></textarea></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger edit-only" id="btnDelete" onclick="deleteStamp()">🗑 Eliminar</button>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+        <button class="btn btn-primary edit-only" onclick="saveStamp()">Guardar sello</button>
+      </div>
+    </div>
+  </div>
+  <button class="modal-nav next" id="modalNavNext" onclick="event.stopPropagation(); navegarSello(1)" title="Sello siguiente (→)">›</button>
+</div>
+
+<div class="lightbox" id="lightbox" onclick="if(!lbDrag.active && lbScale<=1) closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightboxImg" src="" alt="">
+  <div class="lightbox-caption" id="lightboxCaption"></div>
+  <div style="position:absolute;top:20px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,0.3);font-family:'Crimson Pro',serif;font-size:0.75rem;letter-spacing:0.1em;pointer-events:none">Rueda del ratón para zoom · Arrastrar para mover</div>
+</div>
+
+<div class="saving-toast" id="toast"></div>
+
+<script>
+// Pruebas Oficiales y del Artista
+let PRUEBAS_OFICIALES_DATA = []; // Cargado dinámicamente desde Google Sheets (Hoja 10)
+
+// config
+function _cfg() {
+  const _d = atob;
+  const _r = {};
+  [
+    ['sid',    'MUtLVEthbXdlUTBIUTg1UDlnOGh5LUNHNGlyRnJKQ185N181cXJFRm1aNUU='],
+    ['surl',   'aHR0cHM6Ly9zY3JpcHQuZ29vZ2xlLmNvbS9tYWNyb3Mvcy9BS2Z5Y2J6STJJc1pLSU05eVBTSzZVdDlKSjBFTVpWQlhPUV9DWFJoSFlubVRBc1FhQ1MtaGNOM3lUMTA4RGYzeUVWWlNFN2kvZXhlYw=='],
+    ['mail',   'bWVuZmlzMTNAZ21haWwuY29t'],
+    ['cid',    'NzU5NTY4OTc1NTc4LXNyaWcwdWx0YTFxdWllcDZoM2lsODlxNWUyZGhqdnU4LmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29t'],
+    ['tok',    'bWVuZmlzLXNlbGxvcy0yMDI0LXhLOXA='],
+    ['cloud',  'ZG80bHRwZmJv'],
+    ['preset', 'c2VsbG9zX3VwbG9hZA=='],
+  ].forEach(([k,v]) => _r[k] = _d(v));
+  return _r;
+}
+let SHEET_URL = `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=Hoja 1`;
+
+// ==================== AUTENTICACIÓN GOOGLE ====================
+const AUTHORIZED_EMAIL = _cfg().mail;
+// ⚠️ REEMPLAZA con tu Google OAuth Client ID
+// Ve a https://console.cloud.google.com → APIs y servicios → Credenciales
+// Crea "ID de cliente OAuth 2.0" → tipo "Aplicación web"
+// Añade https://menfis13.github.io en "Orígenes autorizados de JavaScript"
+const GOOGLE_CLIENT_ID = _cfg().cid;
+
+let currentUser = null;
+let _googleCredentialToken = null; // Token JWT real de Google
+
+function isEditor() {
+  // SEGURIDAD: requiere token JWT real de Google en memoria, no datos de localStorage
+  return currentUser && currentUser.email === AUTHORIZED_EMAIL && _googleCredentialToken !== null;
+}
+
+function applyAuthUI() {
+  const area = document.getElementById('authArea');
+  const authPortada = document.getElementById('authPortada');
+  const notice = document.getElementById('readOnlyNotice');
+  const isMobile = window.innerWidth <= 600;
+
+  if (isEditor()) {
+    notice.style.display = 'none';
+    area.innerHTML = `<button class="btn-add-header" onclick="openNew()">＋ Añadir sello</button>`;
+
+    if (isMobile) {
+      // Móvil con sesión: ocultar panel flotante, mostrar solo avatar en header
+      if (authPortada) authPortada.style.display = 'none';
+      let avatarBtn = document.getElementById('headerAvatar');
+      if (!avatarBtn) {
+        avatarBtn = document.createElement('button');
+        avatarBtn.id = 'headerAvatar';
+        avatarBtn.title = currentUser.name + ' · Toca para cerrar sesión';
+        avatarBtn.style.cssText = 'background:none;border:2px solid var(--gold);border-radius:50%;cursor:pointer;padding:0;width:32px;height:32px;overflow:hidden;flex-shrink:0;opacity:0.85;';
+        avatarBtn.innerHTML = `<img src="${currentUser.picture}" alt="" style="width:100%;height:100%;object-fit:cover;">`;
+        avatarBtn.onclick = () => { if (confirm('¿Cerrar sesión?')) signOut(); };
+        const darkBtn = document.getElementById('darkModeBtn');
+        if (darkBtn && darkBtn.parentNode) darkBtn.parentNode.insertBefore(avatarBtn, darkBtn);
+      } else {
+        avatarBtn.style.display = '';
+        avatarBtn.innerHTML = `<img src="${currentUser.picture}" alt="" style="width:100%;height:100%;object-fit:cover;">`;
+      }
+    } else {
+      // Escritorio con sesión: panel flotante discreto
+      if (authPortada) {
+        authPortada.style.display = '';
+        authPortada.innerHTML = `
+          <div style="display:flex;align-items:center;gap:10px;background:rgba(0,0,0,0.4);padding:8px 14px;border-radius:3px;border:1px solid rgba(184,134,11,0.2)">
+            <img src="${currentUser.picture}" alt="" style="width:26px;height:26px;border-radius:50%;border:1px solid var(--gold)">
+            <span style="font-size:0.78rem;color:#a89070">${currentUser.name}</span>
+            <button class="btn-logout" onclick="signOut()">Salir</button>
+          </div>`;
+      }
+    }
+  } else {
+    notice.style.display = 'block';
+    area.innerHTML = '';
+    // Ocultar avatar del header si existía
+    const avatarBtn = document.getElementById('headerAvatar');
+    if (avatarBtn) avatarBtn.style.display = 'none';
+
+    if (authPortada) {
+      authPortada.style.display = '';
+      if (isMobile) {
+        // Móvil sin sesión: botón compacto
+        authPortada.innerHTML = `
+          <button class="btn-login-google" onclick="triggerSignIn()" style="font-size:0.8rem;padding:6px 10px;gap:6px;">
+            <svg width="16" height="16" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/><path fill="#FBBC05" d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707s.102-1.167.282-1.707V4.961H.957C.347 6.175 0 7.55 0 9s.348 2.825.957 4.039l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.961L3.964 7.293C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
+            Entrar
+          </button>`;
+      } else {
+        // Escritorio sin sesión: botón completo
+        authPortada.innerHTML = `
+          <button class="btn-login-google" onclick="triggerSignIn()">
+            <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/><path fill="#FBBC05" d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707s.102-1.167.282-1.707V4.961H.957C.347 6.175 0 7.55 0 9s.348 2.825.957 4.039l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.961L3.964 7.293C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
+            Iniciar sesión
+          </button>`;
+      }
+    }
+  }
+  document.querySelectorAll('.edit-only').forEach(el => { el.style.display = isEditor() ? '' : 'none'; });
+}
+
+async function handleGoogleCredential(response) {
+  const payload = JSON.parse(atob(response.credential.split('.')[1]));
+  
+  if (payload.email !== AUTHORIZED_EMAIL) {
+    showToast('⛔ Esta cuenta no tiene permisos de edición');
+    return;
+  }
+  
+  currentUser = { name: payload.name, email: payload.email, picture: payload.picture };
+  _googleCredentialToken = response.credential; // Guardar token JWT real en memoria
+  
+  // Guardar el TOKEN COMPLETO en localStorage
+  localStorage.setItem('sellos_google_token', response.credential);
+  
+  // --- NUEVO: Cargamos los precios desde el Excel antes de mostrar nada ---
+  await cargarPreciosDesdeSheets();
+  
+  applyAuthUI();
+  showToast('✓ Sesión iniciada · ' + payload.name);
+}
+
+function triggerSignIn() {
+  if (!window.google || !google.accounts) { showToast('Cargando...'); return; }
+  google.accounts.id.prompt((n) => {
+    if (n.isNotDisplayed() || n.isSkippedMoment()) {
+      const d = document.createElement('div');
+      d.style.cssText = 'position:fixed;top:80px;right:20px;z-index:9999;background:white;padding:8px;border-radius:4px;box-shadow:0 4px 20px rgba(0,0,0,0.3);';
+      d.innerHTML = '<div id="gsiBtn"></div>';
+      document.body.appendChild(d);
+      google.accounts.id.renderButton(document.getElementById('gsiBtn'), { theme: 'outline', size: 'large', width: 240 });
+      setTimeout(() => d.remove(), 8000);
+    }
+  });
+}
+
+function signOut() {
+  currentUser = null;
+  _googleCredentialToken = null; // Limpiar token de memoria
+  localStorage.removeItem('sellos_google_token'); // Limpiar token guardado
+  google.accounts.id.disableAutoSelect();
+  applyAuthUI();
+  showToast('Sesión cerrada');
+}
+
+window.addEventListener('load', () => {
+  // SEGURIDAD: Restaurar sesión desde el token JWT completo de Google (no desde datos de usuario)
+  // El token JWT está firmado por Google - aunque alguien lo lea no puede falsificarlo
+  // Solo guardamos el token completo, nunca los datos del usuario directamente
+  try {
+    const savedToken = localStorage.getItem('sellos_google_token');
+    if (savedToken) {
+      // Decodificar el payload del JWT (parte central entre los dos puntos)
+      const parts = savedToken.split('.');
+      if (parts.length === 3) {
+        const payload = JSON.parse(atob(parts[1]));
+        const now = Math.floor(Date.now() / 1000);
+        // Verificar que el token no ha expirado Y que el email es el autorizado
+        if (payload.exp > now && payload.email === AUTHORIZED_EMAIL) {
+          currentUser = { name: payload.name, email: payload.email, picture: payload.picture };
+          _googleCredentialToken = savedToken;
+          // Token válido restaurado silenciosamente
+        } else {
+          // Token expirado o email no autorizado - limpiar
+          localStorage.removeItem('sellos_google_token');
+        }
+      }
+    }
+  } catch(e) {
+    localStorage.removeItem('sellos_google_token');
+  }
+
+  const t = setInterval(() => {
+    if (window.google && google.accounts) {
+      clearInterval(t);
+      google.accounts.id.initialize({
+        client_id: GOOGLE_CLIENT_ID,
+        callback: handleGoogleCredential,
+        auto_select: true,
+        cancel_on_tap_outside: true,
+      });
+      applyAuthUI();
+      initPhotoDragDrop(); // Activar drag & drop y paste en slots de foto
+    }
+  }, 200);
+});
+
+// Datos de referencia con imágenes base64 (solo para mostrar la imagen original del sello)
+// ==================== FILIGRANAS REQUERIDAS ====================
+// Sellos de Isabel II que tienen filigrana obligatoria o son variante sin filigrana
+// ==================== PRECIOS CATÁLOGO EDIFIL ====================
+// Cargados dinámicamente desde Google Sheets
+// Formato: [precio_nuevo_normal, precio_usado_normal] en euros
+let PRECIOS_EDIFIL = {};
+
+const FILIGRANAS_REQUERIDAS = {
+  39: { tipo: 'Lazos',            opciones: ['Lazos'] },
+  40: { tipo: 'Lazos',            opciones: ['Lazos'] },
+  41: { tipo: 'Lazos',            opciones: ['Lazos'] },
+  42: { tipo: 'Lazos',            opciones: ['Lazos'] },
+  43: { tipo: 'Líneas cruzadas',  opciones: ['Líneas cruzadas'] },
+  44: { tipo: 'Líneas cruzadas',  opciones: ['Líneas cruzadas'] },
+  45: { tipo: 'Líneas cruzadas',  opciones: ['Líneas cruzadas'] },
+  46: { tipo: 'Líneas cruzadas',  opciones: ['Líneas cruzadas'] },
+  47: { tipo: 'Sin filigrana',    opciones: ['Sin filigrana'] },
+  48: { tipo: 'Sin filigrana',    opciones: ['Sin filigrana'] },
+  49: { tipo: 'Sin filigrana',    opciones: ['Sin filigrana'] },
+  50: { tipo: 'Sin filigrana',    opciones: ['Sin filigrana'] },
+};
+
+function getFiligranaSello(s) {
+  const info = FILIGRANAS_REQUERIDAS[s.edifil];
+  if (!info) return null;
+  return { requerida: info.tipo, opciones: info.opciones, registrada: s.filigrana || null };
+}
+
+const EPOCAS = {
+  'isabel2': {
+    id: 'isabel2',
+    titulo: '(1850-1870) Isabel II',
+    subtitulo: 'Primera época de la filatelia española',
+    sello_ref: 'https://res.cloudinary.com/do4ltpfbo/image/upload/portada_isabel2.jpg',
+    sheet: 'Hoja 1',
+    data: []
+  },
+  'duque': {
+    id: 'duque',
+    titulo: '(1870-1872) Regencia Duque De La Torre',
+    subtitulo: 'Efigie alegórica de España',
+    sello_ref: 'https://res.cloudinary.com/do4ltpfbo/image/upload/portada_duque.jpg',
+    sheet: 'Hoja 2',
+    data: []
+  },
+  'amadeo1': {
+    id: 'amadeo1',
+    titulo: '(1872-1873) Amadeo I',
+    subtitulo: 'Corona Real, Cifras y Busto de Amadeo I',
+    sello_ref: 'https://res.cloudinary.com/do4ltpfbo/image/upload/portada_amadeo1.jpg',
+    sheet: 'Hoja 3',
+    data: []
+  },
+  'republica1': {
+    id: 'republica1',
+    titulo: '(1873-1875) 1ª República',
+    subtitulo: 'Corona mural y Alegoría de la República',
+    sello_ref: 'https://res.cloudinary.com/do4ltpfbo/image/upload/portada_republica1.jpg',
+    sheet: 'Hoja 4',
+    data: []
+  },
+  'carlos7': {
+    id: 'carlos7',
+    titulo: '(1873-1875) Carlos VII',
+    subtitulo: 'Pretendiente carlista al trono',
+    sello_ref: 'https://res.cloudinary.com/do4ltpfbo/image/upload/portada_carlos7.jpg',
+    sheet: 'Hoja 5',
+    data: []
+  },
+  'alfonso12': {
+    id: 'alfonso12',
+    titulo: '(1875-1885) Alfonso XII',
+    subtitulo: 'Reinado de Alfonso XII',
+    sello_ref: 'https://res.cloudinary.com/do4ltpfbo/image/upload/portada_alfonso12.jpg',
+    sheet: 'Hoja 6',
+    data: []
+  },
+  'alfonso13': {
+    id: 'alfonso13',
+    titulo: '(1889-1931) Alfonso XIII',
+    subtitulo: 'Reinado de Alfonso XIII',
+    sello_ref: 'https://res.cloudinary.com/do4ltpfbo/image/upload/portada_alfonso13.jpg',
+    sheet: 'Hoja 7',
+    data: []
+  },
+  'republica2': {
+    id: 'republica2',
+    titulo: '(1931-1939) 2ª República',
+    subtitulo: 'Segunda República Española',
+    sello_ref: 'https://res.cloudinary.com/do4ltpfbo/image/upload/portada_republica2.jpg',
+    sheet: 'Hoja 8',
+    data: []
+  }
+,
+  'franco': {
+    id: 'franco',
+    titulo: '(1936-1975) F. Franco',
+    subtitulo: 'Estado Español. Francisco Franco',
+    sello_ref: 'https://res.cloudinary.com/do4ltpfbo/image/upload/portada_franco.jpg',
+    sheet: 'Hoja 9',
+    data: []
+  }
+,
+  'pruebas': {
+    id: 'pruebas',
+    titulo: '(1975-2024) Pruebas Oficiales',
+    subtitulo: 'Pruebas Oficiales y del Artista',
+    sello_ref: 'https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_32.jpg',
+    sheet: 'Hoja 10',
+    data: []
+  }
+};
+
+let currentEpoca = null;
+function getRefUrl(edifil) {
+  if (!edifil && edifil !== 0) return null;
+  const s = String(edifil);
+  const m = s.match(/^(\d+)([A-Za-z].*)?$/);
+  if (m) {
+    const num = String(parseInt(m[1])).padStart(3, '0');
+    const suf = m[2] || '';
+    return `https://res.cloudinary.com/do4ltpfbo/image/upload/sello_${num}${suf}.jpg`;
+  }
+  return null;
+}
+
+function getPruebaRefUrl(codigo) {
+  if (!codigo) return null;
+  return `https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_${codigo.toLowerCase()}.jpg`;
+}
+
+const epocasContadores = {};
+
+// Estado
+let stamps = [];
+let currentView = 'grid';
+let sortField = 'edifil';
+let sortDir = 1;
+let currentStampId = null;
+let currentPhotoTarget = null;
+
+// ==================== GOOGLE SHEETS SYNC ====================
+function setSyncStatus(status, msg) {
+  const bar = document.getElementById('syncBar');
+  const msgEl = document.getElementById('syncMsg');
+  bar.className = 'sync-bar ' + status;
+  msgEl.textContent = msg;
+}
+
+async function loadFromSheets() {
+  setSyncStatus('syncing', 'Cargando datos desde Google Sheets...');
+  try {
+    const res = await fetch(SHEET_URL);
+    const text = await res.text();
+    const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\((.*)\);?$/s)[1]);
+    const rows = json.table.rows;
+
+    if (!rows || rows.length === 0) {
+      stamps = [];
+      setSyncStatus('', 'Google Sheets vacío para esta época.');
+    } else {
+      stamps = rows.map(row => {
+        if (!row.c || !row.c[0] || !row.c[0].v) return null;
+        const edifil = row.c[0].v;
+        return {
+          edifil,
+          año:          row.c[1]?.v || null,
+          descripcion:  row.c[2]?.v || '',
+          color:        row.c[3]?.v || '',
+          valor_facial: row.c[4]?.v || '',
+          dentado:      row.c[5]?.v || '',
+          estado:       row.c[6]?.v || null,
+          notas:        row.c[7]?.v || '',
+          referencia:   row.c[8]?.v || getRefUrl(edifil),
+          delante:      row.c[9]?.v || null,
+          detras:       row.c[10]?.v || null,
+          filigrana:    row.c[11]?.v || null,
+          precio_nuevo: row.c[12]?.v || null,
+          precio_usado: row.c[13]?.v || null,
+        };
+      }).filter(Boolean);
+      setSyncStatus('', `Sincronizado con Google Sheets — ${stamps.length} registros`);
+    }
+  } catch(e) {
+    console.error(e);
+    stamps = [];
+    setSyncStatus('error', 'Sin conexión con Sheets — no hay datos locales disponibles');
+  }
+  populateFilters();
+  renderStamps();
+  if (currentEpoca) epocasContadores[currentEpoca] = stamps.filter(s => s.estado).length;
+}
+async function saveToSheets(stamp) {
+  setSyncStatus('syncing', 'Guardando en Google Sheets...');
+  saveLocal();
+  try {
+    const payload = { ...stamp };
+    delete payload.referencia;
+    // Solo borrar si son base64 (muy largas), no si son URLs de Cloudinary
+    if (payload.delante && payload.delante.startsWith('data:')) payload.delante = null;
+    if (payload.detras && payload.detras.startsWith('data:')) payload.detras = null;
+    // Añadir precios del catálogo Edifil
+    const p = PRECIOS_EDIFIL[stamp.edifil];
+    if (p) { payload.precio_nuevo = p[0]; payload.precio_usado = p[1]; }
+    const url = _cfg().surl + '?action=save&token=' + _cfg().tok + '&payload=' + encodeURIComponent(JSON.stringify(payload)) + '&sheet=' + encodeURIComponent(EPOCAS[currentEpoca].sheet);
+    const res = await fetch(url);
+    const json = await res.json();
+    if (json.status === 'ok') {
+      setSyncStatus('', 'Guardado en Google Sheets ✓');
+      showToast('Sello guardado en Sheets ✓');
+    } else {
+      throw new Error(json.message);
+    }
+  } catch(e) {
+    console.error(e);
+    setSyncStatus('error', 'Error al guardar en Sheets — guardado localmente');
+    showToast('Guardado localmente (sin conexión a Sheets)');
+  }
+}
+
+async function deleteFromSheets(edifil) {
+  try {
+    const url = _cfg().surl + '?action=delete&token=' + _cfg().tok + '&edifil=' + edifil + '&sheet=' + encodeURIComponent(EPOCAS[currentEpoca].sheet);
+    await fetch(url);
+  } catch(e) {
+    console.error('Error eliminando de Sheets:', e);
+  }
+}
+
+// ==================== PRUEBAS OFICIALES - SHEETS ====================
+const PRUEBAS_SHEET = 'Hoja 10';
+
+
+async function loadPruebasFromSheets() {
+  setSyncStatus('syncing', 'Cargando pruebas desde Google Sheets...');
+  try {
+    const url = `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(PRUEBAS_SHEET)}`;
+    const res = await fetch(url);
+    const text = await res.text();
+    const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\((.*)\);?$/s)[1]);
+    const rows = json.table.rows;
+
+    if (!rows || rows.length === 0) {
+      PRUEBAS_OFICIALES_DATA = [];
+      setSyncStatus('', 'Hoja 10 vacía — sin datos de pruebas.');
+      renderPruebas();
+      return;
+    }
+
+    // A=edifil(id), B=año, C=descripcion, D=codigo, E=valor_facial, F=dentado,
+    // G=estado, H=notas, I=(vacío), J=delante, K=detras, L=filigrana, M=precio_nuevo, N=precio_usado
+    PRUEBAS_OFICIALES_DATA = rows.map(row => {
+      if (!row.c || !row.c[0] || !row.c[0].v) return null;
+      const id = row.c[0].v;
+      const codigo = row.c[3]?.v ? String(row.c[3].v) : '';
+      return {
+        id,
+        codigo,
+        año:          row.c[1]?.v || null,
+        descripcion:  row.c[2]?.v || '',
+        estado:       row.c[6]?.v || null,
+        notas:        row.c[7]?.v || '',
+        referencia:   getPruebaRefUrl(codigo),
+        delante:      row.c[9]?.v || null,
+        detras:       row.c[10]?.v || null,
+        precio_nuevo: row.c[12]?.v || null,
+        precio_usado: row.c[13]?.v || null,
+      };
+    }).filter(Boolean);
+
+    setSyncStatus('', `Pruebas cargadas — ${PRUEBAS_OFICIALES_DATA.length} registros`);
+    try { localStorage.setItem('pruebas_oficiales', JSON.stringify(PRUEBAS_OFICIALES_DATA)); } catch(e) {}
+    renderPruebas();
+  } catch(e) {
+    console.error(e);
+    setSyncStatus('error', 'Sin conexión con Sheets para pruebas');
+    if (!PRUEBAS_OFICIALES_DATA.length) renderPruebas();
+  }
+}
+async function savePruebaToSheets(prueba) {
+  setSyncStatus('syncing', 'Guardando prueba en Google Sheets...');
+  try {
+    // El Apps Script busca por col A (edifil) y escribe por posición de columna
+    // Orden debe coincidir con cabeceras de Hoja 10: id,codigo,descripcion,año,estado,notas,delante,detras,precio_nuevo,precio_usado
+    const payload = {
+      edifil:       prueba.id,
+      año:          prueba.año,
+      descripcion:  prueba.descripcion,
+      color:        prueba.codigo,
+      valor_facial: '',
+      dentado:      '',
+      estado:       prueba.estado,
+      notas:        prueba.notas,
+      referencia:   '',
+      delante:      (prueba.delante && prueba.delante.startsWith('data:')) ? null : prueba.delante,
+      detras:       (prueba.detras  && prueba.detras.startsWith('data:'))  ? null : prueba.detras,
+      filigrana:    '',
+      precio_nuevo: prueba.precio_nuevo,
+      precio_usado: prueba.precio_usado,
+    };
+    const url = _cfg().surl + '?action=save&token=' + _cfg().tok +
+                '&payload=' + encodeURIComponent(JSON.stringify(payload)) +
+                '&sheet=' + encodeURIComponent(PRUEBAS_SHEET);
+    const res = await fetch(url);
+    const json = await res.json();
+    if (json.status === 'ok') {
+      setSyncStatus('', 'Prueba guardada en Sheets ✓');
+      showToast('Prueba guardada en Sheets ✓');
+    } else {
+      throw new Error(json.message);
+    }
+  } catch(e) {
+    console.error(e);
+    setSyncStatus('error', 'Error al guardar prueba — guardado localmente');
+    showToast('Guardado localmente (sin conexión a Sheets)');
+  }
+}
+
+function saveLocal() {
+  try {
+    const toSave = stamps.map(s => {
+      const {referencia, ...rest} = s;
+      return rest;
+    });
+    localStorage.setItem('sellos_sheets_backup', JSON.stringify(toSave));
+  } catch(e) {}
+}
+
+// ==================== STAT FILTER ====================
+let activeStatFilter = null; // 'tengo' | 'fotos' | null
+
+function toggleStatFilter(tipo) {
+  if (tipo === 'total') {
+    activeStatFilter = null;
+  } else {
+    activeStatFilter = (activeStatFilter === tipo) ? null : tipo;
+  }
+  // Actualizar clases visuales
+  document.getElementById('statbox-total').classList.toggle('active-filter', activeStatFilter === null && tipo === 'total' && false);
+  document.getElementById('statbox-tengo').classList.toggle('active-filter', activeStatFilter === 'tengo');
+  document.getElementById('statbox-fotos').classList.toggle('active-filter', activeStatFilter === 'fotos');
+  // Si estamos en pruebas, filtrar pruebas; si no, filtrar sellos normales
+  const inPruebas = document.getElementById('seccionPruebas').classList.contains('open');
+  if (inPruebas) renderPruebas(); else renderStamps();
+}
+
+// ==================== FILTERS ====================
+function getFiltered() {
+  const rawSearch = document.getElementById('searchInput').value.toLowerCase().trim();
+  // Si estamos en modo override (búsqueda numérica -> mostrar todo), ignorar el filtro de búsqueda
+  const search = window._searchOverride ? '' : rawSearch;
+  const filterYear = document.getElementById('filterYear').value;
+  const filterEstado = document.getElementById('filterEstado').value;
+  const filterColor = document.getElementById('filterColor').value;
+  return stamps.filter(s => {
+    // Filtro por stat-box activo
+    if (activeStatFilter === 'tengo' && !s.estado) return false;
+    if (activeStatFilter === 'fotos' && !s.delante && !s.detras) return false;
+    if (search) {
+      // Si es solo número, buscar Edifil exacto
+      if (/^\d+$/.test(search)) {
+        if (String(s.edifil) !== search) return false;
+      } else {
+        const hay = [s.edifil, s.año, s.descripcion, s.color, s.valor_facial, s.dentado, s.estado, s.notas].join(' ').toLowerCase();
+        if (!hay.includes(search)) return false;
+      }
+    }
+    if (filterYear && String(s.año) !== filterYear) return false;
+    if (filterEstado === 'con_estado' && !s.estado) return false;
+    if (filterEstado === 'sin_estado' && s.estado) return false;
+    // Color parcial: "amarillo" encuentra "negro/amarillo"
+    if (filterColor && !s.color?.toLowerCase().includes(filterColor.toLowerCase())) return false;
+    return true;
+  }).sort((a,b) => {
+    let av = a[sortField], bv = b[sortField];
+    if (av == null) av = ''; if (bv == null) bv = '';
+    if (typeof av === 'string') av = av.toLowerCase();
+    if (typeof bv === 'string') bv = bv.toLowerCase();
+    return av < bv ? -sortDir : av > bv ? sortDir : 0;
+  });
+}
+
+function populateFilters() {
+  const years = [...new Set(stamps.map(s => s.año).filter(Boolean))].sort();
+  const yearSel = document.getElementById('filterYear');
+  yearSel.innerHTML = '<option value="">Todos los años</option>';
+  years.forEach(y => { const o = document.createElement('option'); o.value = y; o.textContent = y; yearSel.appendChild(o); });
+  const colors = [...new Set(stamps.map(s => s.color).filter(Boolean))].sort();
+  const colorSel = document.getElementById('filterColor');
+  colorSel.innerHTML = '<option value="">Todos los colores</option>';
+  colors.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c.charAt(0).toUpperCase() + c.slice(1); colorSel.appendChild(o); });
+}
+
+// ==================== RENDER ====================
+function colorClass(color) {
+  if (!color) return 'color-default';
+  const c = color.toLowerCase();
+  const map = {negro:'negro',lila:'lila',rojo:'rojo',azul:'azul',verde:'verde',naranja:'naranja',rosa:'rosa',amarillo:'amarillo',gris:'gris',castaño:'castaño',violeta:'lila',cobre:'cobre'};
+  for (const [k,v] of Object.entries(map)) { if (c.includes(k)) return 'color-'+v; }
+  return 'color-default';
+}
+
+function renderStamps() {
+  const filtered = getFiltered();
+  const withEstado = stamps.filter(s => s.estado).length;
+  const withPhoto = stamps.filter(s => s.delante).length;
+  document.getElementById('stat-total').textContent = stamps.length;
+  document.getElementById('stat-tengo').textContent = withEstado;
+  document.getElementById('stat-fotos').textContent = withPhoto;
+  let infoExtra = '';
+  if (activeStatFilter === 'tengo') infoExtra = ' · <strong style="color:var(--gold)">Filtro: En colección</strong> <span style="cursor:pointer;color:var(--sepia)" onclick="toggleStatFilter(\'tengo\')" title="Quitar filtro">✕</span>';
+  if (activeStatFilter === 'fotos') infoExtra = ' · <strong style="color:var(--gold)">Filtro: Con foto</strong> <span style="cursor:pointer;color:var(--sepia)" onclick="toggleStatFilter(\'fotos\')" title="Quitar filtro">✕</span>';
+  document.getElementById('resultsInfo').innerHTML = `Mostrando ${filtered.length} de ${stamps.length} sellos${infoExtra}`;
+  if (currentEpoca) epocasContadores[currentEpoca] = withEstado;
+
+  // Siempre sincronizar estado visual de botones y contenedores con currentView
+  const isGrid = currentView === 'grid';
+  document.getElementById('gridView').classList.toggle('active', isGrid);
+  document.getElementById('listView').classList.toggle('active', !isGrid);
+  document.getElementById('btnGrid').classList.toggle('active', isGrid);
+  document.getElementById('btnList').classList.toggle('active', !isGrid);
+
+  if (isGrid) renderGrid(filtered);
+  else renderList(filtered);
+}
+
+function renderGrid(filtered) {
+  const container = document.getElementById('gridView');
+  if (!filtered.length) { container.innerHTML = '<div style="text-align:center;padding:80px;color:var(--sepia);opacity:0.5"><h3 style="font-family:Playfair Display,serif">Sin resultados</h3></div>'; return; }
+  container.innerHTML = filtered.map(s => {
+    const imgArea = s.referencia
+      ? `<img class="stamp-photo" src="${s.referencia}" alt="Sello ${s.edifil}">`
+      : `<div class="stamp-placeholder"><div class="stamp-placeholder-num">${s.edifil}</div></div>`;
+    const fil = getFiligranaSello(s);
+    let filBadge = '';
+    if (fil) {
+      if (fil.requerida === 'Sin filigrana') {
+        filBadge = `<span class="filigrana-badge requerida" title="Sin filigrana — cuidado con confundirlo con Edifil ${s.edifil-4}">ℹ Sin filigrana</span>`;
+      } else if (!fil.registrada) {
+        filBadge = `<span class="filigrana-badge requerida" title="Requiere filigrana ${fil.requerida}">⚠ Filigrana</span>`;
+      } else if (fil.registrada === fil.requerida) {
+        filBadge = `<span class="filigrana-badge ok" title="Filigrana verificada: ${fil.registrada}">✓ ${fil.registrada}</span>`;
+      } else {
+        filBadge = `<span class="filigrana-badge alerta" title="Filigrana incorrecta">⚠ Revisar</span>`;
+      }
+    }
+    const noTengo = !s.estado;
+    const esVariante = s.variante === true;
+    const edId = typeof s.edifil === 'string' ? `'${s.edifil}'` : s.edifil;
+    return `<div class="stamp-card${noTengo ? '' : ' tengo'}${esVariante ? ' variante' : ''}" onclick="openStamp(${edId})">
+      <div class="stamp-img-area">${imgArea}</div>
+      <div class="stamp-info">
+        <div class="stamp-edifil">Edifil nº ${s.edifil}</div>
+        <div class="stamp-desc">${s.descripcion || '—'}</div>
+        <div class="stamp-meta">
+          <span class="stamp-tag"><span class="stamp-color-dot ${colorClass(s.color)}"></span>${s.color || '—'}</span>
+          <span class="stamp-tag">📅 ${s.año || '—'}</span>
+          <span class="stamp-tag">${s.valor_facial || '—'}</span>
+          ${s.dentado ? `<span class="stamp-tag">${s.dentado}</span>` : ''}
+          ${filBadge}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderList(filtered) {
+  const tbody = document.getElementById('listBody');
+  if (!filtered.length) { tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--sepia)">Sin resultados</td></tr>'; return; }
+  tbody.innerHTML = filtered.map(s => {
+    const edId = typeof s.edifil === 'string' ? `'${s.edifil}'` : s.edifil;
+    return `
+    <tr onclick="openStamp(${edId})">
+      <td><strong>${s.edifil}</strong></td><td>${s.año||'—'}</td><td>${s.descripcion||'—'}</td>
+      <td><span style="display:flex;align-items:center;gap:6px"><span class="stamp-color-dot ${colorClass(s.color)}"></span>${s.color||'—'}</span></td>
+      <td>${s.valor_facial||'—'}</td><td>${s.dentado||'—'}</td>
+      <td>${s.estado ? `<span style="background:var(--sage);color:white;padding:2px 8px;border-radius:1px;font-size:0.75rem">${s.estado}</span>` : '<span style="color:#aaa">—</span>'}</td>
+      <td>${s.referencia
+        ? `<img src="${s.referencia}" style="width:40px;height:40px;object-fit:cover;border-radius:2px;border:1px solid rgba(184,134,11,0.25);display:block" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span style="display:none;color:#aaa;font-size:0.75rem">—</span>`
+        : '<span style="color:#aaa;font-size:0.75rem">—</span>'
+      }</td>
+    </tr>`;
+  }).join('');
+}
+
+function sortBy(field) {
+  if (sortField === field) sortDir *= -1; else { sortField = field; sortDir = 1; }
+  renderStamps();
+}
+function setView(v) {
+  currentView = v;
+  renderStamps();
+}
+
+function onSearchInput() {
+  document.querySelectorAll('.search-highlight').forEach(el => el.classList.remove('search-highlight'));
+  renderStamps();
+}
+
+function saltarEdifil() {
+  const val = document.getElementById('edifilJump').value.trim();
+  if (!val) return;
+  const edifil = parseInt(val);
+  document.querySelectorAll('.search-highlight').forEach(el => el.classList.remove('search-highlight'));
+
+  // Buscar en época actual primero
+  if (stamps.find(s => s.edifil === edifil)) {
+    window._searchOverride = true;
+    renderStamps();
+    window._searchOverride = false;
+    setTimeout(() => scrollAndHighlight(edifil), 80);
+    return;
+  }
+
+  // Buscar en otras épocas usando el mapa precargado
+  const epocaDestino = edifilEpocaMap[edifil] || null;
+  if (!epocaDestino) {
+    showToast('Edifil nº ' + edifil + ' no encontrado en ninguna época');
+    return;
+  }
+
+  // Cambiar de época y saltar
+  showToast('Saltando a ' + EPOCAS[epocaDestino].titulo + '…');
+  switchEpoca(epocaDestino);
+  // Esperar a que carguen los datos de Sheets antes de saltar
+  const esperarYSaltar = (intentos) => {
+    const found = stamps.find(s => s.edifil === edifil);
+    if (found) {
+      window._searchOverride = true;
+      renderStamps();
+      window._searchOverride = false;
+      setTimeout(() => scrollAndHighlight(edifil), 80);
+    } else if (intentos > 0) {
+      setTimeout(() => esperarYSaltar(intentos - 1), 300);
+    }
+  };
+  setTimeout(() => esperarYSaltar(10), 400);
+}
+
+// ==================== IR ARRIBA / RESALTAR ====================
+function irAlPrimerSello() {
+  window.scrollTo(0, 0);
+}
+
+function scrollAndHighlight(edifil) {
+  let target = null;
+  const str = String(edifil);
+  if (currentView === 'grid') {
+    document.querySelectorAll('#gridView .stamp-card').forEach(card => {
+      card.classList.remove('search-highlight');
+      const edifilEl = card.querySelector('.stamp-edifil');
+      // Coincidencia exacta: el texto debe ser exactamente "Edifil nº X"
+      if (edifilEl && edifilEl.textContent.replace(/\D/g,'') === str) target = card;
+    });
+    if (target) target.classList.add('search-highlight');
+  } else {
+    document.querySelectorAll('#listBody tr').forEach(row => {
+      row.classList.remove('search-highlight');
+      const td = row.querySelector('td strong');
+      if (td && td.textContent.trim() === str) target = row;
+    });
+    if (target) target.classList.add('search-highlight');
+  }
+  if (target) {
+    const top = target.getBoundingClientRect().top + window.scrollY - 140;
+    window.scrollTo({ top: Math.max(0, top), behavior: 'auto' }); // salto instantáneo
+    // Quitar resaltado tras 5 segundos
+    setTimeout(() => target.classList.remove('search-highlight'), 5000);
+  }
+}
+
+// ==================== MODAL ====================
+// ── Navegación entre sellos en el modal ──────────────────────────────────────
+function navegarSello(dir) {
+  if (!currentStampId) return;
+  const filtered = getFiltered();
+  const idx = filtered.findIndex(s => s.edifil === currentStampId);
+  if (idx === -1) return;
+  const nextIdx = idx + dir;
+  if (nextIdx < 0 || nextIdx >= filtered.length) return;
+  openStamp(filtered[nextIdx].edifil);
+}
+
+function actualizarNavModal() {
+  if (!currentStampId) return;
+  const filtered = getFiltered();
+  const idx = filtered.findIndex(s => s.edifil === currentStampId);
+  const btnPrev = document.getElementById('modalNavPrev');
+  const btnNext = document.getElementById('modalNavNext');
+  if (btnPrev) btnPrev.disabled = idx <= 0;
+  if (btnNext) btnNext.disabled = idx >= filtered.length - 1;
+}
+
+// Swipe táctil en el modal
+(function() {
+  let touchStartX = 0, touchStartY = 0;
+  document.addEventListener('touchstart', (e) => {
+    const modal = document.getElementById('modalOverlay');
+    if (!modal || !modal.classList.contains('open')) return;
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+
+  document.addEventListener('touchend', (e) => {
+    const modal = document.getElementById('modalOverlay');
+    if (!modal || !modal.classList.contains('open')) return;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    // Solo swipe horizontal claro (más horizontal que vertical, mínimo 60px)
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      navegarSello(dx < 0 ? 1 : -1); // swipe izq = siguiente, swipe der = anterior
+    }
+  }, { passive: true });
+})();
+
+// Teclas ← → cuando el modal está abierto
+document.addEventListener('keydown', (e) => {
+  const modal = document.getElementById('modalOverlay');
+  if (!modal || !modal.classList.contains('open')) return;
+  // No interferir si se está editando un campo de texto
+  if (['INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName)) return;
+  if (e.key === 'ArrowLeft')  { e.preventDefault(); navegarSello(-1); }
+  if (e.key === 'ArrowRight') { e.preventDefault(); navegarSello(1); }
+});
+// ── Fin navegación modal ──────────────────────────────────────────────────────
+
+function openStamp(edifil) {
+  const s = stamps.find(x => x.edifil === edifil);
+  if (!s) return;
+  currentStampId = edifil;
+  fillModal(s);
+  document.getElementById('btnDelete').style.display = '';
+  document.getElementById('modalOverlay').classList.add('open');
+  history.pushState({ view: 'sello', edifil: currentStampId }, '', '');
+  // Aplicar readonly si no es editor
+  const formInputs = document.querySelectorAll('#modal .form-input, #modal .form-select, #modal .form-textarea');
+  formInputs.forEach(el => { el.readOnly = !isEditor(); el.style.pointerEvents = isEditor() ? '' : 'none'; el.style.background = isEditor() ? '' : '#f5f0e8'; });
+  applyAuthUI();
+  actualizarNavModal(); // Actualizar estado botones anterior/siguiente
+}
+function openNew() {
+  if (!isEditor()) { showToast('🔒 Inicia sesión para añadir sellos'); return; }
+  currentStampId = null;
+  fillModal({edifil:'',año:'',descripcion:'',color:'',valor_facial:'',dentado:'',estado:'',filigrana:'',delante:null,detras:null,referencia:null,notas:''});
+  document.getElementById('btnDelete').style.display = 'none';
+  document.getElementById('modalOverlay').classList.add('open');
+  history.pushState({ view: 'modal' }, '', '');
+}
+function fillModal(s) {
+  document.getElementById('mEdifil').textContent = s.edifil ? `Edifil nº ${s.edifil}` : 'Nuevo sello';
+  document.getElementById('mTitle').textContent = s.descripcion || 'Nuevo sello';
+  document.getElementById('fEdifil').value = s.edifil || '';
+  document.getElementById('fAño').value = s.año || '';
+  document.getElementById('fDesc').value = s.descripcion || '';
+  document.getElementById('fColor').value = s.color || '';
+  document.getElementById('fValor').value = s.valor_facial || '';
+  document.getElementById('fNotas').value = s.notas || '';
+  const dSel = document.getElementById('fDentado');
+  dSel.value = s.dentado || '';
+  if (s.dentado && !Array.from(dSel.options).some(o => o.value === s.dentado)) {
+    const o = document.createElement('option'); o.value = s.dentado; o.textContent = s.dentado; dSel.appendChild(o);
+  }
+  dSel.value = s.dentado || '';
+  const eSel = document.getElementById('fEstado');
+  if (s.estado && !Array.from(eSel.options).some(o => o.value === s.estado)) {
+    const o = document.createElement('option'); o.value = s.estado; o.textContent = s.estado; eSel.appendChild(o);
+  }
+  eSel.value = s.estado || '';
+
+  // Campo filigrana: solo aparece para los 12 sellos relevantes
+  const fil = getFiligranaSello(s);
+  const grupoFil = document.getElementById('grupoFiligrana');
+  const selFil = document.getElementById('fFiligrana');
+  if (fil) {
+    grupoFil.style.display = '';
+    selFil.innerHTML = fil.opciones.map(op => `<option value="${op}">${op}</option>`).join('');
+    selFil.value = s.filigrana || fil.opciones[0];
+  } else {
+    grupoFil.style.display = 'none';
+    selFil.value = '';
+  }
+
+  // Aviso de filigrana en el modal
+  const avisoEl = document.getElementById('filigrana-aviso-modal');
+  // const fil removed duplicate
+  if (fil) {
+    if (fil.requerida === 'Sin filigrana') {
+      // 47-50: estos no llevan filigrana, solo info discreta
+      avisoEl.innerHTML = `<div class="filigrana-aviso requerida">ℹ️ Este sello (<strong>Edifil ${s.edifil}</strong>) no lleva filigrana. Si alguien te lo vende como Edifil ${s.edifil - 4} (con filigrana ${FILIGRANAS_REQUERIDAS[s.edifil-4]?.tipo}), sería incorrecto.</div>`;
+    } else if (!fil.registrada) {
+      avisoEl.innerHTML = `<div class="filigrana-aviso requerida">⚠️ <strong>Atención:</strong> Este sello debe llevar filigrana de <strong>${fil.requerida}</strong> para ser auténtico. Verifícala antes de comprarlo.</div>`;
+    } else if (fil.registrada === fil.requerida) {
+      avisoEl.innerHTML = `<div class="filigrana-aviso ok">✓ <strong>Filigrana verificada:</strong> ${fil.registrada}. Este sello está correctamente autentificado.</div>`;
+    } else {
+      avisoEl.innerHTML = `<div class="filigrana-aviso alerta">⚠️ <strong>Revisar:</strong> Tiene registrada filigrana <strong>${fil.registrada}</strong> pero debería ser <strong>${fil.requerida}</strong>. Comprueba la autenticidad.</div>`;
+    }
+  } else {
+    avisoEl.innerHTML = '';
+  }
+
+  // Bloque de precios Edifil 2020 — usa Sheets si disponible, si no el array local
+  const precioEl = document.getElementById('precio-edifil-modal');
+  const precioLocal = PRECIOS_EDIFIL[s.edifil];
+  const nuevo = s.precio_nuevo != null ? s.precio_nuevo : (precioLocal ? precioLocal[0] : null);
+  const usado = s.precio_usado != null ? s.precio_usado : (precioLocal ? precioLocal[1] : null);
+  if (nuevo != null) {
+    const usadoHtml = usado != null
+      ? `<div class="precio-item"><span class="precio-item-label">Usado</span><span class="precio-item-valor">${Number(usado).toLocaleString('es-ES')} €</span></div>`
+      : '';
+    precioEl.innerHTML = `<div class="precio-edifil">
+      <span class="precio-edifil-titulo">📋 Edifil 2020</span>
+      <div class="precio-edifil-valores">
+        <div class="precio-item"><span class="precio-item-label">Nuevo</span><span class="precio-item-valor">${Number(nuevo).toLocaleString('es-ES')} €</span></div>
+        ${usadoHtml}
+      </div>
+      <span class="precio-nota">Calidad Normal · Catálogo 2020</span>
+    </div>`;
+  } else {
+    precioEl.innerHTML = '';
+  }
+
+  setPhotoSlot('referencia', s.referencia);
+  setPhotoSlot('delante', s.delante);
+  setPhotoSlot('detras', s.detras);
+}
+function closeModal(e) {
+  if (e && e.target !== document.getElementById('modalOverlay')) return;
+  document.getElementById('modalOverlay').classList.remove('open');
+  currentStampId = null;
+  // Limpiar entrada modal del historial para que atrás vaya a época
+  if (history.state && (history.state.view === 'sello' || history.state.view === 'modal')) {
+    history.replaceState({ view: 'epoca', epocaId: currentEpoca }, '', '');
+  }
+}
+function saveStamp() {
+  if (!isEditor()) { showToast('🔒 Sin permisos de edición'); return; }
+  const edifilRaw = document.getElementById('fEdifil').value.trim();
+  const edifil = isNaN(edifilRaw) ? edifilRaw : (parseInt(edifilRaw) || null);
+  if (!edifil) { alert('El número Edifil es obligatorio'); return; }
+  const data = {
+    edifil, año: parseInt(document.getElementById('fAño').value)||null,
+    descripcion: document.getElementById('fDesc').value.trim(),
+    color: document.getElementById('fColor').value.trim(),
+    valor_facial: document.getElementById('fValor').value.trim(),
+    dentado: document.getElementById('fDentado').value,
+    estado: document.getElementById('fEstado').value || null,
+    filigrana: document.getElementById('fFiligrana').value || null,
+    notas: document.getElementById('fNotas').value.trim(),
+    delante: null, detras: null
+  };
+  const existing = stamps.find(s => s.edifil === (currentStampId || edifil));
+  if (existing) { data.delante = existing.delante; data.detras = existing.detras; data.referencia = existing.referencia; }
+  if (currentStampId) {
+    const idx = stamps.findIndex(s => s.edifil === currentStampId);
+    if (idx >= 0) stamps[idx] = {...stamps[idx], ...data};
+  } else {
+    if (stamps.some(s => s.edifil === edifil)) { alert('Ya existe un sello con ese número Edifil'); return; }
+    stamps.push(data);
+    stamps.sort((a,b) => a.edifil - b.edifil);
+  }
+  saveToSheets(data);
+  renderStamps();
+  document.getElementById('modalOverlay').classList.remove('open');
+  // Reemplazar entrada modal por época, para que atrás vaya a portada (no quede huérfana)
+  if (history.state && (history.state.view === 'sello' || history.state.view === 'modal')) {
+    history.replaceState({ view: 'epoca', epocaId: currentEpoca }, '', '');
+  }
+}
+function deleteStamp() {
+  if (!isEditor()) { showToast('🔒 Sin permisos de edición'); return; }
+  if (!currentStampId) return;
+  if (!confirm(`¿Eliminar el sello Edifil nº ${currentStampId}?`)) return;
+  const edifil = currentStampId;
+  stamps = stamps.filter(s => s.edifil !== edifil);
+  saveLocal();
+  deleteFromSheets(edifil);
+  renderStamps();
+  document.getElementById('modalOverlay').classList.remove('open');
+  if (history.state && (history.state.view === 'sello' || history.state.view === 'modal')) {
+    history.replaceState({ view: 'epoca', epocaId: currentEpoca }, '', '');
+  }
+  showToast('Sello eliminado');
+}
+
+// ==================== PHOTOS ====================
+function setPhotoSlot(side, src) {
+  const slotId = side === 'delante' ? 'slotDelante' : side === 'detras' ? 'slotDetras' : 'slotReferencia';
+  const slot = document.getElementById(slotId);
+  const preview = slot.querySelector('.photo-slot-preview') || slot;
+  const existing = preview.querySelector('img');
+  if (existing) existing.remove();
+  slot.classList.remove('has-photo');
+  if (src) {
+    const img = document.createElement('img');
+    img.src = src;
+    const captions = { referencia: 'Imagen de referencia', delante: 'Mi sello · Cara delantera', detras: 'Mi sello · Cara trasera' };
+    img.addEventListener('click', (e) => { e.stopPropagation(); openLightbox(src, captions[side]||''); });
+    preview.insertBefore(img, preview.firstChild);
+    slot.classList.add('has-photo');
+    // Click en todo el preview (no solo la imagen)
+    preview.onclick = (e) => { e.stopPropagation(); openLightbox(src, captions[side]||''); };
+  }
+}
+function triggerPhoto(side) { currentPhotoTarget = side; document.getElementById('fileInput').click(); }
+function triggerPhotoCamera(side) { currentPhotoTarget = side; window._fromCamera = true; document.getElementById('fileCamera').click(); }
+function triggerPhotoGallery(side) { currentPhotoTarget = side; window._fromCamera = false; document.getElementById('fileGallery').click(); }
+
+// ── Drag & Drop y Paste en slots de foto ──────────────────────────────────────
+function initPhotoDragDrop() {
+  const slotsConfig = [
+    { id: 'slotDelante', side: 'delante' },
+    { id: 'slotDetras',  side: 'detras'  },
+  ];
+
+  slotsConfig.forEach(({ id, side }) => {
+    const slot = document.getElementById(id);
+    if (!slot) return;
+
+    // Drag over: resaltar
+    slot.addEventListener('dragover', (e) => {
+      if (!isEditor()) return;
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'copy';
+      slot.classList.add('drag-over');
+    });
+
+    // Drag leave: quitar resaltado
+    slot.addEventListener('dragleave', (e) => {
+      if (!slot.contains(e.relatedTarget)) slot.classList.remove('drag-over');
+    });
+
+    // Drop: procesar imagen
+    slot.addEventListener('drop', (e) => {
+      e.preventDefault();
+      slot.classList.remove('drag-over');
+      if (!isEditor()) { showToast('🔒 Inicia sesión para editar'); return; }
+      const file = e.dataTransfer.files[0] || null;
+      if (file && file.type.startsWith('image/')) {
+        processFileAsPhoto(file, side);
+        return;
+      }
+      // Si no hay archivo, puede ser una imagen arrastrada desde el navegador (URL)
+      const imgUrl = e.dataTransfer.getData('text/uri-list') || e.dataTransfer.getData('text/plain');
+      if (imgUrl && /^https?:\/\//.test(imgUrl)) {
+        fetchUrlAsPhoto(imgUrl, side);
+      }
+    });
+  });
+
+  // Paste global: Ctrl+V cuando el modal está abierto
+  document.addEventListener('paste', (e) => {
+    if (!isEditor()) return;
+    const modalSello = document.getElementById('modalOverlay');
+    const modalPrueba = document.getElementById('modalPrueba');
+    const selloAbierto = modalSello?.classList.contains('open');
+    const pruebaAbierta = modalPrueba?.classList.contains('open');
+    if (!selloAbierto && !pruebaAbierta) return;
+
+    const items = e.clipboardData?.items;
+    if (!items) return;
+
+    for (const item of items) {
+      if (item.type.startsWith('image/')) {
+        const file = item.getAsFile();
+        if (!file) continue;
+        if (pruebaAbierta) {
+          const side = window._currentPruebaPhotoSide || 'delante';
+          currentPhotoTarget = 'prueba_' + side;
+          window._currentPruebaPhotoSide = side;
+          const fakeInput = { files: [file] };
+          handlePhoto({ target: fakeInput });
+          showToast('📋 Imagen pegada en ' + (side === 'delante' ? 'Anverso' : 'Reverso'));
+        } else {
+          const target = currentPhotoTarget || 'delante';
+          processFileAsPhoto(file, target);
+          showToast('📋 Imagen pegada en ' + (target === 'delante' ? 'Anverso' : 'Reverso'));
+        }
+        e.preventDefault();
+        return;
+      }
+    }
+  });
+}
+
+// Procesar un File como si viniera del input de archivo (reutiliza todo el flujo existente)
+function processFileAsPhoto(file, side) {
+  currentPhotoTarget = side;
+  window._fromCamera = false;
+  // Crear un evento sintético compatible con handlePhoto
+  const dt = new DataTransfer();
+  dt.items.add(file);
+  const fakeInput = document.createElement('input');
+  fakeInput.type = 'file';
+  Object.defineProperty(fakeInput, 'files', { value: dt.files });
+  handlePhoto({ target: fakeInput });
+}
+
+// Cargar imagen desde URL externa (arrastre desde navegador)
+async function fetchUrlAsPhoto(url, side) {
+  try {
+    showToast('⏳ Cargando imagen...');
+    const resp = await fetch(url);
+    const blob = await resp.blob();
+    if (!blob.type.startsWith('image/')) { showToast('❌ No es una imagen válida'); return; }
+    const file = new File([blob], 'arrastrada.jpg', { type: blob.type });
+    processFileAsPhoto(file, side);
+  } catch(e) {
+    showToast('❌ No se pudo cargar la imagen');
+  }
+}
+// ── Fin Drag & Drop y Paste ───────────────────────────────────────────────────
+
+// ==================== RECORTADOR MANUAL ====================
+let _cropCallback = null;
+let _cropNatW = 1, _cropNatH = 1;   // tamaño real imagen
+let _cropDispW = 1, _cropDispH = 1; // tamaño display
+let _cropRect = { x:0, y:0, w:1, h:1 }; // en coords display
+
+const HANDLE_R = 10; // radio handles touch
+const HANDLES = ['tl','tm','tr','ml','mr','bl','bm','br','c'];
+
+function _getHandlePos(r) {
+  return {
+    tl:{ x:r.x,           y:r.y           },
+    tm:{ x:r.x+r.w/2,     y:r.y           },
+    tr:{ x:r.x+r.w,       y:r.y           },
+    ml:{ x:r.x,           y:r.y+r.h/2     },
+    mr:{ x:r.x+r.w,       y:r.y+r.h/2     },
+    bl:{ x:r.x,           y:r.y+r.h       },
+    bm:{ x:r.x+r.w/2,     y:r.y+r.h       },
+    br:{ x:r.x+r.w,       y:r.y+r.h       },
+    c: { x:r.x+r.w/2,     y:r.y+r.h/2     }
+  };
+}
+
+function _hitHandle(px, py, r) {
+  const pts = _getHandlePos(r);
+  for (const h of HANDLES) {
+    const d = Math.hypot(px - pts[h].x, py - pts[h].y);
+    if (d <= HANDLE_R + 4) return h;
+  }
+  return null;
+}
+
+function _drawCrop() {
+  const ov = document.getElementById('cropOverlay');
+  const ctx = ov.getContext('2d');
+  const W = ov.width, H = ov.height;
+  ctx.clearRect(0, 0, W, H);
+  const r = _cropRect;
+
+  // Oscurecer fuera
+  ctx.fillStyle = 'rgba(0,0,0,0.55)';
+  ctx.fillRect(0, 0, W, r.y);
+  ctx.fillRect(0, r.y, r.x, r.h);
+  ctx.fillRect(r.x+r.w, r.y, W-r.x-r.w, r.h);
+  ctx.fillRect(0, r.y+r.h, W, H-r.y-r.h);
+
+  // Borde dorado
+  ctx.strokeStyle = '#b8860b';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(r.x+1, r.y+1, r.w-2, r.h-2);
+
+  // Regla de tercios (tenue)
+  ctx.strokeStyle = 'rgba(184,134,11,0.25)';
+  ctx.lineWidth = 1;
+  for (let i=1; i<3; i++) {
+    ctx.beginPath(); ctx.moveTo(r.x + r.w*i/3, r.y); ctx.lineTo(r.x + r.w*i/3, r.y+r.h); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(r.x, r.y + r.h*i/3); ctx.lineTo(r.x+r.w, r.y + r.h*i/3); ctx.stroke();
+  }
+
+  // Handles
+  const pts = _getHandlePos(r);
+  for (const h of HANDLES) {
+    if (h === 'c') continue;
+    ctx.fillStyle = '#b8860b';
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(pts[h].x, pts[h].y, HANDLE_R, 0, Math.PI*2);
+    ctx.fill(); ctx.stroke();
+  }
+
+  // Info tamaño
+  const scaleX = _cropNatW / _cropDispW;
+  const scaleY = _cropNatH / _cropDispH;
+  const pw = Math.round(r.w * scaleX), ph = Math.round(r.h * scaleY);
+  ctx.fillStyle = 'rgba(184,134,11,0.9)';
+  ctx.font = '13px Crimson Pro, serif';
+  ctx.fillText(`${pw} × ${ph}px`, r.x + 6, r.y + r.h - 7);
+}
+
+// ── Interacción ─────────────────────────────────────────
+let _drag = null;
+let _dragStart = {};
+
+function _pointerPos(e, el) {
+  const rect = el.getBoundingClientRect();
+  const src = e.touches ? e.touches[0] : e;
+  return { x: src.clientX - rect.left, y: src.clientY - rect.top };
+}
+
+function _clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+const MIN_SIZE = 20;
+
+function _onPointerDown(e) {
+  e.preventDefault();
+  const ov = document.getElementById('cropOverlay');
+  const p = _pointerPos(e, ov);
+  const hit = _hitHandle(p.x, p.y, _cropRect);
+  _drag = hit || null;
+  _dragStart = { p, rect: {..._cropRect} };
+}
+
+function _onPointerMove(e) {
+  if (!_drag) return;
+  e.preventDefault();
+  const ov = document.getElementById('cropOverlay');
+  const p = _pointerPos(e, ov);
+  const dx = p.x - _dragStart.p.x, dy = p.y - _dragStart.p.y;
+  const s = _dragStart.rect;
+  const W = _cropDispW, H = _cropDispH;
+  let {x, y, w, h} = s;
+
+  if (_drag === 'c') {
+    x = _clamp(s.x + dx, 0, W - w);
+    y = _clamp(s.y + dy, 0, H - h);
+  } else {
+    if (_drag.includes('l')) { const nx = _clamp(s.x+dx, 0, s.x+s.w-MIN_SIZE); w = s.w-(nx-s.x); x = nx; }
+    if (_drag.includes('r')) { w = _clamp(s.w+dx, MIN_SIZE, W-s.x); }
+    if (_drag.includes('t')) { const ny = _clamp(s.y+dy, 0, s.y+s.h-MIN_SIZE); h = s.h-(ny-s.y); y = ny; }
+    if (_drag.includes('b')) { h = _clamp(s.h+dy, MIN_SIZE, H-s.y); }
+    if (_drag === 'tm' || _drag === 'bm') x = s.x;
+    if (_drag === 'ml' || _drag === 'mr') y = s.y;
+  }
+  _cropRect = {x, y, w, h};
+  _drawCrop();
+}
+
+function _onPointerUp(e) { _drag = null; }
+
+function _initCropEvents() {
+  const ov = document.getElementById('cropOverlay');
+  // Guardar dimensiones antes de clonar
+  const w = ov.width, h = ov.height, sw = ov.style.width, sh = ov.style.height;
+  // Limpiar listeners previos clonando
+  const fresh = ov.cloneNode(false);
+  // Restaurar dimensiones en el clon
+  fresh.width = w; fresh.height = h;
+  fresh.style.width = sw; fresh.style.height = sh;
+  ov.parentNode.replaceChild(fresh, ov);
+  fresh.addEventListener('mousedown',  _onPointerDown);
+  fresh.addEventListener('touchstart', _onPointerDown, {passive:false});
+  window.addEventListener('mousemove',  _onPointerMove);
+  window.addEventListener('touchmove',  _onPointerMove, {passive:false});
+  window.addEventListener('mouseup',   _onPointerUp);
+  window.addEventListener('touchend',  _onPointerUp);
+}
+
+
+// ── Auto-detección del sello ────────────────────────────────
+// Optimizado para fondo oscuro/negro y sello con borde blanco
+function _autoDetectStamp(canvas) {
+  try {
+    const W = canvas.width, H = canvas.height;
+    // Trabajar en miniatura para velocidad
+    const SCALE = Math.min(1, 300 / Math.max(W, H));
+    const sw = Math.max(1, Math.round(W * SCALE));
+    const sh = Math.max(1, Math.round(H * SCALE));
+    const small = document.createElement('canvas');
+    small.width = sw; small.height = sh;
+    const sCtx = small.getContext('2d');
+    sCtx.drawImage(canvas, 0, 0, sw, sh);
+    const d = sCtx.getImageData(0, 0, sw, sh).data;
+
+    // Calcular luma media del borde exterior para saber si fondo es oscuro o claro
+    let borderSum = 0, borderCount = 0;
+    for (let x = 0; x < sw; x++) {
+      for (const y of [0, 1, sh-2, sh-1]) {
+        const i = (y * sw + x) * 4;
+        borderSum += 0.299*d[i] + 0.587*d[i+1] + 0.114*d[i+2];
+        borderCount++;
+      }
+    }
+    for (let y = 0; y < sh; y++) {
+      for (const x of [0, 1, sw-2, sw-1]) {
+        const i = (y * sw + x) * 4;
+        borderSum += 0.299*d[i] + 0.587*d[i+1] + 0.114*d[i+2];
+        borderCount++;
+      }
+    }
+    const bgLuma = borderSum / borderCount;
+
+    // Umbral: si fondo oscuro (<80) buscar píxeles claros, si fondo claro buscar oscuros
+    const darkBg = bgLuma < 80;
+    const THRESH = darkBg ? 60 : 180; // luma mínima (dark bg) o máxima (light bg)
+
+    let minX = sw, maxX = 0, minY = sh, maxY = 0, found = false;
+    const margin = Math.round(Math.min(sw, sh) * 0.02);
+    for (let y = margin; y < sh - margin; y++) {
+      for (let x = margin; x < sw - margin; x++) {
+        const i = (y * sw + x) * 4;
+        const luma = 0.299*d[i] + 0.587*d[i+1] + 0.114*d[i+2];
+        const isStamp = darkBg ? luma > THRESH : luma < THRESH;
+        if (isStamp) {
+          if (x < minX) minX = x; if (x > maxX) maxX = x;
+          if (y < minY) minY = y; if (y > maxY) maxY = y;
+          found = true;
+        }
+      }
+    }
+
+    if (!found || (maxX - minX) < sw * 0.05 || (maxY - minY) < sh * 0.05) return null;
+
+    // Pequeño margen y escalar a tamaño real
+    const pad = Math.round(Math.min(sw, sh) * 0.015);
+    return {
+      x: Math.max(0, Math.round((minX - pad) / SCALE)),
+      y: Math.max(0, Math.round((minY - pad) / SCALE)),
+      w: Math.min(W, Math.round((maxX - minX + pad * 2) / SCALE)),
+      h: Math.min(H, Math.round((maxY - minY + pad * 2) / SCALE))
+    };
+  } catch(e) {
+    console.warn('autoDetect error:', e);
+    return null;
+  }
+}
+
+function showCropModal(sourceCanvas, callback) {
+  _cropCallback = callback;
+  _cropNatW = sourceCanvas.width;
+  _cropNatH = sourceCanvas.height;
+  showCropModal._src = sourceCanvas;
+
+  // Ocultar modal del sello mientras se recorta (antes de calcular viewport)
+  const stampModal = document.getElementById('modalOverlay');
+  const stampWasOpen = stampModal.classList.contains('open');
+  if (stampWasOpen) stampModal.classList.remove('open');
+  showCropModal._stampWasOpen = stampWasOpen;
+
+  // Abrir cropModal primero para que el viewport sea correcto al medir
+  document.getElementById('cropModal').classList.add('open');
+
+  // Usar rAF para que el DOM ya tenga las dimensiones reales (crítico en móvil)
+  requestAnimationFrame(() => {
+    const maxW = Math.max(200, Math.floor(window.innerWidth  * 0.90));
+    const maxH = Math.max(150, Math.floor(window.innerHeight * 0.62));
+    const scale = Math.min(1, maxW / _cropNatW, maxH / _cropNatH);
+    _cropDispW = Math.max(1, Math.round(_cropNatW * scale));
+    _cropDispH = Math.max(1, Math.round(_cropNatH * scale));
+
+    const bg = document.getElementById('cropBg');
+    bg.width  = _cropDispW;
+    bg.height = _cropDispH;
+    bg.style.width  = _cropDispW + 'px';
+    bg.style.height = _cropDispH + 'px';
+    bg.getContext('2d').drawImage(sourceCanvas, 0, 0, _cropDispW, _cropDispH);
+
+    const ov = document.getElementById('cropOverlay');
+    ov.width  = _cropDispW;
+    ov.height = _cropDispH;
+    ov.style.width  = _cropDispW + 'px';
+    ov.style.height = _cropDispH + 'px';
+
+    // Autodetección del sello
+    const _det = _autoDetectStamp(sourceCanvas);
+    if (_det) {
+      const scX=_cropDispW/_cropNatW, scY=_cropDispH/_cropNatH;
+      _cropRect={x:Math.round(_det.x*scX),y:Math.round(_det.y*scY),
+                 w:Math.round(_det.w*scX),h:Math.round(_det.h*scY)};
+      document.getElementById('cropHint').textContent='Sello detectado automáticamente — ajusta si es necesario';
+    } else {
+      const pad=0.10;
+      _cropRect={x:Math.round(_cropDispW*pad),y:Math.round(_cropDispH*pad),
+                 w:Math.round(_cropDispW*(1-pad*2)),h:Math.round(_cropDispH*(1-pad*2))};
+    }
+
+    _initCropEvents();
+    _drawCrop();
+  });
+}
+
+function rotateCrop() {
+  const src = showCropModal._src;
+  if (!src) return;
+
+  // Rotar el canvas fuente 90° en sentido horario
+  const rotated = document.createElement('canvas');
+  rotated.width  = src.height;
+  rotated.height = src.width;
+  const ctx = rotated.getContext('2d');
+  ctx.translate(rotated.width / 2, rotated.height / 2);
+  ctx.rotate(Math.PI / 2);
+  ctx.drawImage(src, -src.width / 2, -src.height / 2);
+
+  // Actualizar el canvas fuente
+  showCropModal._src = rotated;
+  _cropNatW = rotated.width;
+  _cropNatH = rotated.height;
+
+  // Recalcular escala de display
+  const maxW = Math.max(200, Math.floor(window.innerWidth  * 0.90));
+  const maxH = Math.max(150, Math.floor(window.innerHeight * 0.62));
+  const scale = Math.min(1, maxW / _cropNatW, maxH / _cropNatH);
+  _cropDispW = Math.max(1, Math.round(_cropNatW * scale));
+  _cropDispH = Math.max(1, Math.round(_cropNatH * scale));
+
+  // Redibujar el fondo
+  const bg = document.getElementById('cropBg');
+  bg.width  = _cropDispW; bg.height = _cropDispH;
+  bg.style.width  = _cropDispW + 'px'; bg.style.height = _cropDispH + 'px';
+  bg.getContext('2d').drawImage(rotated, 0, 0, _cropDispW, _cropDispH);
+
+  // Redibujar el overlay con las nuevas dimensiones
+  const ov = document.getElementById('cropOverlay');
+  ov.width  = _cropDispW; ov.height = _cropDispH;
+  ov.style.width  = _cropDispW + 'px'; ov.style.height = _cropDispH + 'px';
+
+  // Re-autodetectar en la imagen rotada
+  const det = _autoDetectStamp(rotated);
+  if (det) {
+    const scX = _cropDispW / _cropNatW, scY = _cropDispH / _cropNatH;
+    _cropRect = { x: Math.round(det.x * scX), y: Math.round(det.y * scY),
+                  w: Math.round(det.w * scX), h: Math.round(det.h * scY) };
+    document.getElementById('cropHint').textContent = 'Sello detectado — ajusta si es necesario';
+  } else {
+    const pad = 0.10;
+    _cropRect = { x: Math.round(_cropDispW * pad), y: Math.round(_cropDispH * pad),
+                  w: Math.round(_cropDispW * (1 - pad*2)), h: Math.round(_cropDispH * (1 - pad*2)) };
+  }
+
+  _initCropEvents();
+  _drawCrop();
+}
+
+function confirmCrop(doCrop) {
+  document.getElementById('cropModal').classList.remove('open');
+  // Restaurar modal del sello
+  if (showCropModal._stampWasOpen) {
+    document.getElementById('modalOverlay').classList.add('open');
+    showCropModal._stampWasOpen = false;
+  }
+  const src = showCropModal._src;
+  let result = src;
+  if (doCrop && src) {
+    const scaleX = _cropNatW / _cropDispW;
+    const scaleY = _cropNatH / _cropDispH;
+    const rx = Math.round(_cropRect.x * scaleX);
+    const ry = Math.round(_cropRect.y * scaleY);
+    const rw = Math.round(_cropRect.w * scaleX);
+    const rh = Math.round(_cropRect.h * scaleY);
+    const out = document.createElement('canvas');
+    out.width = rw; out.height = rh;
+    out.getContext('2d').drawImage(src, rx, ry, rw, rh, 0, 0, rw, rh);
+    result = out;
+  }
+  showCropModal._src = null;
+  if (_cropCallback) { _cropCallback(result); _cropCallback = null; }
+}
+
+async function handlePhoto(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const canvas = document.createElement('canvas');
+
+  // Lee orientación EXIF manualmente para corregir fotos de móvil giradas
+  async function getExifOrientation(file) {
+    try {
+      const buf = await file.slice(0, 65536).arrayBuffer();
+      const view = new DataView(buf);
+      if (view.getUint16(0) !== 0xFFD8) return 1;
+      let offset = 2;
+      while (offset < view.byteLength - 2) {
+        const marker = view.getUint16(offset);
+        offset += 2;
+        if (marker === 0xFFE1) {
+          if (view.getUint32(offset + 2, false) !== 0x45786966) return 1;
+          const little = view.getUint16(offset + 8) === 0x4949;
+          const ifdOffset = view.getUint32(offset + 14, little);
+          const entries = view.getUint16(offset + 8 + ifdOffset, little);
+          for (let i = 0; i < entries; i++) {
+            const entryOffset = offset + 8 + ifdOffset + 2 + i * 12;
+            if (view.getUint16(entryOffset, little) === 0x0112) {
+              return view.getUint16(entryOffset + 8, little);
             }
+          }
+          return 1;
+        }
+        if ((marker & 0xFF00) !== 0xFF00) break;
+        offset += view.getUint16(offset);
+      }
+    } catch(e) {}
+    return 1;
+  }
 
-            // Función: Activar vista LISTA
-            function activarVistaLista() {
-                todosContenedores.forEach(cont => {
-                    cont.classList.add('vista-lista');
-                });
-                btnList.classList.add('activo');
-                btnGrid.classList.remove('activo');
-            }
+  async function loadImageWithOrientation(file) {
+    // Intentar createImageBitmap primero (respeta EXIF en navegadores modernos)
+    try {
+      const bmp = await createImageBitmap(file);
+      const c = document.createElement('canvas');
+      c.width = bmp.width; c.height = bmp.height;
+      c.getContext('2d').drawImage(bmp, 0, 0);
+      bmp.close();
+      return c;
+    } catch(e) {}
 
-            // Event listeners para los botones
-            if (btnGrid) {
-                btnGrid.addEventListener('click', activarVistaGrid);
-            }
+    // Fallback: Image + corrección manual EXIF
+    return new Promise(async (resolve) => {
+      const orientation = await getExifOrientation(file);
+      const objectUrl = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        URL.revokeObjectURL(objectUrl);
+        const c = document.createElement('canvas');
+        const swap = orientation >= 5 && orientation <= 8;
+        c.width  = swap ? img.height : img.width;
+        c.height = swap ? img.width  : img.height;
+        const ctx = c.getContext('2d');
+        switch (orientation) {
+          case 2: ctx.transform(-1, 0, 0, 1, c.width, 0); break;
+          case 3: ctx.transform(-1, 0, 0, -1, c.width, c.height); break;
+          case 4: ctx.transform(1, 0, 0, -1, 0, c.height); break;
+          case 5: ctx.transform(0, 1, 1, 0, 0, 0); break;
+          case 6: ctx.transform(0, 1, -1, 0, c.height, 0); break;
+          case 7: ctx.transform(0, -1, -1, 0, c.height, c.width); break;
+          case 8: ctx.transform(0, -1, 1, 0, 0, c.width); break;
+          default: break;
+        }
+        ctx.drawImage(img, 0, 0);
+        resolve(c);
+      };
+      img.src = objectUrl;
+    });
+  }
 
-            if (btnList) {
-                btnList.addEventListener('click', activarVistaLista);
-            }
+  try {
+    const srcCanvas = await loadImageWithOrientation(file);
 
-            // =============================================
-            // 2. BUSCADOR
-            // =============================================
-            const buscador = document.getElementById('buscador');
-            
-            if (buscador) {
-                buscador.addEventListener('input', function() {
-                    const texto = this.value.toLowerCase();
-                    
-                    // Busca en todos los items (sellos y pruebas)
-                    const todosItems = document.querySelectorAll('.sello-item, .prueba-item, tr');
-                    
-                    todosItems.forEach(item => {
-                        const contenido = item.textContent.toLowerCase();
-                        if (contenido.includes(texto)) {
-                            item.style.display = '';
-                        } else {
-                            item.style.display = 'none';
-                        }
-                    });
-                });
-            }
+    // Redimensionar si es muy grande
+    const MAX = 1400;
+    let w = srcCanvas.width, h = srcCanvas.height;
+    if (w > MAX || h > MAX) {
+      if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
+      else { w = Math.round(w * MAX / h); h = MAX; }
+    }
+    canvas.width = w; canvas.height = h;
+    canvas.getContext('2d').drawImage(srcCanvas, 0, 0, w, h);
 
-            // =============================================
-            // 3. MODO OSCURO
-            // =============================================
-            const btnDark = document.getElementById('btn-darkmode');
-            
-            if (btnDark) {
-                btnDark.addEventListener('click', function() {
-                    document.body.classList.toggle('dark-mode');
-                });
-            }
+    const uploadCanvas = async (finalCanvas) => {
+      const previewSrc = finalCanvas.toDataURL('image/jpeg', 0.85);
+      setPhotoSlot(currentPhotoTarget, previewSrc);
+      showToast('Subiendo foto...');
+      setSyncStatus('syncing', 'Subiendo foto a Cloudinary...');
 
-            // =============================================
-            // 4. BOTÓN IR ARRIBA
-            // =============================================
-            const btnArriba = document.getElementById('btn-arriba');
-            
-            if (btnArriba) {
-                btnArriba.addEventListener('click', function() {
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                });
-            }
+      finalCanvas.toBlob(async (blob) => {
+      try {
+        const formData = new FormData();
+        const esPrueba = currentPhotoTarget.startsWith('prueba_');
+        const uniqueName = (esPrueba ? 'prueba_oficial_' + currentPruebaId : 'sello_' + currentStampId) + '_' + currentPhotoTarget + '_' + Date.now() + '.jpg';
+        formData.append('file', blob, uniqueName);
+        formData.append('upload_preset', _cfg().preset);
+        formData.append('folder', esPrueba ? 'sellos/pruebas-oficiales/mios' : 'sellos/' + currentEpoca + '/mios');
 
-            // =============================================
-            // 5. NAVEGACIÓN DE ÉPOCAS
-            // =============================================
-            const epocaBtns = document.querySelectorAll('.epoca-btn');
-            const contenedorSellos = document.getElementById('contenedor-sellos');
-            const contenedorPruebas = document.getElementById('contenedor-pruebas');
-
-            epocaBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const epoca = this.dataset.epoca;
-                    
-                    // Mostrar/ocultar contenedores según la época
-                    if (epoca === 'pruebas') {
-                        contenedorSellos.style.display = 'none';
-                        contenedorPruebas.style.display = 'grid';
-                    } else {
-                        contenedorSellos.style.display = 'grid';
-                        contenedorPruebas.style.display = 'none';
-                    }
-
-                    // Actualizar botón activo
-                    epocaBtns.forEach(b => b.style.background = 'white');
-                    this.style.background = '#007bff';
-                    this.style.color = 'white';
-                });
-            });
-
-            // =============================================
-            // 6. MODALES (Editar sello/prueba)
-            // =============================================
-            const modalSello = document.getElementById('modal-sello');
-            const modalPrueba = document.getElementById('modal-prueba');
-
-            // Cerrar modales
-            document.getElementById('cancelar-sello')?.addEventListener('click', () => {
-                modalSello.style.display = 'none';
-            });
-
-            document.getElementById('cancelar-prueba')?.addEventListener('click', () => {
-                modalPrueba.style.display = 'none';
-            });
-
-            // Cerrar al hacer clic fuera del modal
-            window.addEventListener('click', function(event) {
-                if (event.target === modalSello) {
-                    modalSello.style.display = 'none';
-                }
-                if (event.target === modalPrueba) {
-                    modalPrueba.style.display = 'none';
-                }
-            });
-
-            // =============================================
-            // 7. ESTADO DE CONEXIÓN GOOGLE SHEETS
-            // =============================================
-            const connectionStatus = document.getElementById('connection-status');
-            
-            // Simular estado de conexión (esto se actualizará con tu código real de Google Sheets)
-            setTimeout(() => {
-                if (connectionStatus) {
-                    connectionStatus.className = 'connection-status readonly';
-                    connectionStatus.innerHTML = '🔒 Modo solo lectura — inicia sesión con tu cuenta de Google para editar la colección';
-                }
-            }, 2000);
-
-            // =============================================
-            // 8. CARGA DE DATOS DESDE GOOGLE SHEETS
-            // =============================================
-            // Aquí iría tu código existente de conexión con Google Sheets
-            // No lo he modificado para no romper tu integración existente
-            
-            console.log('✅ Página cargada correctamente');
-            console.log('✅ Botones de vista funcionando para TODOS los contenedores');
+        const res = await fetch(`https://api.cloudinary.com/v1_1/${_cfg().cloud}/image/upload`, {
+          method: 'POST',
+          body: formData
         });
-    </script>
+        const json = await res.json();
+
+        if (json.secure_url) {
+          if (esPrueba) {
+            // Guardar foto en prueba oficial
+            const side = window._currentPruebaPhotoSide;
+            const pidx = PRUEBAS_OFICIALES_DATA.findIndex(p => p.id === currentPruebaId);
+            if (pidx >= 0) {
+              PRUEBAS_OFICIALES_DATA[pidx][side] = json.secure_url;
+              setPruebaSlot(side, json.secure_url);
+              try { localStorage.setItem('pruebas_oficiales', JSON.stringify(PRUEBAS_OFICIALES_DATA)); } catch(e) {}
+              savePruebaToSheets(PRUEBAS_OFICIALES_DATA[pidx]);
+              renderPruebas();
+            }
+            setSyncStatus('', 'Foto guardada en Cloudinary ✓');
+            showToast('Foto guardada ✓');
+          } else {
+          const idx = stamps.findIndex(s => s.edifil === currentStampId);
+          let autoEstadoMsg = '';
+
+if (idx >= 0) {
+  stamps[idx][currentPhotoTarget] = json.secure_url;
+  setPhotoSlot(currentPhotoTarget, json.secure_url);
+
+  if (!stamps[idx].estado) {
+    stamps[idx].estado = 'Nuevo';
+    const fEstado = document.getElementById('fEstado');
+    if (fEstado) fEstado.value = 'Nuevo';
+    autoEstadoMsg = ' · marcado como Nuevo ✓';
+    renderStamps();
+  }
+
+  await saveToSheets(stamps[idx]);
+  saveLocal();
+  renderStamps();
+}
+
+setSyncStatus('', 'Foto guardada en Cloudinary ✓');
+showToast('Foto guardada ✓' + autoEstadoMsg);
+          }
+        } else {
+          console.error('Cloudinary error:', json);
+          throw new Error(json.error?.message || 'Error en Cloudinary');
+        }
+      } catch(err) {
+        console.error(err);
+        const idx = stamps.findIndex(s => s.edifil === currentStampId);
+        if (idx >= 0) {
+          stamps[idx][currentPhotoTarget] = previewSrc;
+          // Auto-estado también en caso de error (guardado local)
+          if (!stamps[idx].estado) {
+            stamps[idx].estado = 'Nuevo';
+            const fEstado = document.getElementById('fEstado');
+            if (fEstado) fEstado.value = 'Nuevo';
+            showToast('Foto guardada localmente · marcado como Nuevo ✓');
+          }
+          saveLocal(); renderStamps();
+        }
+        setSyncStatus('error', 'Error subiendo foto — guardada localmente');
+        showToast('Error: ' + err.message);
+      }
+    }, 'image/jpeg', 0.88);
+    }; // fin uploadCanvas
+
+    showCropModal(canvas, uploadCanvas);
+    event.target.value = '';
+
+  } catch(err) {
+    console.error('Error procesando imagen:', err);
+    showToast('Error al cargar la imagen');
+    event.target.value = '';
+  }
+}
+async function removePhoto(side) {
+  if (!isEditor()) { showToast('🔒 Sin permisos de edición'); return; }
+  const idx = stamps.findIndex(s => s.edifil === currentStampId);
+  if (idx < 0) return;
+  setPhotoSlot(side, null);
+  stamps[idx][side] = null;
+  saveLocal();
+  renderStamps();
+  try {
+    await saveToSheets(stamps[idx]);
+    showToast('Imagen eliminada ✓');
+  } catch(err) {
+    showToast('Imagen eliminada localmente');
+  }
+}
+
+// ==================== LIGHTBOX ====================
+let lbScale = 1;
+let lbDrag = { active:false, startX:0, startY:0, curTx:0, curTy:0 };
+
+function openLightbox(src, caption) {
+  lbScale = 1; lbDrag = { active:false, startX:0, startY:0, curTx:0, curTy:0 };
+  const img = document.getElementById('lightboxImg');
+  img.style.transition = 'none';
+  img.style.transform = 'scale(1) translate(0,0)';
+  img.src = src;
+  document.getElementById('lightboxCaption').textContent = caption;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.getElementById('lightboxImg').src = '';
+  document.body.style.overflow = '';
+  lbScale = 1; lbDrag = { active:false, startX:0, startY:0, curTx:0, curTy:0 };
+}
+
+// Zoom con rueda — acumula destino, transición solo al soltar
+let lbWheelTimer = null;
+document.addEventListener('wheel', (e) => {
+  const lb = document.getElementById('lightbox');
+  if (!lb.classList.contains('open')) return;
+  e.preventDefault();
+  const img = document.getElementById('lightboxImg');
+  img.style.transition = 'none';
+  const factor = e.deltaY < 0 ? 1.1 : 0.91;
+  lbScale = Math.min(5, Math.max(1, lbScale * factor));
+  if (lbScale <= 1) { lbScale = 1; lbDrag.curTx = 0; lbDrag.curTy = 0; }
+  img.style.transform = `scale(${lbScale}) translate(${lbDrag.curTx}px,${lbDrag.curTy}px)`;
+  img.style.cursor = lbScale > 1 ? 'grab' : 'default';
+  clearTimeout(lbWheelTimer);
+  lbWheelTimer = setTimeout(() => {
+    img.style.transition = 'transform 0.2s cubic-bezier(0.22,1,0.36,1)';
+    img.style.transform = `scale(${lbScale}) translate(${lbDrag.curTx}px,${lbDrag.curTy}px)`;
+  }, 80);
+}, { passive: false });
+
+// ── TOUCH: pinch-zoom + pan ──────────────────────────────
+(function() {
+  const lb  = () => document.getElementById('lightbox');
+  const img = () => document.getElementById('lightboxImg');
+
+  let touch1 = null, touch2 = null;
+  let pinchStartDist = 0, pinchStartScale = 1;
+  let panStartX = 0, panStartY = 0;
+
+  function dist(a, b) {
+    return Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+  }
+
+  // Limita el pan para que la imagen nunca salga de la pantalla
+  function clampPan() {
+    if (lbScale <= 1) { lbDrag.curTx = 0; lbDrag.curTy = 0; return; }
+    const el = img();
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    // Tamaño real de la imagen en pantalla (sin escala CSS)
+    const iw = el.naturalWidth  ? Math.min(el.naturalWidth,  vw * 0.92) : vw * 0.92;
+    const ih = el.naturalHeight ? Math.min(el.naturalHeight, vh * 0.88) : vh * 0.88;
+    // El pan máximo es la mitad del espacio "ganado" al escalar
+    // Dividir por lbScale porque translate() actúa en espacio pre-escala
+    const maxTx = Math.max(0, (iw  * (lbScale - 1)) / (2 * lbScale));
+    const maxTy = Math.max(0, (ih  * (lbScale - 1)) / (2 * lbScale));
+    lbDrag.curTx = Math.min(maxTx, Math.max(-maxTx, lbDrag.curTx));
+    lbDrag.curTy = Math.min(maxTy, Math.max(-maxTy, lbDrag.curTy));
+  }
+
+  function applyTransform(instant) {
+    clampPan();
+    const el = img();
+    el.style.transition = instant ? 'none' : 'transform 0.25s cubic-bezier(0.22,1,0.36,1)';
+    el.style.transform = `scale(${lbScale}) translate(${lbDrag.curTx}px,${lbDrag.curTy}px)`;
+  }
+
+  document.addEventListener('touchstart', (e) => {
+    if (!lb().classList.contains('open')) return;
+    const touches = e.touches;
+    if (touches.length === 2) {
+      e.preventDefault();
+      touch1 = touches[0]; touch2 = touches[1];
+      pinchStartDist  = dist(touch1, touch2);
+      pinchStartScale = lbScale;
+    } else if (touches.length === 1 && lbScale > 1) {
+      e.preventDefault();
+      touch1 = touches[0];
+      panStartX  = touch1.clientX - lbDrag.curTx;
+      panStartY  = touch1.clientY - lbDrag.curTy;
+    }
+  }, { passive: false });
+
+  document.addEventListener('touchmove', (e) => {
+    if (!lb().classList.contains('open')) return;
+    const touches = e.touches;
+
+    if (touches.length === 2) {
+      e.preventDefault();
+      const newDist = dist(touches[0], touches[1]);
+      lbScale = Math.min(5, Math.max(1, pinchStartScale * (newDist / pinchStartDist)));
+      if (lbScale <= 1) { lbScale = 1; lbDrag.curTx = 0; lbDrag.curTy = 0; }
+      applyTransform(true);
+    } else if (touches.length === 1 && lbScale > 1) {
+      e.preventDefault();
+      lbDrag.curTx = touches[0].clientX - panStartX;
+      lbDrag.curTy = touches[0].clientY - panStartY;
+      applyTransform(true);
+    }
+  }, { passive: false });
+
+  document.addEventListener('touchend', (e) => {
+    if (!lb().classList.contains('open')) return;
+    if (e.touches.length < 2) {
+      // Si queda 1 dedo tras el pinch, reiniciar referencia de pan para evitar salto
+      if (e.touches.length === 1) {
+        touch1 = e.touches[0];
+        panStartX = touch1.clientX - lbDrag.curTx;
+        panStartY = touch1.clientY - lbDrag.curTy;
+      }
+      if (lbScale < 1.05) { lbScale = 1; lbDrag.curTx = 0; lbDrag.curTy = 0; }
+      // Sin transición — quedarse exactamente donde está
+      const el = img();
+      el.style.transition = 'none';
+      el.style.transform = `scale(${lbScale}) translate(${lbDrag.curTx}px,${lbDrag.curTy}px)`;
+      touch2 = null;
+    }
+    if (e.touches.length === 0) touch1 = null;
+  }, { passive: true });
+})();
+
+// Arrastrar con ratón
+(function() {
+  const img = document.getElementById('lightboxImg');
+  img.addEventListener('mousedown', (e) => {
+    if (lbScale <= 1) return;
+    e.preventDefault();
+    lbDrag.active = true;
+    lbDrag.startX = e.clientX - lbDrag.curTx;
+    lbDrag.startY = e.clientY - lbDrag.curTy;
+    img.style.cursor = 'grabbing';
+  });
+  document.addEventListener('mousemove', (e) => {
+    if (!lbDrag.active) return;
+    lbDrag.curTx = e.clientX - lbDrag.startX;
+    lbDrag.curTy = e.clientY - lbDrag.startY;
+    // Limitar para no salir de pantalla
+    const el = document.getElementById('lightboxImg');
+    const vw = window.innerWidth, vh = window.innerHeight;
+    const iw = el.naturalWidth  ? Math.min(el.naturalWidth,  vw * 0.92) : vw * 0.92;
+    const ih = el.naturalHeight ? Math.min(el.naturalHeight, vh * 0.88) : vh * 0.88;
+    const maxTx = Math.max(0, (iw * (lbScale - 1)) / (2 * lbScale));
+    const maxTy = Math.max(0, (ih * (lbScale - 1)) / (2 * lbScale));
+    lbDrag.curTx = Math.min(maxTx, Math.max(-maxTx, lbDrag.curTx));
+    lbDrag.curTy = Math.min(maxTy, Math.max(-maxTy, lbDrag.curTy));
+    el.style.transition = 'none';
+    el.style.transform = `scale(${lbScale}) translate(${lbDrag.curTx}px,${lbDrag.curTy}px)`;
+  });
+  document.addEventListener('mouseup', () => {
+    if (!lbDrag.active) return;
+    lbDrag.active = false;
+    document.getElementById('lightboxImg').style.cursor = lbScale > 1 ? 'grab' : 'default';
+  });
+})();
+
+// ==================== TOAST ====================
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ==================== INIT ====================
+
+function showPortada() {
+  // Cerrar sección pruebas si estuviera abierta
+  const secPruebas = document.getElementById('seccionPruebas');
+  if (secPruebas && secPruebas.classList.contains('open')) {
+    secPruebas.classList.remove('open');
+    secPruebas.style.paddingTop = '';
+    const hEpocas = document.getElementById('header-epocas-btns');
+    const hPruebas = document.getElementById('header-pruebas-btns');
+    if (hEpocas) hEpocas.style.display = 'flex';
+    if (hPruebas) hPruebas.style.display = 'none';
+    const tituloEl = document.getElementById('header-epoca-titulo');
+    if (tituloEl) tituloEl.innerHTML = '';
+    document.getElementById('gridView') && (document.getElementById('gridView').style.display = ''); document.getElementById('listView') && (document.getElementById('listView').style.display = '');
+    const sb = document.getElementById('syncBar');
+    if (sb) sb.style.display = '';
+  }
+  const portada = document.getElementById('portada');
+  portada.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  window.scrollTo(0, 0);
+  history.pushState({ view: 'portada' }, '', '');
+
+  const container = document.getElementById('portadaEpocas');
+  container.innerHTML = Object.values(EPOCAS).map(ep => {
+    const labelItem = ep.id === 'pruebas' ? 'pruebas' : 'sellos';
+    const totalLabel = epocasTotales[ep.id] !== undefined
+      ? `<strong>${epocasTotales[ep.id]}</strong>${labelItem}`
+      : `<strong style="opacity:0.4;font-size:0.8rem">…</strong>${labelItem}`;
+    const tengoLabel = epocasContadores[ep.id] !== undefined
+      ? `<strong>${epocasContadores[ep.id]}</strong>en colección`
+      : `<strong style="opacity:0.4;font-size:0.8rem">…</strong>en colección`;
+    return `
+    <div class="portada-card${ep.id === currentEpoca ? ' active' : ''}${ep.id === 'pruebas' ? ' pruebas-card' : ''}" data-epoca="${ep.id}" onclick="entrarEpoca('${ep.id}')">
+      <img class="portada-card-img" src="${ep.sello_ref}" onerror="this.style.display='none'" alt="">
+      <div class="portada-card-fecha">${ep.titulo.match(/\(.*?\)/)?.[0] || ''}</div>
+      <div class="portada-card-nombre">${ep.titulo.replace(/\(.*?\)\s*/,'')}</div>
+      <div class="portada-card-sub">${ep.subtitulo}</div>
+      <div class="portada-card-sellos">
+        <div>${totalLabel}</div>
+        <div>${tengoLabel}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function entrarEpoca(epocaId) {
+  // Las Pruebas Oficiales usan su propia sección y funciones
+  if (epocaId === 'pruebas') { entrarPruebas(); return; }
+  // Asegurar que el toolbar de épocas está visible (por si veníamos de pruebas)
+  const tw = document.getElementById('epocas-toolbar-wrap');
+  if (tw) tw.style.display = '';
+  currentEpoca = epocaId;
+  document.getElementById('portada').classList.remove('open');
+  document.body.style.overflow = '';
+  // En móvil: ocultar authPortada flotante, mostrar avatar en header si hay sesión
+  if (window.innerWidth <= 600) {
+    const ap = document.getElementById('authPortada');
+    if (ap) ap.style.display = 'none';
+    const av = document.getElementById('headerAvatar');
+    if (av && isEditor()) av.style.display = '';
+  }
+  // Asegurar que portada queda en el historial antes de la época
+  history.replaceState({ view: 'portada' }, '', '');
+  history.pushState({ view: 'epoca', epocaId }, '', '');
+  switchEpoca(epocaId);
+}
+
+function entrarColeccion() {
+  document.getElementById('portada').classList.remove('open');
+  document.body.style.overflow = '';
+  // En móvil: ocultar authPortada flotante, mostrar avatar en header si hay sesión
+  if (window.innerWidth <= 600) {
+    const ap = document.getElementById('authPortada');
+    if (ap) ap.style.display = 'none';
+    const av = document.getElementById('headerAvatar');
+    if (av && isEditor()) av.style.display = '';
+  }
+  switchEpoca(currentEpoca);
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+// Historia del navegador — botón atrás móvil (único listener)
+window.addEventListener('popstate', function(e) {
+  const state = e.state || {};
+
+  // 1. Cerrar lightbox si está abierto
+  if (document.getElementById('lightbox').classList.contains('open')) {
+    closeLightbox();
+    history.pushState({ view: state.view || 'epoca' }, '', '');
+    return;
+  }
+
+  // 2. Cerrar modal si está abierto
+  if (document.getElementById('modalOverlay').classList.contains('open')) {
+    document.getElementById('modalOverlay').classList.remove('open');
+    return;
+  }
+
+  // 3. Volver a portada si venimos de una época
+  if (state.view === 'portada' || state.view === undefined) {
+    if (!document.getElementById('portada').classList.contains('open')) {
+      showPortada();
+    }
+    return;
+  }
+
+  // 4. Si el estado es época pero la portada está oculta, volver a portada
+  if (!document.getElementById('portada').classList.contains('open')) {
+    showPortada();
+    return;
+  }
+});
+
+// Estado inicial
+history.replaceState({ view: 'portada' }, '', '');
+
+function switchEpoca(epocaId) {
+  currentEpoca = epocaId;
+  SHEET_URL = `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=${EPOCAS[epocaId].sheet}`;
+  const ep = EPOCAS[epocaId];
+  // Resetear filtro de stat al cambiar de época
+  activeStatFilter = null;
+  document.getElementById('statbox-tengo').classList.remove('active-filter');
+  document.getElementById('statbox-fotos').classList.remove('active-filter');
+  // Actualizar header
+  const tituloEl = document.getElementById('header-epoca-titulo');
+  tituloEl.innerHTML = '<span style="color:#e0b84a;font-style:italic">' + ep.titulo + '</span>';
+  document.getElementById('header-epoca-sub').textContent = ep.subtitulo;
+  loadFromSheets();
+}
+
+// Mostrar portada al inicio — esperar contadores de Sheets antes de renderizar
+const epocasTotales = {};
+const edifilEpocaMap = {}; // edifil -> epochId (construido en precargarContadores)
+
+async function precargarContadores() {
+  const promesas = Object.values(EPOCAS).map(async ep => {
+    try {
+      const url = `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(ep.sheet)}`;
+      const res = await fetch(url);
+      const text = await res.text();
+      const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\((.*)\);?$/s)[1]);
+      const rows = json.table?.rows || [];
+      const validRows = rows.filter(row => row.c && row.c[0] && row.c[0].v);
+      epocasTotales[ep.id] = validRows.length;
+      let count = 0;
+      validRows.forEach(row => {
+        if (ep.id !== 'pruebas') edifilEpocaMap[row.c[0].v] = ep.id; // mapear edifil -> época
+        if (row.c[6] && row.c[6].v) count++;
+      });
+      epocasContadores[ep.id] = count;
+    } catch(e) {}
+  });
+  await Promise.all(promesas);
+}
+
+async function iniciar() {
+  showPortada();
+  await precargarContadores();
+  showPortada();
+}
+
+iniciar();
+
+/* ── MODO OSCURO ── */
+function toggleDarkMode() {
+  const isDark = document.body.classList.toggle('dark-mode');
+  document.getElementById('darkModeIcon').textContent = isDark ? '☀️' : '🌙';
+  document.getElementById('darkModeTip').textContent  = isDark ? 'Modo claro' : 'Modo oscuro';
+  try { localStorage.setItem('menfis_dark', isDark ? '1' : '0'); } catch(e) {}
+}
+// Restaurar preferencia al cargar
+(function initDark() {
+  let saved = null;
+  try { saved = localStorage.getItem('menfis_dark'); } catch(e) {}
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  if (saved === '1' || (saved === null && prefersDark)) {
+    document.body.classList.add('dark-mode');
+    const icon = document.getElementById('darkModeIcon');
+    const tip  = document.getElementById('darkModeTip');
+    if (icon) icon.textContent = '☀️';
+    if (tip)  tip.textContent  = 'Modo claro';
+  }
+})();
+
+// ── PRUEBAS OFICIALES Y DEL ARTISTA ──────────────────────────────────────────
+let currentPruebaId = null;
+
+function entrarPruebas() {
+  // Ocultar portada y app principal, mostrar sección pruebas
+  document.getElementById('portada').classList.remove('open');
+  document.body.style.overflow = '';
+  const secPruebas = document.getElementById('seccionPruebas');
+  secPruebas.classList.add('open');
+  secPruebas.style.paddingTop = (window.innerWidth <= 600) ? '16px' : '24px';
+  // Actualizar header fijo igual que las épocas normales
+  const tituloEl = document.getElementById('header-epoca-titulo');
+  if (tituloEl) tituloEl.innerHTML = '<span style="color:#e0b84a;font-style:italic">Pruebas Oficiales y del Artista</span>';
+  const subEl = document.getElementById('header-epoca-sub');
+  if (subEl) { subEl.textContent = ''; subEl.style.display = 'none'; }
+  // Ocultar vistas de sellos pero mantener .main para resultsInfo
+  document.getElementById('gridView') && (document.getElementById('gridView').style.display = 'none');
+  document.getElementById('listView') && (document.getElementById('listView').style.display = 'none');
+  document.getElementById('syncBar') && (document.getElementById('syncBar').style.display = 'none');
+  document.getElementById('readOnlyNotice') && (document.getElementById('readOnlyNotice').style.display = 'none');
+  // Ocultar toolbar de épocas (búsqueda/filtros normales) — tiene su propio buscador
+  const toolbarWrap = document.getElementById('epocas-toolbar-wrap');
+  if (toolbarWrap) toolbarWrap.style.display = 'none';
+  // Intercambiar botones del header
+  const hEpocas = document.getElementById('header-epocas-btns');
+  const hPruebas = document.getElementById('header-pruebas-btns');
+  if (hEpocas) hEpocas.style.display = 'none';
+  if (hPruebas) hPruebas.style.display = 'flex';
+  history.pushState({ view: 'pruebas' }, '', '');
+  window.scrollTo(0, 0);
+  renderPruebas();
+  // Cargar desde Google Sheets si hay sesión
+  if (isEditor() || _googleCredentialToken) loadPruebasFromSheets();
+  // Móvil
+  if (window.innerWidth <= 600) {
+    const ap = document.getElementById('authPortada');
+    if (ap) ap.style.display = 'none';
+    const av = document.getElementById('headerAvatar');
+    if (av && isEditor()) av.style.display = '';
+  }
+}
+
+function volverPortadaDesdePruebas() {
+  document.getElementById('seccionPruebas').classList.remove('open');
+  document.getElementById('seccionPruebas').style.paddingTop = '';
+  // Restaurar botones del header
+  const hEpocas = document.getElementById('header-epocas-btns');
+  const hPruebas = document.getElementById('header-pruebas-btns');
+  if (hEpocas) hEpocas.style.display = 'flex';
+  if (hPruebas) hPruebas.style.display = 'none';
+  // Limpiar título del header fijo
+  const tituloEl = document.getElementById('header-epoca-titulo');
+  if (tituloEl) tituloEl.innerHTML = '';
+  // Restaurar contenido principal
+  document.getElementById('gridView') && (document.getElementById('gridView').style.display = ''); document.getElementById('listView') && (document.getElementById('listView').style.display = '');
+  const sb = document.getElementById('syncBar');
+  if (sb) sb.style.display = '';
+  // Restaurar toolbar de épocas
+  const tw = document.getElementById('epocas-toolbar-wrap');
+  if (tw) tw.style.display = '';
+  showPortada();
+}
+
+function etiquetaCodigo(codigo) {
+    if (codigo.startsWith('CALC-')) return '🖨️ Calcográfica ' + codigo.replace('CALC-','');
+    if (codigo.startsWith('ESP-'))  return '⭐ Prueba Especial ' + codigo.replace('ESP-','');
+    if (codigo.startsWith('ABONADOS-')) return '📋 Abonados ' + codigo.replace('ABONADOS-','');
+    if (codigo.startsWith('SN-'))   return 'S/N';
+    return 'Prueba nº ' + codigo;
+  }
+
+function renderPruebas() {
+  const grid = document.getElementById('pruebaGrid');
+const searchInput = document.getElementById('searchInputPruebas');
+const searchVal = (searchInput?.value || '').toLowerCase().trim();
+const info = document.getElementById('resultsInfoPruebas');
+
+  // Filtrar
+  const filtered = PRUEBAS_OFICIALES_DATA.filter(p => {
+    // Filtro por stat-box activo
+    if (activeStatFilter === 'tengo' && !p.estado) return false;
+    if (activeStatFilter === 'fotos' && !p.delante && !p.detras) return false;
+    if (searchVal) {
+      const haystack = [p.codigo, p.descripcion, String(p.año||'')].join(' ').toLowerCase();
+      if (!haystack.includes(searchVal)) return false;
+    }
+    return true;
+  });
+
+  const tengo = PRUEBAS_OFICIALES_DATA.filter(p => p.estado && p.estado !== '').length;
+  const conFoto = PRUEBAS_OFICIALES_DATA.filter(p => p.delante || p.detras).length;
+  // Actualizar stat-boxes del header fijo
+  const elTotal = document.getElementById('stat-total');
+  const elTengo = document.getElementById('stat-tengo');
+  const elFotos = document.getElementById('stat-fotos');
+  if (elTotal) elTotal.textContent = PRUEBAS_OFICIALES_DATA.length;
+  if (elTengo) elTengo.textContent = tengo;
+  if (elFotos) elFotos.textContent = conFoto;
+  const sfBox = document.getElementById('statbox-fotos');
+  if (sfBox) sfBox.style.display = '';
+  // Info de resultados reutilizando el mismo elemento de épocas
+  const ri = document.getElementById('resultsInfo');
+  if (ri) ri.textContent = `Mostrando ${filtered.length} de ${PRUEBAS_OFICIALES_DATA.length} pruebas`;
+  grid.innerHTML = filtered.map(p => {
+    const imgHtml = p.referencia
+      ? `<img src="${p.referencia}" alt="" loading="lazy">`
+      : `<div class="prueba-img-placeholder">🎨</div>`;
+    
+    // Volvemos a 'prueba-card' para que no se estiren, pero mantenemos 'tengo'
+    return `<div class="prueba-card ${p.estado ? 'tengo' : ''}" onclick="abrirPrueba('${p.id}')">
+      <div class="prueba-img-area">${imgHtml}</div>
+      <div class="prueba-info">
+        <div class="prueba-num">${etiquetaCodigo(p.codigo)}</div>
+        <div class="prueba-desc">${p.descripcion}</div>
+        <div class="prueba-año">${p.año || '—'}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function abrirPrueba(id) {
+  const p = PRUEBAS_OFICIALES_DATA.find(x => x.id === id);
+  if (!p) return;
+  currentPruebaId = id;
+
+  document.getElementById('pNum').textContent = etiquetaCodigo(p.codigo);
+  document.getElementById('pTitle').textContent = p.descripcion;
+  document.getElementById('pFNum').value = p.codigo;
+  document.getElementById('pFAño').value = p.año || '';
+  document.getElementById('pFDesc').value = p.descripcion;
+  document.getElementById('pFEstado').value = p.estado || '';
+  document.getElementById('pFNotas').value = p.notas || '';
+
+  // Precio
+  const precioEl = document.getElementById('precio-prueba-modal');
+  if (precioEl) {
+    if (p.precio_nuevo || p.precio_usado) {
+      precioEl.innerHTML = `<div style="font-size:0.75rem;color:var(--sepia);padding:4px 0 8px;display:flex;gap:16px">
+        ${p.precio_nuevo ? '<span>Nuevo: <strong>' + p.precio_nuevo + ' €</strong></span>' : ''}
+        ${p.precio_usado ? '<span>Usado: <strong>' + p.precio_usado + ' €</strong></span>' : ''}
+      </div>`;
+    } else { precioEl.innerHTML = ''; }
+  }
+
+  // Fotos
+  setPruebaSlot('referencia', p.referencia);
+  setPruebaSlot('delante', p.delante);
+  setPruebaSlot('detras', p.detras);
+
+  // Drag & drop / paste en slots de prueba
+  const editable = isEditor();
+  ['pSlotDelante','pSlotDetras'].forEach(slotId => {
+    const slot = document.getElementById(slotId);
+    if (!slot || !editable) return;
+    const side = slotId === 'pSlotDelante' ? 'delante' : 'detras';
+    slot.ondragover = e => { e.preventDefault(); slot.classList.add('drag-over'); };
+    slot.ondragleave = () => slot.classList.remove('drag-over');
+    slot.ondrop = e => {
+      e.preventDefault(); slot.classList.remove('drag-over');
+      const file = e.dataTransfer.files[0];
+      if (file && file.type.startsWith('image/')) {
+        currentPhotoTarget = 'prueba_' + side;
+        window._currentPruebaPhotoSide = side;
+        const fakeInput = { files: [file] };
+        handlePhoto({ target: fakeInput });
+      }
+    };
+  });
+
+  // Permisos edición
+  ['pFAño','pFDesc','pFNotas'].forEach(fid => {
+    const el = document.getElementById(fid);
+    if (el) { el.readOnly = !editable; el.style.background = editable ? '' : '#f5f0e8'; }
+  });
+  const sel = document.getElementById('pFEstado');
+  if (sel) sel.disabled = !editable;
+  document.querySelectorAll('.edit-only').forEach(el => { el.style.display = editable ? '' : 'none'; });
+
+  document.getElementById('modalPrueba').classList.add('open');
+  actualizarNavPrueba();
+}
+
+function setPruebaSlot(side, src) {
+  const ids = { referencia: 'pSlotRef', delante: 'pSlotDelante', detras: 'pSlotDetras' };
+  const slot = document.getElementById(ids[side]);
+  if (!slot) return;
+  const preview = slot.querySelector('.photo-slot-preview') || slot;
+  const existing = preview.querySelector('img');
+  if (existing) existing.remove();
+  slot.classList.remove('has-photo');
+  preview.onclick = null;
+  if (src) {
+    const captions = { referencia: 'Imagen de referencia', delante: 'Mi prueba · Cara delantera', detras: 'Mi prueba · Cara trasera' };
+    const img = document.createElement('img');
+    img.src = src;
+    img.addEventListener('click', (e) => { e.stopPropagation(); openLightbox(src, captions[side]||''); });
+    preview.insertBefore(img, preview.firstChild);
+    slot.classList.add('has-photo');
+    preview.onclick = (e) => { e.stopPropagation(); openLightbox(src, captions[side]||''); };
+  }
+}
+
+function cerrarModalPrueba(e) {
+  if (e && e.target !== document.getElementById('modalPrueba')) return;
+  document.getElementById('modalPrueba').classList.remove('open');
+  currentPruebaId = null;
+}
+
+function guardarPrueba() {
+  if (!isEditor()) return;
+  const idx = PRUEBAS_OFICIALES_DATA.findIndex(p => p.id === currentPruebaId);
+  if (idx < 0) return;
+  PRUEBAS_OFICIALES_DATA[idx].año = parseInt(document.getElementById('pFAño').value) || null;
+  PRUEBAS_OFICIALES_DATA[idx].descripcion = document.getElementById('pFDesc').value;
+  PRUEBAS_OFICIALES_DATA[idx].estado = document.getElementById('pFEstado').value || null;
+  PRUEBAS_OFICIALES_DATA[idx].notas = document.getElementById('pFNotas').value;
+  // Guardar en localStorage
+  try { localStorage.setItem('pruebas_oficiales', JSON.stringify(PRUEBAS_OFICIALES_DATA)); } catch(e) {}
+  // Guardar en Google Sheets
+  savePruebaToSheets(PRUEBAS_OFICIALES_DATA[idx]);
+  renderPruebas();
+}
+
+function eliminarPrueba() {
+  if (!isEditor()) return;
+  if (!confirm('¿Eliminar los datos de esta prueba?')) return;
+  const idx = PRUEBAS_OFICIALES_DATA.findIndex(p => p.id === currentPruebaId);
+  if (idx < 0) return;
+  PRUEBAS_OFICIALES_DATA[idx].estado = null;
+  PRUEBAS_OFICIALES_DATA[idx].notas = '';
+  PRUEBAS_OFICIALES_DATA[idx].delante = null;
+  PRUEBAS_OFICIALES_DATA[idx].detras = null;
+  try { localStorage.setItem('pruebas_oficiales', JSON.stringify(PRUEBAS_OFICIALES_DATA)); } catch(e) {}
+  savePruebaToSheets(PRUEBAS_OFICIALES_DATA[idx]);
+  cerrarModalPrueba();
+  renderPruebas();
+  showToast('Datos eliminados');
+}
+
+function navegarPrueba(dir) {
+  const idx = PRUEBAS_OFICIALES_DATA.findIndex(p => p.id === currentPruebaId);
+  if (idx < 0) return;
+  const next = idx + dir;
+  if (next < 0 || next >= PRUEBAS_OFICIALES_DATA.length) return;
+  abrirPrueba(PRUEBAS_OFICIALES_DATA[next].id);
+}
+
+function actualizarNavPrueba() {
+  const idx = PRUEBAS_OFICIALES_DATA.findIndex(p => p.id === currentPruebaId);
+  const btnP = document.getElementById('pruebNavPrev');
+  const btnN = document.getElementById('pruebNavNext');
+  if (btnP) btnP.disabled = idx <= 0;
+  if (btnN) btnN.disabled = idx >= PRUEBAS_OFICIALES_DATA.length - 1;
+}
+
+function triggerPruebaPhoto(side) {
+  currentPhotoTarget = 'prueba_' + side;
+  window._currentPruebaPhotoSide = side;
+  window._fromCamera = true;
+  document.getElementById('fileCamera').click();
+}
+function triggerPruebaPhotoGallery(side) {
+  currentPhotoTarget = 'prueba_' + side;
+  window._currentPruebaPhotoSide = side;
+  window._fromCamera = false;
+  document.getElementById('fileGallery').click();
+}
+function quitarFotoPrueba(side) {
+  const idx = PRUEBAS_OFICIALES_DATA.findIndex(p => p.id === currentPruebaId);
+  if (idx < 0) return;
+  PRUEBAS_OFICIALES_DATA[idx][side] = null;
+  setPruebaSlot(side, null);
+  try { localStorage.setItem('pruebas_oficiales', JSON.stringify(PRUEBAS_OFICIALES_DATA)); } catch(e) {}
+}
+
+// Los datos de pruebas se cargan siempre desde Google Sheets
+
+// Swipe táctil en modal de pruebas
+(function() {
+  let tx = 0, ty = 0;
+  document.addEventListener('touchstart', (e) => {
+    if (!document.getElementById('modalPrueba')?.classList.contains('open')) return;
+    tx = e.touches[0].clientX; ty = e.touches[0].clientY;
+  }, { passive: true });
+  document.addEventListener('touchend', (e) => {
+    if (!document.getElementById('modalPrueba')?.classList.contains('open')) return;
+    const dx = e.changedTouches[0].clientX - tx;
+    const dy = e.changedTouches[0].clientY - ty;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) navegarPrueba(dx < 0 ? 1 : -1);
+  }, { passive: true });
+})();
+
+// Historial: volver desde pruebas
+window.addEventListener('popstate', function(e) {
+  if (document.getElementById('seccionPruebas').classList.contains('open')) {
+    document.getElementById('seccionPruebas').classList.remove('open');
+    document.getElementById('seccionPruebas').style.paddingTop = '';
+    const hEpocas = document.getElementById('header-epocas-btns');
+    const hPruebas = document.getElementById('header-pruebas-btns');
+    if (hEpocas) hEpocas.style.display = 'flex';
+    if (hPruebas) hPruebas.style.display = 'none';
+    const tituloEl = document.getElementById('header-epoca-titulo');
+    if (tituloEl) tituloEl.innerHTML = '';
+    document.getElementById('gridView') && (document.getElementById('gridView').style.display = ''); document.getElementById('listView') && (document.getElementById('listView').style.display = '');
+    const sb = document.getElementById('syncBar');
+    if (sb) sb.style.display = '';
+    showPortada();
+  }
+});
+// ── FIN PRUEBAS OFICIALES ─────────────────────────────────────────────────────
+
+/**
+ * PASO NUEVO: Función para leer los precios desde Google Sheets
+ * Esta función busca en la pestaña 'STAMPS', toma el número Edifil (Columna A)
+ * y los precios de las columnas K y L.
+ */
+async function cargarPreciosDesdeSheets() {
+    const SPREADSHEET_ID = '1X58_YshD6l7h1-B-lCid_m9m5v63Xz-B6e7Yqf0';
+    
+    // Si no hay token de Google, no podemos leer el archivo privado
+    if (typeof _googleCredentialToken === 'undefined' || !_googleCredentialToken) {
+        return;
+    }
+
+    try {
+        // Pedimos los datos a Google Sheets (Rango A hasta L para llegar a los precios)
+        const response = await fetch(
+            `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/STAMPS!A2:L`,
+            { headers: { 'Authorization': `Bearer ${_googleCredentialToken}` } }
+        );
+        const data = await response.json();
+
+        if (data.values) {
+            // Vaciamos la variable para llenarla con los datos actualizados del Excel
+            PRECIOS_EDIFIL = {};
+            
+            data.values.forEach(fila => {
+                const idEdifil = fila[0];            // Columna A (ID)
+                const precioNuevo = parseFloat(fila[10]) || 0; // Columna K (Precio Nuevo)
+                const precioUsado = parseFloat(fila[11]) || 0; // Columna L (Precio Usado)
+                
+                if (idEdifil) {
+                    PRECIOS_EDIFIL[idEdifil] = [precioNuevo, precioUsado];
+                }
+            });
+            console.log("Precios cargados desde Sheets con éxito");
+            
+            // Refrescamos la pantalla para que se vean los precios nuevos
+            if (typeof renderStamps === 'function') renderStamps();
+        }
+    } catch (error) {
+        console.error("Error al obtener precios de Sheets:", error);
+    }
+}
+
+</script>
+
+<div id="cropModal">
+  <div id="cropHeader">Recortar imagen</div>
+  <div id="cropHint">Arrastra los bordes o esquinas para ajustar · Toca dentro para mover</div>
+  <div id="cropWrap">
+    <canvas id="cropBg"></canvas>
+    <canvas id="cropOverlay"></canvas>
+  </div>
+  <div class="crop-btns">
+    <button id="btnCropSkip" onclick="confirmCrop(false)">Sin recortar</button>
+    <button id="btnCropRotate" onclick="rotateCrop()" title="Rotar 90°">↻</button>
+    <button id="btnCropOk"   onclick="confirmCrop(true)">✓ Recortar</button>
+  </div>
+</div>
 </body>
 </html>
+
