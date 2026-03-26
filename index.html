@@ -1417,8 +1417,15 @@ async function loadFromSheets() {
       console.log('ÚLTIMAS 10 FILAS DE SHEETS (col A):', lastRows.map(r => r?.c?.[0]));
       stamps = rows.map(row => {
         if (!row.c || !row.c[0]) return null;
-        const edifil = row.c[0].v ?? row.c[0].f ?? null;
-        if (edifil === null || edifil === undefined || edifil === '') return null;
+        // Sheets puede devolver null en .v para celdas con texto (ej: "1A") si la columna está formateada como número
+        // En ese caso el valor viene solo en .f (formatted). Leemos ambos.
+        const cell = row.c[0];
+        const edifil = (cell.v !== null && cell.v !== undefined && String(cell.v).trim() !== '')
+                       ? cell.v
+                       : (cell.f !== null && cell.f !== undefined && String(cell.f).trim() !== '')
+                       ? cell.f
+                       : null;
+        if (edifil === null) return null;
         return {
           edifil,
           año:          row.c[1]?.v || null,
@@ -1439,6 +1446,11 @@ async function loadFromSheets() {
       }).filter(Boolean);
       const variantes = stamps.filter(s => s.variante);
       console.log('VARIANTES ENCONTRADAS:', variantes.map(s => s.edifil));
+      // Toast visible para diagnóstico
+      const dbgMsg = 'Registros: ' + stamps.length + ' | Variantes: ' + variantes.length
+                   + (variantes.length ? ' (' + variantes.map(s=>s.edifil).join(', ') + ')' : '')
+                   + ' | Últimas col A: ' + rows.slice(-5).map(r => JSON.stringify(r?.c?.[0]?.v) + '/' + JSON.stringify(r?.c?.[0]?.f)).join(', ');
+      showToast(dbgMsg, 8000);
       setSyncStatus('', `Sincronizado — ${stamps.length} registros, ${variantes.length} variantes`);
     }
   } catch(e) {
@@ -2889,10 +2901,10 @@ document.addEventListener('wheel', (e) => {
 })();
 
 // ==================== TOAST ====================
-function showToast(msg) {
+function showToast(msg, duration) { duration = duration || 2500;
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2500);
+  setTimeout(() => t.classList.remove('show'), duration);
 }
 
 // ==================== INIT ====================
