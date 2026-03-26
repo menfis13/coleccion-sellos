@@ -268,7 +268,7 @@
   .btn-add-header { background: var(--gold); color: var(--ink); border: none; white-space: normal; line-height: 1.2; }
   .btn-add-header:hover { background: var(--gold-light); }
 
-  .sync-bar { background: #1e2a1e; color: #7ab87a; padding: 8px 32px; font-size: 0.8rem; letter-spacing: 0.08em; display: flex; align-items: center; gap: 10px; }
+  .sync-bar { background: #1e2a1e; color: #7ab87a; padding: 8px 32px; font-size: 0.8rem; letter-spacing: 0.08em; display: flex; align-items: center; gap: 10px; position: sticky; top: var(--header-h, 90px); z-index: 300; }
   .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: #7ab87a; animation: pulse 2s infinite; }
   @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
   .sync-bar.syncing { color: var(--gold-light); background: #1e1a0e; }
@@ -454,7 +454,7 @@
 
   .color-negro { background: #222; } .color-lila, .color-violeta { background: #9b59b6; } .color-rojo { background: #c0392b; } .color-azul { background: #2980b9; } .color-verde { background: #27ae60; } .color-naranja { background: #e67e22; } .color-rosa { background: #e91e8c; } .color-amarillo { background: #f1c40f; } .color-gris { background: #95a5a6; } .color-castaño { background: #795548; } .color-cobre { background: #b87333; } .color-default { background: var(--sepia); }
 
-  .saving-toast { position: fixed; bottom: 24px; right: 24px; background: var(--ink); color: var(--gold-light); padding: 12px 20px; border-radius: 3px; font-family: 'Crimson Pro', serif; font-size: 0.9rem; z-index: 800; transform: translateY(80px); transition: transform 0.3s; box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+  .saving-toast { position: fixed; bottom: 24px; right: 24px; left: 24px; background: #2a1e00; color: #f5e070; border: 1.5px solid #b8860b; padding: 14px 20px; border-radius: 4px; font-family: 'Crimson Pro', serif; font-size: 1rem; font-weight: 600; z-index: 1200; transform: translateY(120px); transition: transform 0.3s; box-shadow: 0 8px 32px rgba(0,0,0,0.7); max-width: 600px; margin: 0 auto; word-break: break-all; }
   .saving-toast.show { transform: translateY(0); }
 
   @media (max-width: 640px) {
@@ -3073,6 +3073,14 @@ async function iniciar() {
 }
 
 iniciar();
+
+// Calcular altura real del header y aplicarla como variable CSS
+function actualizarHeaderH() {
+  const h = document.querySelector('header');
+  if (h) document.documentElement.style.setProperty('--header-h', h.offsetHeight + 'px');
+}
+actualizarHeaderH();
+window.addEventListener('resize', actualizarHeaderH);
 
 /* ── MODO OSCURO ── */
 function toggleDarkMode() {
