@@ -1413,8 +1413,9 @@ async function loadFromSheets() {
       setSyncStatus('', 'Google Sheets vacío para esta época.');
     } else {
       stamps = rows.map(row => {
-        if (!row.c || !row.c[0] || !row.c[0].v) return null;
-        const edifil = row.c[0].v;
+        if (!row.c || !row.c[0]) return null;
+        const edifil = row.c[0].v ?? row.c[0].f ?? null;
+        if (!edifil && edifil !== 0) return null;
         return {
           edifil,
           año:          row.c[1]?.v || null,
@@ -1626,6 +1627,13 @@ function getFiltered() {
     if (filterColor && !s.color?.toLowerCase().includes(filterColor.toLowerCase())) return false;
     return true;
   }).sort((a,b) => {
+    // Ordenación especial por edifil: 1, 1A, 1B, 2, 2A, 22, 22B...
+    if (sortField === 'edifil') {
+      const parse = v => { const s = String(v||''); const n = parseInt(s)||0; const l = s.replace(/^\d+/,'').toLowerCase(); return [n,l]; };
+      const [an,al] = parse(a.edifil); const [bn,bl] = parse(b.edifil);
+      if (an !== bn) return (an-bn)*sortDir;
+      return (al<bl?-1:al>bl?1:0)*sortDir;
+    }
     let av = a[sortField], bv = b[sortField];
     if (av == null) av = ''; if (bv == null) bv = '';
     if (typeof av === 'string') av = av.toLowerCase();
