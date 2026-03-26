@@ -748,6 +748,14 @@
 <!-- Sección Pruebas Oficiales y del Artista -->
 <div id="seccionPruebas" class="seccion-epoca">
   
+  <div class="epoca-controls" style="margin-bottom: 20px; padding: 0 15px;">
+    <div id="resultsInfoPruebas" style="margin-bottom: 10px; font-weight: bold; color: var(--gold);"></div>
+    <div class="search-container">
+      <input type="text" id="searchInputPruebas" placeholder="Buscar pruebas..." oninput="renderPruebas()" 
+             style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--gold); background: var(--cream); color: var(--ink);">
+    </div>
+  </div>
+
   <div class="prueba-grid" id="pruebaGrid"></div>
 
 </div>
@@ -824,30 +832,20 @@
 
 <div id="epocas-toolbar-wrap" style="max-width:1400px;margin:0 auto;">
   <div class="toolbar" id="epocas-toolbar">
-    <!-- Controles para épocas normales -->
-    <div id="epocas-search-area" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;width:100%">
-      <div class="search-wrap">
-        <span class="search-icon">🔍</span>
-        <input type="text" id="searchInput" placeholder="Buscar descripción, color, año…" oninput="onSearchInput()">
-      </div>
-      <select class="filter-select" id="filterYear" onchange="renderStamps()"><option value="">Todos los años</option></select>
-      <select class="filter-select" id="filterEstado" onchange="renderStamps()">
-        <option value="">Todos los estados</option>
-        <option value="con_estado">Con estado registrado</option>
-        <option value="sin_estado">Sin estado</option>
-      </select>
-      <select class="filter-select" id="filterColor" onchange="renderStamps()"><option value="">Todos los colores</option></select>
-      <div class="view-toggle">
-        <button class="view-btn active" id="btnGrid" onclick="setView('grid')" title="Cuadrícula">⊞</button>
-        <button class="view-btn" id="btnList" onclick="setView('list')" title="Lista">☰</button>
-      </div>
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Buscar descripción, color, año…" oninput="onSearchInput()">
     </div>
-    <!-- Controles para Pruebas Oficiales -->
-    <div id="pruebas-search-area" style="display:none;gap:12px;align-items:center;flex-wrap:wrap;width:100%">
-      <div class="search-wrap" style="flex:1;min-width:200px">
-        <span class="search-icon">🔍</span>
-        <input type="text" id="searchInputPruebas" placeholder="Buscar pruebas oficiales…" oninput="renderPruebas()">
-      </div>
+    <select class="filter-select" id="filterYear" onchange="renderStamps()"><option value="">Todos los años</option></select>
+    <select class="filter-select" id="filterEstado" onchange="renderStamps()">
+      <option value="">Todos los estados</option>
+      <option value="con_estado">Con estado registrado</option>
+      <option value="sin_estado">Sin estado</option>
+    </select>
+    <select class="filter-select" id="filterColor" onchange="renderStamps()"><option value="">Todos los colores</option></select>
+    <div class="view-toggle">
+      <button class="view-btn active" id="btnGrid" onclick="setView('grid')" title="Cuadrícula">⊞</button>
+      <button class="view-btn" id="btnList" onclick="setView('list')" title="Lista">☰</button>
     </div>
   </div>
 </div>
@@ -1485,7 +1483,6 @@ let activeStatFilter = null; // 'tengo' | 'fotos' | null
 
 function toggleStatFilter(tipo) {
   if (tipo === 'total') {
-    // Total siempre limpia el filtro
     activeStatFilter = null;
   } else {
     activeStatFilter = (activeStatFilter === tipo) ? null : tipo;
@@ -1494,9 +1491,9 @@ function toggleStatFilter(tipo) {
   document.getElementById('statbox-total').classList.toggle('active-filter', activeStatFilter === null && tipo === 'total' && false);
   document.getElementById('statbox-tengo').classList.toggle('active-filter', activeStatFilter === 'tengo');
   document.getElementById('statbox-fotos').classList.toggle('active-filter', activeStatFilter === 'fotos');
-  // Detectar si estamos en pruebas y renderizar lo que corresponde
-  const enPruebas = document.getElementById('seccionPruebas').classList.contains('open');
-  if (enPruebas) renderPruebas(); else renderStamps();
+  // Si estamos en pruebas, filtrar pruebas; si no, filtrar sellos normales
+  const inPruebas = document.getElementById('seccionPruebas').classList.contains('open');
+  if (inPruebas) renderPruebas(); else renderStamps();
 }
 
 // ==================== FILTERS ====================
@@ -2539,25 +2536,27 @@ async function handlePhoto(event) {
             showToast('Foto guardada ✓');
           } else {
           const idx = stamps.findIndex(s => s.edifil === currentStampId);
-          if (idx >= 0) {
-            stamps[idx][currentPhotoTarget] = json.secure_url;
-            setPhotoSlot(currentPhotoTarget, json.secure_url);
-            // Auto-estado: si no tenía estado, marcar como Nuevo automáticamente
-            let autoEstadoMsg = '';
-            if (!stamps[idx].estado) {
-              stamps[idx].estado = 'Nuevo';
-              const fEstado = document.getElementById('fEstado');
-              if (fEstado) fEstado.value = 'Nuevo';
-              autoEstadoMsg = ' · marcado como Nuevo ✓';
-              // Actualizar contadores de la cabecera
-              renderStamps();
-            }
-            await saveToSheets(stamps[idx]);
-            saveLocal();
-            renderStamps();
-          }
-          setSyncStatus('', 'Foto guardada en Cloudinary ✓');
-          showToast('Foto guardada ✓' + autoEstadoMsg);
+          let autoEstadoMsg = '';
+
+if (idx >= 0) {
+  stamps[idx][currentPhotoTarget] = json.secure_url;
+  setPhotoSlot(currentPhotoTarget, json.secure_url);
+
+  if (!stamps[idx].estado) {
+    stamps[idx].estado = 'Nuevo';
+    const fEstado = document.getElementById('fEstado');
+    if (fEstado) fEstado.value = 'Nuevo';
+    autoEstadoMsg = ' · marcado como Nuevo ✓';
+    renderStamps();
+  }
+
+  await saveToSheets(stamps[idx]);
+  saveLocal();
+  renderStamps();
+}
+
+setSyncStatus('', 'Foto guardada en Cloudinary ✓');
+showToast('Foto guardada ✓' + autoEstadoMsg);
           }
         } else {
           console.error('Cloudinary error:', json);
@@ -2831,11 +2830,9 @@ function showPortada() {
 function entrarEpoca(epocaId) {
   // Las Pruebas Oficiales usan su propia sección y funciones
   if (epocaId === 'pruebas') { entrarPruebas(); return; }
-  // Restaurar zona épocas en toolbar (si veníamos de pruebas)
-  const _ea3 = document.getElementById('epocas-search-area');
-  const _pa3 = document.getElementById('pruebas-search-area');
-  if (_ea3) _ea3.style.display = 'flex';
-  if (_pa3) _pa3.style.display = 'none';
+  // Asegurar que el toolbar de épocas está visible (por si veníamos de pruebas)
+  const tw = document.getElementById('epocas-toolbar-wrap');
+  if (tw) tw.style.display = '';
   currentEpoca = epocaId;
   document.getElementById('portada').classList.remove('open');
   document.body.style.overflow = '';
@@ -2989,11 +2986,9 @@ function entrarPruebas() {
   document.getElementById('listView') && (document.getElementById('listView').style.display = 'none');
   document.getElementById('syncBar') && (document.getElementById('syncBar').style.display = 'none');
   document.getElementById('readOnlyNotice') && (document.getElementById('readOnlyNotice').style.display = 'none');
-  // Intercambiar zona búsqueda: ocultar épocas, mostrar pruebas
-  const _ea = document.getElementById('epocas-search-area');
-  const _pa = document.getElementById('pruebas-search-area');
-  if (_ea) _ea.style.display = 'none';
-  if (_pa) _pa.style.display = 'flex';
+  // Ocultar toolbar de épocas (búsqueda/filtros normales) — tiene su propio buscador
+  const toolbarWrap = document.getElementById('epocas-toolbar-wrap');
+  if (toolbarWrap) toolbarWrap.style.display = 'none';
   // Intercambiar botones del header
   const hEpocas = document.getElementById('header-epocas-btns');
   const hPruebas = document.getElementById('header-pruebas-btns');
@@ -3028,11 +3023,9 @@ function volverPortadaDesdePruebas() {
   document.getElementById('gridView') && (document.getElementById('gridView').style.display = ''); document.getElementById('listView') && (document.getElementById('listView').style.display = '');
   const sb = document.getElementById('syncBar');
   if (sb) sb.style.display = '';
-  // Restaurar zona épocas en toolbar
-  const _ea2 = document.getElementById('epocas-search-area');
-  const _pa2 = document.getElementById('pruebas-search-area');
-  if (_ea2) _ea2.style.display = 'flex';
-  if (_pa2) _pa2.style.display = 'none';
+  // Restaurar toolbar de épocas
+  const tw = document.getElementById('epocas-toolbar-wrap');
+  if (tw) tw.style.display = '';
   showPortada();
 }
 
@@ -3052,6 +3045,7 @@ const info = document.getElementById('resultsInfoPruebas');
 
   // Filtrar
   const filtered = PRUEBAS_OFICIALES_DATA.filter(p => {
+    // Filtro por stat-box activo
     if (activeStatFilter === 'tengo' && !p.estado) return false;
     if (activeStatFilter === 'fotos' && !p.delante && !p.detras) return false;
     if (searchVal) {
@@ -3344,5 +3338,4 @@ async function cargarPreciosDesdeSheets() {
 </div>
 </body>
 </html>
-
 
