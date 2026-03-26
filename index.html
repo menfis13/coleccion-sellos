@@ -1430,6 +1430,7 @@ async function loadFromSheets() {
           filigrana:    row.c[11]?.v || null,
           precio_nuevo: row.c[12]?.v || null,
           precio_usado: row.c[13]?.v || null,
+          variante:     /[a-zA-Z]/.test(String(edifil)),
         };
       }).filter(Boolean);
       setSyncStatus('', `Sincronizado con Google Sheets — ${stamps.length} registros`);
