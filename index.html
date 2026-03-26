@@ -683,6 +683,36 @@
   }
   .portada-entrar:hover { background:#e0b84a; transform:translateY(-1px); }
   .portada-footer { font-size:0.72rem; color:#6a5a3a; letter-spacing:0.1em; text-transform:uppercase; margin-top:48px; }
+
+/* ===== TOOLBAR PRUEBAS ===== */
+.pruebas-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.pruebas-toolbar input {
+  width: 33%;
+  min-width: 120px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--gold);
+  background: var(--cream);
+  color: var(--ink);
+}
+
+.pruebas-toolbar .right-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+@media (max-width:600px) {
+  .pruebas-toolbar input {
+    width: 45%;
+  }
+}
+
 </style>
 </head>
 <body>
