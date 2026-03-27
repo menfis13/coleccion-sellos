@@ -3141,10 +3141,7 @@ function entrarPruebas() {
   document.body.style.overflow = '';
   const secPruebas = document.getElementById('seccionPruebas');
   secPruebas.classList.add('open');
-  // Calcular el alto real del header para no quedar tapado
-  const headerEl = document.querySelector('header');
-  const headerH = headerEl ? headerEl.offsetHeight : 92;
-  secPruebas.style.paddingTop = (headerH + 12) + 'px';
+  secPruebas.style.paddingTop = '';
   // Actualizar header fijo igual que las épocas normales
   const tituloEl = document.getElementById('header-epoca-titulo');
   if (tituloEl) tituloEl.innerHTML = '<span style="color:#e0b84a;font-style:italic">Pruebas Oficiales y del Artista</span>';
@@ -3153,7 +3150,7 @@ function entrarPruebas() {
   // Ocultar vistas de sellos pero mantener .main para resultsInfo
   document.getElementById('gridView') && (document.getElementById('gridView').style.display = 'none');
   document.getElementById('listView') && (document.getElementById('listView').style.display = 'none');
-  document.getElementById('syncBar') && (document.getElementById('syncBar').style.display = 'none');
+  document.getElementById('syncBar') && (document.getElementById('syncBar').style.display = '');
   document.getElementById('readOnlyNotice') && (document.getElementById('readOnlyNotice').style.display = 'none');
   // Ocultar toolbar de épocas (búsqueda/filtros normales) — tiene su propio buscador
   const toolbarWrap = document.getElementById('epocas-toolbar-wrap');
