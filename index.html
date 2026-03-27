@@ -853,26 +853,6 @@
   </div>
 </header>
 
-<!-- Sección Pruebas Oficiales y del Artista -->
-<div id="seccionPruebas" class="seccion-epoca">
-  
-  <div class="epoca-controls" style="margin-bottom: 20px; padding: 0 15px;">
-    <div id="resultsInfoPruebas" style="margin-bottom: 10px; font-weight: bold; color: var(--gold);"></div>
-   <div class="pruebas-toolbar">
-  
-  <input type="text" id="searchInputPruebas" placeholder="Buscar pruebas..." oninput="renderPruebas()">
-
-  <div class="view-toggle">
-    <button class="view-btn active" id="pruebaBtnGrid" onclick="setPruebaView('grid')" title="Cuadrícula">⊞</button>
-    <button class="view-btn" id="pruebaBtnList" onclick="setPruebaView('list')" title="Lista">≡</button>
-  </div>
-
-</div>
-  </div>
-
-  <div class="prueba-grid" id="pruebaGrid"></div>
-
-</div>
 
 <div class="modal-overlay" id="modalPrueba" onclick="cerrarModalPrueba(event)">
   <button class="modal-nav prev" id="pruebNavPrev" onclick="event.stopPropagation(); navegarPrueba(-1)">‹</button>
@@ -962,6 +942,27 @@
       <button class="view-btn" id="btnList" onclick="setView('list')" title="Lista">☰</button>
     </div>
   </div>
+</div>
+
+<!-- Sección Pruebas Oficiales y del Artista -->
+<div id="seccionPruebas" class="seccion-epoca">
+  
+  <div class="epoca-controls" style="margin-bottom: 20px; padding: 0 15px;">
+    <div id="resultsInfoPruebas" style="margin-bottom: 10px; font-weight: bold; color: var(--gold);"></div>
+   <div class="pruebas-toolbar">
+  
+  <input type="text" id="searchInputPruebas" placeholder="Buscar pruebas..." oninput="renderPruebas()">
+
+  <div class="view-toggle">
+    <button class="view-btn active" id="pruebaBtnGrid" onclick="setPruebaView('grid')" title="Cuadrícula">⊞</button>
+    <button class="view-btn" id="pruebaBtnList" onclick="setPruebaView('list')" title="Lista">≡</button>
+  </div>
+
+</div>
+  </div>
+
+  <div class="prueba-grid" id="pruebaGrid"></div>
+
 </div>
 
 <div class="main">
@@ -3141,7 +3142,6 @@ function entrarPruebas() {
   document.body.style.overflow = '';
   const secPruebas = document.getElementById('seccionPruebas');
   secPruebas.classList.add('open');
-  secPruebas.style.paddingTop = '';
   // Actualizar header fijo igual que las épocas normales
   const tituloEl = document.getElementById('header-epoca-titulo');
   if (tituloEl) tituloEl.innerHTML = '<span style="color:#e0b84a;font-style:italic">Pruebas Oficiales y del Artista</span>';
