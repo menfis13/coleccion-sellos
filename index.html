@@ -1643,6 +1643,7 @@ function colorClass(color) {
 }
 
 function renderStamps() {
+  if (currentEpoca === 'pruebas') showToast('Pruebas: ' + stamps.length + ' sellos en stamps', 5000);
   const filtered = getFiltered();
   const withEstado = stamps.filter(s => s.estado).length;
   const withPhoto = stamps.filter(s => s.delante).length;
