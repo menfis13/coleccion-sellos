@@ -1643,7 +1643,7 @@ function colorClass(color) {
 }
 
 function renderStamps() {
-  if (currentEpoca === 'pruebas') showToast('Pruebas: ' + stamps.length + ' sellos en stamps', 5000);
+  if (currentEpoca === 'pruebas') { const s0 = stamps[0]; showToast('Pruebas: ' + stamps.length + ' | edifil0=' + (s0&&s0.edifil) + ' codigo0=' + (s0&&s0.codigo) + ' | gridActive=' + document.getElementById('gridView').classList.contains('active') + ' gridStyle=' + document.getElementById('gridView').style.display, 8000); }
   const filtered = getFiltered();
   const withEstado = stamps.filter(s => s.estado).length;
   const withPhoto = stamps.filter(s => s.delante).length;
