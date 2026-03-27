@@ -1463,7 +1463,8 @@ async function loadFromSheets() {
   } catch(e) {
     console.error(e);
     stamps = [];
-    setSyncStatus('error', 'Sin conexión con Sheets — no hay datos locales disponibles');
+    setSyncStatus('error', 'Error: ' + e.message);
+    let dbg = document.getElementById('_dbg'); if (!dbg) { dbg = document.createElement('div'); dbg.id='_dbg'; dbg.style.cssText='position:fixed;top:50%;left:0;right:0;background:red;color:#fff;padding:12px;z-index:9999;font-size:0.85rem;word-break:break-all;'; document.body.appendChild(dbg); } dbg.textContent = 'ERROR loadFromSheets: ' + e.message + ' | URL: ' + SHEET_URL;
   }
   populateFilters();
   renderStamps();
@@ -1643,7 +1644,15 @@ function colorClass(color) {
 }
 
 function renderStamps() {
-  if (currentEpoca === 'pruebas') { const s0 = stamps[0]; showToast('Pruebas: ' + stamps.length + ' | edifil0=' + (s0&&s0.edifil) + ' codigo0=' + (s0&&s0.codigo) + ' | gridActive=' + document.getElementById('gridView').classList.contains('active') + ' gridStyle=' + document.getElementById('gridView').style.display, 8000); }
+  if (currentEpoca === 'pruebas') {
+    const s0 = stamps[0];
+    const gv = document.getElementById('gridView');
+    const msg = 'stamps=' + stamps.length + ' | edifil0=' + (s0&&s0.edifil) + ' | codigo0=' + (s0&&s0.codigo) + ' | gridActive=' + gv.classList.contains('active') + ' | gridDisplay=' + (gv.style.display||'(css)') + ' | gridHTML=' + gv.innerHTML.length;
+    // Div fijo en pantalla para diagnóstico
+    let dbg = document.getElementById('_dbg');
+    if (!dbg) { dbg = document.createElement('div'); dbg.id='_dbg'; dbg.style.cssText='position:fixed;top:50%;left:0;right:0;background:#b8860b;color:#000;padding:12px;z-index:9999;font-size:0.85rem;word-break:break-all;'; document.body.appendChild(dbg); }
+    dbg.textContent = msg;
+  }
   const filtered = getFiltered();
   const withEstado = stamps.filter(s => s.estado).length;
   const withPhoto = stamps.filter(s => s.delante).length;
@@ -3001,7 +3010,9 @@ history.replaceState({ view: 'portada' }, '', '');
 
 function switchEpoca(epocaId) {
   currentEpoca = epocaId;
-  SHEET_URL = `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=${EPOCAS[epocaId].sheet}&range=A1:N500`;
+  SHEET_URL = epocaId === 'pruebas'
+    ? `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(EPOCAS[epocaId].sheet)}`
+    : `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=${EPOCAS[epocaId].sheet}&range=A1:N500`;
   const ep = EPOCAS[epocaId];
   // Resetear filtro de stat al cambiar de época
   activeStatFilter = null;
