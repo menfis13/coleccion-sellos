@@ -1078,7 +1078,7 @@ function _cfg() {
   ].forEach(([k,v]) => _r[k] = _d(v));
   return _r;
 }
-let SHEET_URL = `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=Hoja 1`;
+let SHEET_URL = `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=Hoja 1&range=A1:N500`;
 
 // ==================== AUTENTICACIÓN GOOGLE ====================
 const AUTHORIZED_EMAIL = _cfg().mail;
@@ -1446,7 +1446,7 @@ async function loadFromSheets() {
       }).filter(Boolean);
       const variantes = stamps.filter(s => s.variante);
       console.log('VARIANTES ENCONTRADAS:', variantes.map(s => s.edifil));
-      setSyncStatus('', `Sincronizado — ${stamps.length} registros, ${variantes.length} variantes`);
+      setSyncStatus('', `Sincronizado — ${stamps.length} sellos cargados (${rows.length} filas en Sheets), ${variantes.length} variantes`);
     }
   } catch(e) {
     console.error(e);
@@ -3023,7 +3023,7 @@ history.replaceState({ view: 'portada' }, '', '');
 
 function switchEpoca(epocaId) {
   currentEpoca = epocaId;
-  SHEET_URL = `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=${EPOCAS[epocaId].sheet}`;
+  SHEET_URL = `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=${EPOCAS[epocaId].sheet}&range=A1:N500`;
   const ep = EPOCAS[epocaId];
   // Resetear filtro de stat al cambiar de época
   activeStatFilter = null;
@@ -3043,7 +3043,7 @@ const edifilEpocaMap = {}; // edifil -> epochId (construido en precargarContador
 async function precargarContadores() {
   const promesas = Object.values(EPOCAS).map(async ep => {
     try {
-      const url = `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(ep.sheet)}`;
+      const url = `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(ep.sheet)}&range=A1:N500`;
       const res = await fetch(url);
       const text = await res.text();
       const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\((.*)\);?$/s)[1]);
