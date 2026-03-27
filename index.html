@@ -1472,38 +1472,21 @@ async function saveToSheets(stamp) {
   setSyncStatus('syncing', 'Guardando en Google Sheets...');
   saveLocal();
   try {
-    const payload = {
-      edifil: stamp.edifil,
-      año: stamp.año,
-      descripcion: stamp.descripcion,
-      color: stamp.color,
-      valor_facial: stamp.valor_facial,
-      dentado: stamp.dentado,
-      estado: stamp.estado || '',
-      notas: stamp.notas || '',
-      filigrana: stamp.filigrana || '',
-      precio_nuevo: stamp.precio_nuevo,
-      precio_usado: stamp.precio_usado,
-      delante: (stamp.delante && stamp.delante.startsWith('data:')) ? null : stamp.delante,
-      detras: (stamp.detras && stamp.detras.startsWith('data:')) ? null : stamp.detras
-    };
-
+    const payload = { ...stamp };
+    delete payload.referencia;
+    // Solo borrar si son base64 (muy largas), no si son URLs de Cloudinary
+    if (payload.delante && payload.delante.startsWith('data:')) payload.delante = null;
+    if (payload.detras && payload.detras.startsWith('data:')) payload.detras = null;
+    // Añadir precios del catálogo Edifil
+    const p = PRECIOS_EDIFIL[stamp.edifil];
+    if (p) { payload.precio_nuevo = p[0]; payload.precio_usado = p[1]; }
     const url = _cfg().surl + '?action=save&token=' + _cfg().tok + '&payload=' + encodeURIComponent(JSON.stringify(payload)) + '&sheet=' + encodeURIComponent(EPOCAS[currentEpoca].sheet);
     const res = await fetch(url);
     const json = await res.json();
-
     if (json.status === 'ok') {
       setSyncStatus('', 'Guardado en Google Sheets ✓');
       showToast('Sello guardado en Sheets ✓');
     } else {
-      throw new Error(json.message);
-    }
-  } catch (err) {
-    console.error(err);
-    setSyncStatus('error', 'Error al guardar');
-    showToast('Error al guardar: ' + err.message);
-  }
-}    } else {
       throw new Error(json.message);
     }
   } catch(e) {
