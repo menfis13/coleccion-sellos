@@ -268,7 +268,7 @@
   .btn-add-header { background: var(--gold); color: var(--ink); border: none; white-space: normal; line-height: 1.2; }
   .btn-add-header:hover { background: var(--gold-light); }
 
-  .sync-bar { background: #1e2a1e; color: #7ab87a; padding: 8px 32px; font-size: 0.8rem; letter-spacing: 0.08em; display: flex; align-items: center; gap: 10px; position: sticky; top: var(--header-h, 90px); z-index: 300; }
+  .sync-bar { background: #1e2a1e; color: #7ab87a; padding: 8px 32px; font-size: 0.8rem; letter-spacing: 0.08em; display: flex; align-items: center; gap: 10px; }
   .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: #7ab87a; animation: pulse 2s infinite; }
   @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
   .sync-bar.syncing { color: var(--gold-light); background: #1e1a0e; }
@@ -1446,11 +1446,6 @@ async function loadFromSheets() {
       }).filter(Boolean);
       const variantes = stamps.filter(s => s.variante);
       console.log('VARIANTES ENCONTRADAS:', variantes.map(s => s.edifil));
-      // Toast visible para diagnóstico
-      const dbgMsg = 'Registros: ' + stamps.length + ' | Variantes: ' + variantes.length
-                   + (variantes.length ? ' (' + variantes.map(s=>s.edifil).join(', ') + ')' : '')
-                   + ' | Últimas col A: ' + rows.slice(-5).map(r => JSON.stringify(r?.c?.[0]?.v) + '/' + JSON.stringify(r?.c?.[0]?.f)).join(', ');
-      showToast(dbgMsg, 8000);
       setSyncStatus('', `Sincronizado — ${stamps.length} registros, ${variantes.length} variantes`);
     }
   } catch(e) {
@@ -3074,13 +3069,18 @@ async function iniciar() {
 
 iniciar();
 
-// Calcular altura real del header y aplicarla como variable CSS
-function actualizarHeaderH() {
-  const h = document.querySelector('header');
-  if (h) document.documentElement.style.setProperty('--header-h', h.offsetHeight + 'px');
+// Ajustar posición de syncBar y toolbar al tamaño real del header
+function ajustarBajHeader() {
+  const headerH = (document.querySelector('header') || {}).offsetHeight || 90;
+  const sb = document.getElementById('syncBar');
+  const tw = document.getElementById('epocas-toolbar-wrap');
+  // Solo ajustar el padding-top del body para que nada quede tapado
+  // syncBar y toolbar son flujo normal — el body padding los empuja hacia abajo
+  document.body.style.paddingTop = headerH + 'px';
 }
-actualizarHeaderH();
-window.addEventListener('resize', actualizarHeaderH);
+ajustarBajHeader();
+window.addEventListener('resize', ajustarBajHeader);
+
 
 /* ── MODO OSCURO ── */
 function toggleDarkMode() {
