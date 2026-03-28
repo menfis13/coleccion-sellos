@@ -1680,8 +1680,14 @@ function renderStamps() {
   document.getElementById('btnGrid').classList.toggle('active', isGrid);
   document.getElementById('btnList').classList.toggle('active', !isGrid);
 
-  if (isGrid) renderGrid(filtered);
-  else renderList(filtered);
+  if (isGrid) {
+    try {
+      renderGrid(filtered);
+    } catch(e) {
+      let dbg = document.getElementById('_dbg'); if (!dbg) { dbg = document.createElement('div'); dbg.id='_dbg'; dbg.style.cssText='position:fixed;top:50%;left:0;right:0;background:red;color:#fff;padding:12px;z-index:9999;font-size:0.85rem;word-break:break-all;'; document.body.appendChild(dbg); }
+      dbg.textContent = 'renderGrid ERROR: ' + e.message + ' | stack: ' + e.stack?.slice(0,200);
+    }
+  } else renderList(filtered);
   if (currentEpoca === 'pruebas') {
     const gv2 = document.getElementById('gridView');
     let dbg = document.getElementById('_dbg');
