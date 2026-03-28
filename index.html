@@ -7,11 +7,32 @@
 <link rel="icon" type="image/jpeg" href="https://res.cloudinary.com/do4ltpfbo/image/upload/sello_001A.jpg">
 <link rel="shortcut icon" type="image/jpeg" href="https://res.cloudinary.com/do4ltpfbo/image/upload/sello_001A.jpg">
 <link rel="apple-touch-icon" href="https://res.cloudinary.com/do4ltpfbo/image/upload/sello_001A.jpg">
-<link rel="manifest" href='data:application/manifest+json,{"name":"Colección Filatélica de Menfis","short_name":"Menfis","icons":[{"src":"https://res.cloudinary.com/do4ltpfbo/image/upload/sello_001A.jpg","sizes":"192x192","type":"image/jpeg"},{"src":"https://res.cloudinary.com/do4ltpfbo/image/upload/sello_001A.jpg","sizes":"512x512","type":"image/jpeg"}],"display":"standalone","background_color":"#0d0b07","theme_color":"#b8860b","start_url":"."}'>
 <meta name="theme-color" content="#b8860b">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Menfis Sellos">
+<script>
+(function(){
+  var manifest = {
+    name: "Colección Filatélica de Menfis",
+    short_name: "Menfis Sellos",
+    icons: [
+      { src: "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_001A.jpg", sizes: "192x192", type: "image/jpeg" },
+      { src: "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_001A.jpg", sizes: "512x512", type: "image/jpeg" }
+    ],
+    display: "standalone",
+    background_color: "#0d0b07",
+    theme_color: "#b8860b",
+    start_url: "."
+  };
+  var blob = new Blob([JSON.stringify(manifest)], { type: "application/manifest+json" });
+  var url  = URL.createObjectURL(blob);
+  var link = document.createElement("link");
+  link.rel  = "manifest";
+  link.href = url;
+  document.head.appendChild(link);
+})();
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:wght@300;400;600&display=swap" rel="stylesheet">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
