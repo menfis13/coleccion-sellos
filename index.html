@@ -376,6 +376,9 @@
   .btn-secondary { background: none; color: var(--sepia); border: 1px solid rgba(92,61,30,0.3); }
   .btn-secondary:hover { background: var(--parchment); }
 
+  .stamp-precios { display:flex; gap:8px; padding:4px 10px 6px; border-top:1px solid rgba(92,61,30,0.08); font-size:0.72rem; color:var(--sepia); }
+  .stamp-precios span { display:flex; align-items:center; gap:2px; }
+  .stamp-precios strong { font-family:'Playfair Display',serif; color:var(--gold); font-size:0.8rem; }
   input[type="file"] { display: none; }
   /* Drag & Drop / Paste en slots de foto */
   .photo-slot.drag-over {
@@ -1412,6 +1415,10 @@ function renderGrid(filtered) {
           ${s.dentado ? `<span class="stamp-tag">${s.dentado}</span>` : ''}
           ${filBadge}
         </div>
+        ${(s.precio_nuevo || s.precio_usado) ? `<div class="stamp-precios">
+          ${s.precio_nuevo ? `<span title="Nuevo">N: <strong>${s.precio_nuevo}€</strong></span>` : ''}
+          ${s.precio_usado ? `<span title="Usado">U: <strong>${s.precio_usado}€</strong></span>` : ''}
+        </div>` : ''}
       </div>
     </div>`;
   }).join('');
