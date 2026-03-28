@@ -950,7 +950,7 @@ function applyAuthUI() {
   }
   document.querySelectorAll('.edit-only').forEach(el => { el.style.display = isEditor() ? '' : 'none'; });
   const backupBtn = document.getElementById('backupBtn');
-  if (backupBtn) backupBtn.style.display = isEditor() ? '' : 'none';
+  if (backupBtn) backupBtn.style.display = (isEditor() && window.innerWidth > 768) ? '' : 'none';
 }
 
 async function handleGoogleCredential(response) {
