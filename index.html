@@ -467,7 +467,7 @@
     .stat-box { padding: 3px 8px; }
     .stat-num { font-size: 0.95rem; }
     .stat-label { font-size: 0.52rem; }
-    #statbox-fotos { display: none; }
+    #statbox-variantes { display: none; }
     .header-inner > div:last-child {
       flex-shrink: 0;
       width: auto;
@@ -573,7 +573,7 @@
     .stat-box { padding: 4px 8px; }
     .stat-num { font-size: 1.1rem; }
     .stat-label { font-size: 0.6rem; }
-    #statbox-fotos { display: none; }
+    #statbox-variantes { display: none; }
     /* Fila 3: Botones a la derecha */
     .header-inner > div:last-child { order: 3; flex-shrink: 0; width: 100%; justify-content: flex-end; display: flex; gap: 6px; }
     /* Toolbar: buscador en fila completa */
@@ -1278,9 +1278,11 @@ function toggleStatFilter(tipo) {
     activeStatFilter = (activeStatFilter === tipo) ? null : tipo;
   }
   // Actualizar clases visuales
-  document.getElementById('statbox-total').classList.toggle('active-filter', activeStatFilter === null && tipo === 'total' && false);
-  document.getElementById('statbox-tengo').classList.toggle('active-filter', activeStatFilter === 'tengo');
-  document.getElementById('statbox-fotos').classList.toggle('active-filter', activeStatFilter === 'fotos');
+  ['total','variantes','tengo','notengo'].forEach(t => {
+    const el = document.getElementById('statbox-' + t);
+    if (el) el.classList.toggle('active-filter',
+      t === 'total' ? activeStatFilter === null : activeStatFilter === t);
+  });
   renderStamps();
 }
 
@@ -1294,8 +1296,9 @@ function getFiltered() {
   const filterColor = document.getElementById('filterColor').value;
   return stamps.filter(s => {
     // Filtro por stat-box activo
-    if (activeStatFilter === 'tengo' && !s.estado) return false;
-    if (activeStatFilter === 'fotos' && !s.delante && !s.detras) return false;
+    if (activeStatFilter === 'tengo'    && !s.estado) return false;
+    if (activeStatFilter === 'notengo'  && s.estado) return false;
+    if (activeStatFilter === 'variantes' && !s.variante) return false;
     if (search) {
       // Si es solo número, buscar Edifil exacto
       if (/^\d+$/.test(search)) {
@@ -1358,14 +1361,16 @@ function colorClass(color) {
 
 function renderStamps() {
   const filtered = getFiltered();
-  const withEstado = stamps.filter(s => s.estado).length;
-  const withPhoto = stamps.filter(s => s.delante).length;
-  document.getElementById('stat-total').textContent = stamps.length;
-  document.getElementById('stat-tengo').textContent = withEstado;
-  document.getElementById('stat-fotos').textContent = withPhoto;
+  const withEstado   = stamps.filter(s => s.estado).length;
+  const withVariante = stamps.filter(s => s.variante).length;
+  document.getElementById('stat-total').textContent    = stamps.length;
+  document.getElementById('stat-variantes').textContent = withVariante;
+  document.getElementById('stat-tengo').textContent    = withEstado;
+  document.getElementById('stat-notengo').textContent  = stamps.length - withEstado;
   let infoExtra = '';
-  if (activeStatFilter === 'tengo') infoExtra = ' · <strong style="color:var(--gold)">Filtro: En colección</strong> <span style="cursor:pointer;color:var(--sepia)" onclick="toggleStatFilter(\'tengo\')" title="Quitar filtro">✕</span>';
-  if (activeStatFilter === 'fotos') infoExtra = ' · <strong style="color:var(--gold)">Filtro: Con foto</strong> <span style="cursor:pointer;color:var(--sepia)" onclick="toggleStatFilter(\'fotos\')" title="Quitar filtro">✕</span>';
+  if (activeStatFilter === 'tengo')     infoExtra = ' · <strong style="color:var(--gold)">Filtro: Tengo</strong> <span style="cursor:pointer;color:var(--sepia)" onclick="toggleStatFilter(\'tengo\')" title="Quitar filtro">✕</span>';
+  if (activeStatFilter === 'notengo')   infoExtra = ' · <strong style="color:var(--gold)">Filtro: No tengo</strong> <span style="cursor:pointer;color:var(--sepia)" onclick="toggleStatFilter(\'notengo\')" title="Quitar filtro">✕</span>';
+  if (activeStatFilter === 'variantes') infoExtra = ' · <strong style="color:var(--gold)">Filtro: Variantes</strong> <span style="cursor:pointer;color:var(--sepia)" onclick="toggleStatFilter(\'variantes\')" title="Quitar filtro">✕</span>';
   document.getElementById('resultsInfo').innerHTML = `Mostrando ${filtered.length} de ${stamps.length} sellos${infoExtra}`;
   if (currentEpoca) epocasContadores[currentEpoca] = withEstado;
 
@@ -2586,12 +2591,10 @@ function showPortada() {
   const container = document.getElementById('portadaEpocas');
   container.innerHTML = Object.values(EPOCAS).map(ep => {
     const labelItem = 'sellos';
-    const totalLabel = epocasTotales[ep.id] !== undefined
-      ? `<strong>${epocasTotales[ep.id]}</strong>${labelItem}`
-      : `<strong style="opacity:0.4;font-size:0.8rem">…</strong>${labelItem}`;
-    const tengoLabel = epocasContadores[ep.id] !== undefined
-      ? `<strong>${epocasContadores[ep.id]}</strong>en colección`
-      : `<strong style="opacity:0.4;font-size:0.8rem">…</strong>en colección`;
+    const totalLabel     = epocasTotales[ep.id]    !== undefined ? `<strong>${epocasTotales[ep.id]}</strong>${labelItem}`       : `<strong style="opacity:0.4;font-size:0.8rem">…</strong>${labelItem}`;
+    const variantesLabel = epocasVariantes[ep.id]  !== undefined ? `<strong>${epocasVariantes[ep.id]}</strong>variantes`          : '';
+    const tengoLabel     = epocasContadores[ep.id] !== undefined ? `<strong>${epocasContadores[ep.id]}</strong>tengo`              : `<strong style="opacity:0.4;font-size:0.8rem">…</strong>tengo`;
+    const notengoLabel   = epocasNoTengo[ep.id]    !== undefined ? `<strong>${epocasNoTengo[ep.id]}</strong>no tengo`             : '';
     return `
     <div class="portada-card${ep.id === currentEpoca ? ' active' : ''}" data-epoca="${ep.id}" onclick="entrarEpoca('${ep.id}')">
       <img class="portada-card-img" src="${ep.sello_ref}" onerror="this.style.display='none'" alt="">
@@ -2600,7 +2603,9 @@ function showPortada() {
       <div class="portada-card-sub">${ep.subtitulo}</div>
       <div class="portada-card-sellos">
         <div>${totalLabel}</div>
+        ${variantesLabel ? `<div>${variantesLabel}</div>` : ''}
         <div>${tengoLabel}</div>
+        ${notengoLabel ? `<div>${notengoLabel}</div>` : ''}
       </div>
     </div>`;
   }).join('');
@@ -2685,8 +2690,10 @@ function switchEpoca(epocaId) {
   const ep = EPOCAS[epocaId];
   // Resetear filtro de stat al cambiar de época
   activeStatFilter = null;
-  document.getElementById('statbox-tengo').classList.remove('active-filter');
-  document.getElementById('statbox-fotos').classList.remove('active-filter');
+  ['variantes','tengo','notengo'].forEach(t => {
+    const el = document.getElementById('statbox-' + t);
+    if (el) el.classList.remove('active-filter');
+  });
   // Actualizar header
   const tituloEl = document.getElementById('header-epoca-titulo');
   tituloEl.innerHTML = '<span style="color:#e0b84a;font-style:italic">' + ep.titulo + '</span>';
