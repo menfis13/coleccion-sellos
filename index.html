@@ -765,9 +765,9 @@
         <div class="form-group"><label class="form-label">Nº Edifil</label><input class="form-input" type="text" id="fEdifil" placeholder="Ej: 48 ó 48A"></div>
         <div class="form-group"><label class="form-label">Año</label><input class="form-input" type="number" id="fAño" placeholder="Ej: 1856"></div>
         <div class="form-group full"><label class="form-label">Descripción</label><input class="form-input" type="text" id="fDesc" placeholder="Ej: Isabel II"></div>
-        <div class="form-group"><label class="form-label">Color</label><input class="form-input" type="text" id="fColor" placeholder="Ej: azul"></div>
-        <div class="form-group"><label class="form-label">Valor Facial</label><input class="form-input" type="text" id="fValor" placeholder="Ej: 4 cuartos"></div>
-        <div class="form-group"><label class="form-label">Dentado</label>
+        <div class="form-group" id="grupoColor"><label class="form-label">Color</label><input class="form-input" type="text" id="fColor" placeholder="Ej: azul"></div>
+        <div class="form-group" id="grupoValor"><label class="form-label">Valor Facial</label><input class="form-input" type="text" id="fValor" placeholder="Ej: 4 cuartos"></div>
+        <div class="form-group" id="grupoDentado"><label class="form-label">Dentado</label>
           <select class="form-select" id="fDentado">
             <option value="">-- Seleccionar --</option>
             <option value="Sin dentar">Sin dentar</option>
@@ -797,7 +797,7 @@
       <button class="btn btn-danger edit-only" id="btnDelete" onclick="deleteStamp()">🗑 Eliminar</button>
       <div style="display:flex;gap:8px;">
         <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
-        <button class="btn btn-primary edit-only" onclick="saveStamp()">Guardar sello</button>
+        <button class="btn btn-primary edit-only" id="btnGuardar" onclick="saveStamp()">Guardar sello</button>
       </div>
     </div>
   </div>
@@ -1104,6 +1104,14 @@ const EPOCAS = {
     sello_ref: 'https://res.cloudinary.com/do4ltpfbo/image/upload/portada_franco.jpg',
     sheet: 'Hoja 9',
     data: []
+  },
+  'pruebas': {
+    id: 'pruebas',
+    titulo: 'Pruebas Oficiales',
+    subtitulo: 'Pruebas Oficiales y del Artista',
+    sello_ref: 'https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_32.jpg',
+    sheet: 'Hoja 10',
+    data: []
   }
 
 };
@@ -1161,6 +1169,24 @@ async function loadFromSheets() {
                        ? cell.f
                        : null;
         if (edifil === null) return null;
+        // Pruebas Oficiales tienen columnas diferentes a los sellos normales
+        if (currentEpoca === 'pruebas') {
+          const codigo = row.c[3]?.v ? String(row.c[3].v) : '';
+          return {
+            edifil,
+            codigo,
+            año:          row.c[1]?.v || null,
+            descripcion:  row.c[2]?.v || '',
+            estado:       row.c[6]?.v || null,
+            notas:        row.c[7]?.v || '',
+            referencia:   row.c[8]?.v || (codigo ? `https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_${codigo.toLowerCase()}.jpg` : null),
+            delante:      row.c[9]?.v || null,
+            detras:       row.c[10]?.v || null,
+            precio_nuevo: row.c[12]?.v || null,
+            precio_usado: row.c[13]?.v || null,
+            color: '', valor_facial: '', dentado: '', filigrana: '', variante: false,
+          };
+        }
         return {
           edifil,
           año:          row.c[1]?.v || null,
@@ -1368,7 +1394,7 @@ function renderGrid(filtered) {
     return `<div class="stamp-card${noTengo ? '' : ' tengo'}${esVariante ? ' variante' : ''}" onclick="openStamp(${edId})">
       <div class="stamp-img-area">${imgArea}</div>
       <div class="stamp-info">
-        <div class="stamp-edifil">Edifil nº ${s.edifil}</div>
+        <div class="stamp-edifil">${currentEpoca === 'pruebas' && s.codigo ? 'Prueba nº ' + s.codigo : 'Edifil nº ' + s.edifil}</div>
         <div class="stamp-desc">${s.descripcion || '—'}</div>
         <div class="stamp-meta">
           <span class="stamp-tag"><span class="stamp-color-dot ${colorClass(s.color)}"></span>${s.color || '—'}</span>
@@ -1389,7 +1415,7 @@ function renderList(filtered) {
     const edId = typeof s.edifil === 'string' ? `'${s.edifil}'` : s.edifil;
     return `
     <tr onclick="openStamp(${edId})">
-      <td><strong>${s.edifil}</strong></td><td>${s.año||'—'}</td><td>${s.descripcion||'—'}</td>
+      <td><strong>${currentEpoca === 'pruebas' && s.codigo ? 'Prueba nº ' + s.codigo : s.edifil}</strong></td><td>${s.año||'—'}</td><td>${s.descripcion||'—'}</td>
       <td><span style="display:flex;align-items:center;gap:6px"><span class="stamp-color-dot ${colorClass(s.color)}"></span>${s.color||'—'}</span></td>
       <td>${s.valor_facial||'—'}</td><td>${s.dentado||'—'}</td>
       <td>${s.estado ? `<span style="background:var(--sage);color:white;padding:2px 8px;border-radius:1px;font-size:0.75rem">${s.estado}</span>` : '<span style="color:#aaa">—</span>'}</td>
@@ -1642,6 +1668,23 @@ function fillModal(s) {
   setPhotoSlot('referencia', s.referencia);
   setPhotoSlot('delante', s.delante);
   setPhotoSlot('detras', s.detras);
+  // Adaptar campos según época
+  const esPrueba = currentEpoca === 'pruebas';
+  ['grupoColor','grupoValor','grupoDentado','grupoFiligrana'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = esPrueba ? 'none' : '';
+  });
+  if (esPrueba && document.getElementById('filigrana-aviso-modal'))
+    document.getElementById('filigrana-aviso-modal').innerHTML = '';
+  // Etiqueta del campo edifil
+  const lblEdifil = document.querySelector('label[for="fEdifil"]') || document.querySelector('#modal .form-label');
+  // Texto del botón guardar
+  const btnG = document.getElementById('btnGuardar');
+  if (btnG) btnG.textContent = esPrueba ? 'Guardar prueba' : 'Guardar sello';
+  // Cabecera del modal
+  document.getElementById('mEdifil').textContent = (esPrueba && s.codigo)
+    ? 'Prueba nº ' + s.codigo
+    : (s.edifil ? 'Edifil nº ' + s.edifil : 'Nuevo sello');
 }
 function closeModal(e) {
   if (e && e.target !== document.getElementById('modalOverlay')) return;
@@ -1660,9 +1703,10 @@ function saveStamp() {
   const data = {
     edifil, año: parseInt(document.getElementById('fAño').value)||null,
     descripcion: document.getElementById('fDesc').value.trim(),
-    color: document.getElementById('fColor').value.trim(),
-    valor_facial: document.getElementById('fValor').value.trim(),
-    dentado: document.getElementById('fDentado').value,
+    codigo: currentEpoca === 'pruebas' ? (stamps.find(s => String(s.edifil) === String(currentStampId||edifil))?.codigo || '') : undefined,
+    color: currentEpoca === 'pruebas' ? '' : document.getElementById('fColor').value.trim(),
+    valor_facial: currentEpoca === 'pruebas' ? '' : document.getElementById('fValor').value.trim(),
+    dentado: currentEpoca === 'pruebas' ? '' : document.getElementById('fDentado').value,
     estado: document.getElementById('fEstado').value || null,
     filigrana: document.getElementById('fFiligrana').value || null,
     notas: document.getElementById('fNotas').value.trim(),
@@ -2619,7 +2663,9 @@ history.replaceState({ view: 'portada' }, '', '');
 
 function switchEpoca(epocaId) {
   currentEpoca = epocaId;
-  SHEET_URL = `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=${EPOCAS[epocaId].sheet}&range=A1:N500`;
+  SHEET_URL = epocaId === 'pruebas'
+    ? `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(EPOCAS[epocaId].sheet)}`
+    : `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=${EPOCAS[epocaId].sheet}&range=A1:N500`;
   const ep = EPOCAS[epocaId];
   // Resetear filtro de stat al cambiar de época
   activeStatFilter = null;
@@ -2648,7 +2694,7 @@ async function precargarContadores() {
       epocasTotales[ep.id] = validRows.length;
       let count = 0;
       validRows.forEach(row => {
-        edifilEpocaMap[row.c[0].v] = ep.id; if (row.c[0].f) edifilEpocaMap[row.c[0].f] = ep.id;
+        if (ep.id !== 'pruebas') { edifilEpocaMap[row.c[0].v] = ep.id; if (row.c[0].f) edifilEpocaMap[row.c[0].f] = ep.id; }
         if (row.c[6] && row.c[6].v) count++;
       });
       epocasContadores[ep.id] = count;
