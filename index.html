@@ -1417,6 +1417,7 @@ function setSyncStatus(status, msg) {
 
 async function loadFromSheets() {
   _cargando = true;
+  const _epocaAlCargar = currentEpoca;
   setSyncStatus('syncing', 'Cargando datos desde Google Sheets...');
   try {
     const res = await fetch(SHEET_URL);
@@ -1468,6 +1469,7 @@ async function loadFromSheets() {
     setSyncStatus('error', 'Sin conexión con Sheets — no hay datos locales disponibles');
   }
   _cargando = false;
+  if (currentEpoca !== _epocaAlCargar) return; // el usuario cambió de época durante la carga
   populateFilters();
   renderStamps();
   if (currentEpoca) epocasContadores[currentEpoca] = stamps.filter(s => s.estado).length;
@@ -3361,8 +3363,8 @@ async function cargarPreciosDesdeSheets() {
             });
             console.log("Precios cargados desde Sheets con éxito");
             
-            // Refrescamos la pantalla para que se vean los precios nuevos
-            if (typeof renderStamps === 'function') renderStamps();
+            // Refrescamos la pantalla para que se vean los precios nuevos (solo si no hay carga en curso)
+            if (typeof renderStamps === 'function' && !_cargando) renderStamps();
         }
     } catch (error) {
         console.error("Error al obtener precios de Sheets:", error);
