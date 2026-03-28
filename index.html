@@ -568,7 +568,7 @@
     }
     .header-title h1, #header-epoca-titulo { font-size: 1rem !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .header-subtitle { display: none; }
-    /* Fila 2: Total + En colección iguales, Con foto oculto */
+    /* Fila 2: Total, Tengo, No Tengo visibles · Variantes oculto en móvil */
     .header-stats { order: 2; gap: 8px; flex-shrink: 0; width: 100%; justify-content: center; display: flex; }
     .stat-box { padding: 4px 8px; }
     .stat-num { font-size: 1.1rem; }
@@ -653,8 +653,9 @@
     </div>
     <div class="header-stats">
       <div class="stat-box" id="statbox-total" onclick="toggleStatFilter('total')" title="Ver todos los sellos"><span class="stat-num" id="stat-total">—</span><span class="stat-label">Total</span></div>
+      <div class="stat-box" id="statbox-variantes" onclick="toggleStatFilter('variantes')" title="Ver variantes"><span class="stat-num" id="stat-variantes">—</span><span class="stat-label">Variantes</span></div>
       <div class="stat-box" id="statbox-tengo" onclick="toggleStatFilter('tengo')" title="Ver sellos en mi colección"><span class="stat-num" id="stat-tengo">—</span><span class="stat-label">Tengo</span></div>
-      <div class="stat-box" id="statbox-fotos" onclick="toggleStatFilter('fotos')" title="Ver sellos con foto"><span class="stat-num" id="stat-fotos">—</span><span class="stat-label">Con foto</span></div>
+      <div class="stat-box" id="statbox-notengo" onclick="toggleStatFilter('notengo')" title="Ver sellos que me faltan"><span class="stat-num" id="stat-notengo">—</span><span class="stat-label">No tengo</span></div>
     </div>
     <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
       <div id="header-epocas-btns" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
@@ -1362,10 +1363,10 @@ function renderStamps() {
   const filtered = getFiltered();
   const withEstado   = stamps.filter(s => s.estado).length;
   const withVariante = stamps.filter(s => s.variante).length;
-  document.getElementById('stat-total').textContent    = stamps.length;
-  const elVariantes = document.getElementById('stat-variantes'); if (elVariantes) elVariantes.textContent = withVariante;
-  document.getElementById('stat-tengo').textContent    = withEstado;
-  const elNotengo = document.getElementById('stat-notengo'); if (elNotengo) elNotengo.textContent = stamps.length - withEstado;
+  document.getElementById('stat-total').textContent      = stamps.length;
+  document.getElementById('stat-variantes').textContent  = withVariante;
+  document.getElementById('stat-tengo').textContent      = withEstado;
+  document.getElementById('stat-notengo').textContent    = stamps.length - withEstado;
   let infoExtra = '';
   if (activeStatFilter === 'tengo')     infoExtra = ' · <strong style="color:var(--gold)">Filtro: Tengo</strong> <span style="cursor:pointer;color:var(--sepia)" onclick="toggleStatFilter(\'tengo\')" title="Quitar filtro">✕</span>';
   if (activeStatFilter === 'notengo')   infoExtra = ' · <strong style="color:var(--gold)">Filtro: No tengo</strong> <span style="cursor:pointer;color:var(--sepia)" onclick="toggleStatFilter(\'notengo\')" title="Quitar filtro">✕</span>';
@@ -2716,12 +2717,21 @@ async function precargarContadores() {
       const rows = json.table?.rows || [];
       const validRows = rows.filter(row => row.c && row.c[0] && row.c[0].v);
       epocasTotales[ep.id] = validRows.length;
-      let count = 0;
+      let count = 0, variantes = 0;
       validRows.forEach(row => {
-        if (ep.id !== 'pruebas') { edifilEpocaMap[row.c[0].v] = ep.id; if (row.c[0].f) edifilEpocaMap[row.c[0].f] = ep.id; }
+        if (ep.id !== 'pruebas') {
+          const edVal = row.c[0].v;
+          const edFmt = row.c[0].f;
+          edifilEpocaMap[edVal] = ep.id;
+          if (edFmt) edifilEpocaMap[edFmt] = ep.id;
+          // Detectar variante: Edifil con letra (ej: 48A)
+          if (/[a-zA-Z]/.test(String(edFmt || edVal))) variantes++;
+        }
         if (row.c[6] && row.c[6].v) count++;
       });
-      epocasContadores[ep.id] = count;
+      epocasContadores[ep.id]  = count;
+      epocasVariantes[ep.id]   = variantes;
+      epocasNoTengo[ep.id]     = validRows.length - count;
     } catch(e) {}
   });
   await Promise.all(promesas);
