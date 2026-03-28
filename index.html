@@ -1363,9 +1363,9 @@ function renderStamps() {
   const withEstado   = stamps.filter(s => s.estado).length;
   const withVariante = stamps.filter(s => s.variante).length;
   document.getElementById('stat-total').textContent    = stamps.length;
-  document.getElementById('stat-variantes').textContent = withVariante;
+  const elVariantes = document.getElementById('stat-variantes'); if (elVariantes) elVariantes.textContent = withVariante;
   document.getElementById('stat-tengo').textContent    = withEstado;
-  document.getElementById('stat-notengo').textContent  = stamps.length - withEstado;
+  const elNotengo = document.getElementById('stat-notengo'); if (elNotengo) elNotengo.textContent = stamps.length - withEstado;
   let infoExtra = '';
   if (activeStatFilter === 'tengo')     infoExtra = ' · <strong style="color:var(--gold)">Filtro: Tengo</strong> <span style="cursor:pointer;color:var(--sepia)" onclick="toggleStatFilter(\'tengo\')" title="Quitar filtro">✕</span>';
   if (activeStatFilter === 'notengo')   infoExtra = ' · <strong style="color:var(--gold)">Filtro: No tengo</strong> <span style="cursor:pointer;color:var(--sepia)" onclick="toggleStatFilter(\'notengo\')" title="Quitar filtro">✕</span>';
@@ -2702,6 +2702,8 @@ function switchEpoca(epocaId) {
 
 // Mostrar portada al inicio — esperar contadores de Sheets antes de renderizar
 const epocasTotales = {};
+const epocasVariantes = {};
+const epocasNoTengo = {};
 const edifilEpocaMap = {}; // edifil -> epochId (construido en precargarContadores)
 
 async function precargarContadores() {
