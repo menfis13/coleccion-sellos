@@ -1400,6 +1400,7 @@ const epocasContadores = {};
 
 // Estado
 let stamps = [];
+let _cargando = false; // bloquea renderStamps mientras carga Sheets
 let currentView = 'grid';
 let sortField = 'edifil';
 let sortDir = 1;
@@ -1415,6 +1416,7 @@ function setSyncStatus(status, msg) {
 }
 
 async function loadFromSheets() {
+  _cargando = true;
   setSyncStatus('syncing', 'Cargando datos desde Google Sheets...');
   try {
     const res = await fetch(SHEET_URL);
@@ -1465,6 +1467,7 @@ async function loadFromSheets() {
     stamps = [];
     setSyncStatus('error', 'Sin conexión con Sheets — no hay datos locales disponibles');
   }
+  _cargando = false;
   populateFilters();
   renderStamps();
   if (currentEpoca) epocasContadores[currentEpoca] = stamps.filter(s => s.estado).length;
@@ -1651,9 +1654,7 @@ function colorClass(color) {
 }
 
 function renderStamps() {
-  if (currentEpoca === 'pruebas') {
-    console.log('renderStamps stamps=' + stamps.length + ' | ' + new Error().stack.split('\n').slice(1,3).join(' '));
-  }
+  if (_cargando) return; // esperar a que termine loadFromSheets
   const filtered = getFiltered();
   const withEstado = stamps.filter(s => s.estado).length;
   const withPhoto = stamps.filter(s => s.delante).length;
