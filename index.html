@@ -670,6 +670,9 @@
     <div class="portada-epocas" id="portadaEpocas"></div>
     <div class="portada-footer">Haz clic en una época para entrar directamente</div>
     <div id="authPortada" style="position:fixed;bottom:24px;right:28px;z-index:10"></div>
+    <div id="backupBtn" style="position:fixed;bottom:24px;left:28px;z-index:10;display:none">
+      <button onclick="hacerCopiaSeguridad()" style="background:rgba(13,11,7,0.85);border:1px solid rgba(184,134,11,0.4);color:#a89070;font-family:'Crimson Pro',serif;font-size:0.8rem;padding:8px 14px;border-radius:2px;cursor:pointer;letter-spacing:0.06em;backdrop-filter:blur(4px);transition:all 0.2s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='#d4a843'" onmouseout="this.style.borderColor='rgba(184,134,11,0.4)';this.style.color='#a89070'">💾 Copia de seguridad</button>
+    </div>
   </div>
 </div>
 
@@ -946,6 +949,8 @@ function applyAuthUI() {
     }
   }
   document.querySelectorAll('.edit-only').forEach(el => { el.style.display = isEditor() ? '' : 'none'; });
+  const backupBtn = document.getElementById('backupBtn');
+  if (backupBtn) backupBtn.style.display = isEditor() ? '' : 'none';
 }
 
 async function handleGoogleCredential(response) {
@@ -2815,6 +2820,32 @@ let pruebaVista = 'grid'; // 'grid' | 'list'// Los datos de pruebas se cargan si
  * Esta función busca en la pestaña 'STAMPS', toma el número Edifil (Columna A)
  * y los precios de las columnas K y L.
  */
+function hacerCopiaSeguridad() {
+  if (!confirm('¿Descargar copia de seguridad?\n\nSe descargarán dos archivos:\n· HTML de la página\n· Datos de Sheets (Excel)')) return;
+
+  const fecha = new Date().toISOString().slice(0,10); // YYYY-MM-DD
+
+  // 1. Descargar el HTML
+  const htmlBlob = new Blob([document.documentElement.outerHTML], { type: 'text/html;charset=utf-8' });
+  const htmlUrl = URL.createObjectURL(htmlBlob);
+  const htmlLink = document.createElement('a');
+  htmlLink.href = htmlUrl;
+  htmlLink.download = 'menfis_html_' + fecha + '.html';
+  htmlLink.click();
+  setTimeout(() => URL.revokeObjectURL(htmlUrl), 5000);
+
+  // 2. Descargar el Sheets como Excel
+  setTimeout(() => {
+    const sid = _cfg().sid;
+    const xlsxUrl = `https://docs.google.com/spreadsheets/d/${sid}/export?format=xlsx&token=${_googleCredentialToken}`;
+    const xlsxLink = document.createElement('a');
+    xlsxLink.href = xlsxUrl;
+    xlsxLink.download = 'menfis_datos_' + fecha + '.xlsx';
+    xlsxLink.click();
+    showToast('💾 Copia de seguridad descargada');
+  }, 800);
+}
+
 async function cargarPreciosDesdeSheets() {
     const SPREADSHEET_ID = '1X58_YshD6l7h1-B-lCid_m9m5v63Xz-B6e7Yqf0';
     
