@@ -1309,12 +1309,21 @@ function getFiltered() {
     if (filterColor && !s.color?.toLowerCase().includes(filterColor.toLowerCase())) return false;
     return true;
   }).sort((a,b) => {
-    // Ordenación especial por edifil: 1, 1A, 1B, 2, 2A, 22, 22B...
+    // Ordenación por edifil: 1, 1A, 2... y para pruebas PO-1, PO-2, CALC-1...
     if (sortField === 'edifil') {
-      const parse = v => { const s = String(v||''); const n = parseInt(s)||0; const l = s.replace(/^\d+/,'').toLowerCase(); return [n,l]; };
-      const [an,al] = parse(a.edifil); const [bn,bl] = parse(b.edifil);
-      if (an !== bn) return (an-bn)*sortDir;
-      return (al<bl?-1:al>bl?1:0)*sortDir;
+      const parse = v => {
+        const s = String(v||'');
+        // Extraer número final (PO-32 → 32, CALC-5 → 5, 1A → 1, 22 → 22)
+        const mEnd = s.match(/(\d+)([A-Za-z]*)$/);
+        const n = mEnd ? parseInt(mEnd[1]) : 0;
+        const prefix = s.replace(/(\d+)([A-Za-z]*)$/, '').toLowerCase(); // PO-, CALC-, ''
+        const suffix = mEnd ? mEnd[2].toLowerCase() : '';                  // A, B, ''
+        return [prefix, n, suffix];
+      };
+      const [ap,an,al] = parse(a.edifil); const [bp,bn,bl] = parse(b.edifil);
+      if (ap !== bp) return (ap<bp?-1:1)*sortDir; // agrupar por prefijo (PO, CALC...)
+      if (an !== bn) return (an-bn)*sortDir;       // luego por número
+      return (al<bl?-1:al>bl?1:0)*sortDir;         // luego por letra (1A, 1B)
     }
     let av = a[sortField], bv = b[sortField];
     if (av == null) av = ''; if (bv == null) bv = '';
