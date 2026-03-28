@@ -80,55 +80,6 @@
   background: rgba(184, 134, 11, 0.15) !important;
   transform: translateY(-5px) !important;
 }
-/* --- ARREGLO TRIÁNGULO Y TAMAÑO PRUEBAS OFICIALES --- */
-.prueba-card {
-  position: relative !important;
-  overflow: hidden !important;
-  display: flex !important;
-  flex-direction: column !important;
-  height: auto !important; /* Evita que se estiren hacia abajo */
-  min-height: 280px !important; 
-  background: rgba(184, 134, 11, 0.05) !important;
-  border: 1px solid rgba(184, 134, 11, 0.2) !important;
-  border-radius: 8px !important;
-  padding: 10px !important;
-}
-
-/* El Triángulo Rojo para las Pruebas */
-.prueba-card.tengo::after {
-  content: "" !important;
-  position: absolute !important;
-  top: 0 !important;
-  right: 0 !important;
-  width: 0 !important;
-  height: 0 !important;
-  border-style: solid !important;
-  border-width: 0 35px 35px 0 !important;
-  border-color: transparent #d32f2f transparent transparent !important;
-  z-index: 10 !important;
-}
-
-/* Asegurar que la imagen no tape el triángulo */
-.prueba-img-area {
-  position: relative !important;
-  z-index: 1 !important;
-  height: auto !important;
-  min-height: 100px !important;
-  max-height: 220px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  overflow: hidden !important;
-}
-
-.prueba-img-area img {
-  max-width: 100% !important;
-  max-height: 220px !important;
-  width: auto !important;
-  height: auto !important;
-  object-fit: contain !important;
-  display: block !important;
-}
   
   body.dark-mode { background: #13110d !important; color: var(--ink); }
   body.dark-mode header { background: #0d0b07 !important; }
@@ -664,132 +615,9 @@
   .portada-card-img { width:80px; height:80px; object-fit:contain; float:right; margin:-8px -4px 0 16px; opacity:0.85; border-radius:2px; outline:none; border:none; box-shadow:none; }
   .portada-card-sellos { font-size:0.78rem; color:#9a8060; border-top:1px solid rgba(184,134,11,0.12); padding-top:14px; margin-top:14px; display:flex; gap:16px; }
   .portada-card-sellos strong { color:#e0b84a; font-size:1rem; font-family:'Playfair Display',serif; display:block; }
-  /* Tarjeta especial para Pruebas Oficiales */
-  .portada-card.pruebas-card { border-color:rgba(184,134,11,0.3); }
-  .portada-card.pruebas-card:hover { border-color:rgba(184,134,11,0.7); box-shadow:0 16px 48px rgba(184,134,11,0.15); }
-  /* Sección de Pruebas Oficiales */
-  #seccionPruebas { display:none; }
-  #seccionPruebas.open { display:block; }
-  .prueba-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:16px; padding:16px; padding-top:20px; }
-  .prueba-card { background:var(--cream); border:1px solid rgba(184,134,11,0.2); border-radius:3px; overflow:hidden; cursor:pointer; transition:all 0.2s; position:relative; }
-  .prueba-card:hover { border-color:rgba(184,134,11,0.6); transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,0.15); }
-  .prueba-card.tengo { border-color:rgba(184,134,11,0.5); }
-  .prueba-card.tengo::after { content:'✓'; position:absolute; top:6px; right:8px; color:var(--gold-light); font-size:1rem; font-weight:bold; text-shadow:0 0 4px rgba(0,0,0,0.5); }
-  .prueba-img-area { width:100%; height:150px; display:flex; align-items:center; justify-content:center; background:#fff; overflow:hidden; }
-  .prueba-img-area img { width:100%; height:100%; object-fit:contain; }
-  .prueba-img-placeholder { font-size:2rem; opacity:0.2; }
-  .prueba-info { padding:10px 12px 12px; }
-  .prueba-num { font-size:0.65rem; letter-spacing:0.15em; color:var(--gold); text-transform:uppercase; margin-bottom:3px; }
-  .prueba-desc { font-family:'Playfair Display',serif; font-size:0.85rem; color:var(--ink); line-height:1.3; }
-  .prueba-año { font-size:0.72rem; color:var(--sepia); margin-top:4px; }
-  /* Header de la sección pruebas */
-  .pruebas-header { display:none; }
-  .pruebas-stats { font-size:0.8rem; color:var(--sepia); }
-  @media(max-width:600px) {
-    .prueba-grid { grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px; padding:10px; }
-  }
+  @media(max-width:600px) {  }
   .portada-entrar:hover { background:#e0b84a; transform:translateY(-1px); }
   .portada-footer { font-size:0.72rem; color:#6a5a3a; letter-spacing:0.1em; text-transform:uppercase; margin-top:48px; }
-
-/* ===== TOOLBAR PRUEBAS ===== */
-.pruebas-toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.pruebas-toolbar input {
-  width: 33%;
-  min-width: 120px;
-  padding: 9px 14px;
-  border-radius: 2px;
-  border: 1px solid rgba(92,61,30,0.3);
-  background: var(--cream);
-  color: var(--ink);
-  font-family: 'Crimson Pro', serif;
-  font-size: 1rem;
-  outline: none;
-  transition: border-color 0.2s;
-}
-.pruebas-toolbar input:focus { border-color: var(--gold); }
-
-@media (max-width:600px) {
-  .pruebas-toolbar input { width: 45%; }
-}
-
-/* Vista lista de pruebas */
-#pruebaGrid.vista-lista {
-  display: flex !important;
-  flex-direction: column;
-  gap: 0;
-  padding: 0 16px 16px;
-}
-#pruebaGrid.vista-lista .prueba-card {
-  display: grid !important;
-  grid-template-columns: 70px 1fr;
-  min-height: unset !important;
-  height: 64px !important;
-  border-radius: 0 !important;
-  border-bottom: 1px solid rgba(184,134,11,0.12) !important;
-  border-left: none !important;
-  border-right: none !important;
-  border-top: none !important;
-  padding: 0 !important;
-}
-#pruebaGrid.vista-lista .prueba-card:first-child {
-  border-top: 1px solid rgba(184,134,11,0.12) !important;
-}
-#pruebaGrid.vista-lista .prueba-img-area {
-  height: 64px !important;
-  width: 70px;
-  border-right: 1px solid rgba(184,134,11,0.1);
-}
-#pruebaGrid.vista-lista .prueba-info {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 0 14px;
-}
-#pruebaGrid.vista-lista .prueba-num {
-  font-family: 'Playfair Display', serif;
-  font-size: 0.8rem;
-  color: var(--gold);
-  white-space: nowrap;
-  flex-shrink: 0;
-  min-width: 52px;
-}
-#pruebaGrid.vista-lista .prueba-desc {
-  font-size: 0.9rem;
-  color: var(--ink);
-  flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-#pruebaGrid.vista-lista .prueba-año {
-  font-size: 0.8rem;
-  color: var(--sepia);
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-#pruebaGrid.vista-lista .prueba-precio {
-  font-family: 'Playfair Display', serif;
-  font-size: 0.8rem;
-  white-space: nowrap;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 1px;
-}
-#pruebaGrid.vista-lista .prueba-precio span { display: block; }
-#pruebaGrid.vista-lista .prueba-precio .pn { color: var(--gold); }
-#pruebaGrid.vista-lista .prueba-precio .pu { color: var(--sepia); }
-/* Triángulo en lista */
-#pruebaGrid.vista-lista .prueba-card.tengo::after {
-  border-width: 0 22px 22px 0 !important;
-}
 
 </style>
 </head>
@@ -839,10 +667,6 @@
             onblur="saltarEdifil()">
         </div>
       </div>
-      <div id="header-pruebas-btns" style="display:none;align-items:center;gap:6px">
-        <button onclick="volverPortadaDesdePruebas()" class="header-btn" style="background:transparent;border:1px solid rgba(184,134,11,0.5);color:var(--gold-light);" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(184,134,11,0.5)'">◀ Épocas</button>
-        <button onclick="window.scrollTo({top:0,behavior:'smooth'})" class="header-btn" style="background:transparent;border:1px solid rgba(184,134,11,0.35);color:#a89070;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold-light)'" onmouseout="this.style.borderColor='rgba(184,134,11,0.35)';this.style.color='#a89070'">↑ Arriba</button>
-      </div>
       <div id="authArea"></div>
       <div style="width:1px;height:28px;background:rgba(184,134,11,0.25);margin:0 4px;flex-shrink:0"></div>
       <button id="darkModeBtn" onclick="toggleDarkMode()" title="Cambiar modo claro/oscuro">
@@ -852,70 +676,6 @@
     </div>
   </div>
 </header>
-
-
-<div class="modal-overlay" id="modalPrueba" onclick="cerrarModalPrueba(event)">
-  <button class="modal-nav prev" id="pruebNavPrev" onclick="event.stopPropagation(); navegarPrueba(-1)">‹</button>
-  <div class="modal" id="modalPruebaInner" style="max-width:700px">
-    <div class="modal-header">
-      <div>
-        <div class="modal-edifil" id="pNum"></div>
-        <div class="modal-title" id="pTitle"></div>
-      </div>
-      <button class="modal-close" onclick="cerrarModalPrueba()">✕</button>
-    </div>
-    <div class="modal-body">
-      <div id="precio-prueba-modal"></div>
-      <div class="photo-section">
-        <div class="photo-slot" id="pSlotRef"><div class="photo-slot-preview"></div>
-          <div style="text-align:center;font-size:0.62rem;color:var(--sepia);padding:4px 0 3px;letter-spacing:0.07em;border-top:1px solid rgba(92,61,30,0.1);background:#faf7f2">REFERENCIA</div>
-        </div>
-        <div class="photo-slot" id="pSlotDelante"><div class="photo-slot-preview"></div>
-          <div style="text-align:center;font-size:0.62rem;color:var(--sepia);padding:4px 0 3px;letter-spacing:0.07em;border-top:1px solid rgba(92,61,30,0.1);background:#faf7f2">ANVERSO</div>
-          <span class="drop-hint edit-only">📋 pegar · arrastrar</span>
-          <div class="photo-actions edit-only" id="pOverlayDelante">
-            <button onclick="event.stopPropagation(); triggerPruebaPhoto('delante')"><span class="btn-icon">📷</span><span>Cámara</span></button>
-            <button onclick="event.stopPropagation(); triggerPruebaPhotoGallery('delante')"><span class="btn-icon">🖼️</span><span>Galería</span></button>
-            <button class="btn-quitar" onclick="event.stopPropagation(); quitarFotoPrueba('delante')"><span class="btn-icon">🗑️</span><span>Quitar</span></button>
-          </div>
-        </div>
-        <div class="photo-slot" id="pSlotDetras"><div class="photo-slot-preview"></div>
-          <div style="text-align:center;font-size:0.62rem;color:var(--sepia);padding:4px 0 3px;letter-spacing:0.07em;border-top:1px solid rgba(92,61,30,0.1);background:#faf7f2">REVERSO</div>
-          <span class="drop-hint edit-only">📋 pegar · arrastrar</span>
-          <div class="photo-actions edit-only" id="pOverlayDetras">
-            <button onclick="event.stopPropagation(); triggerPruebaPhoto('detras')"><span class="btn-icon">📷</span><span>Cámara</span></button>
-            <button onclick="event.stopPropagation(); triggerPruebaPhotoGallery('detras')"><span class="btn-icon">🖼️</span><span>Galería</span></button>
-            <button class="btn-quitar" onclick="event.stopPropagation(); quitarFotoPrueba('detras')"><span class="btn-icon">🗑️</span><span>Quitar</span></button>
-          </div>
-        </div>
-      </div>
-      <div class="form-grid">
-        <div class="form-group"><label class="form-label">Nº Prueba</label><input class="form-input" id="pFNum" readonly style="pointer-events:none;background:#f5f0e8"></div>
-        <div class="form-group"><label class="form-label">Año</label><input class="form-input" id="pFAño" type="number" min="1975" max="2030"></div>
-        <div class="form-group full"><label class="form-label">Descripción</label><input class="form-input" id="pFDesc"></div>
-        <div class="form-group"><label class="form-label">Estado en tu colección</label>
-          <select class="form-select" id="pFEstado">
-            <option value="">-- No tengo esta prueba --</option>
-            <option value="Nuevo">Nuevo</option>
-            <option value="Nuevo Fijasello">Nuevo Fijasello</option>
-            <option value="Usado">Usado</option>
-            <option value="Usado Fijasello">Usado Fijasello</option>
-          </select>
-        </div>
-        <div class="form-group full"><label class="form-label">Notas personales</label><textarea class="form-textarea" id="pFNotas" placeholder="Observaciones, procedencia, valor estimado..."></textarea></div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-danger edit-only" onclick="eliminarPrueba()">🗑 Eliminar</button>
-      <div style="display:flex;gap:8px;">
-        <button class="btn btn-secondary" onclick="cerrarModalPrueba()">Cancelar</button>
-        <button class="btn btn-primary edit-only" onclick="guardarPrueba()">Guardar prueba</button>
-      </div>
-    </div>
-  </div>
-  <button class="modal-nav next" id="pruebNavNext" onclick="event.stopPropagation(); navegarPrueba(1)">›</button>
-</div>
-
 <div id="syncBar" class="sync-bar">
   <div class="sync-dot"></div>
   <span id="syncMsg">Conectando con Google Sheets...</span>
@@ -944,26 +704,6 @@
   </div>
 </div>
 
-<!-- Sección Pruebas Oficiales y del Artista -->
-<div id="seccionPruebas" class="seccion-epoca">
-  
-  <div class="epoca-controls" style="margin-bottom: 20px; padding: 0 15px;">
-    <div id="resultsInfoPruebas" style="margin-bottom: 10px; font-weight: bold; color: var(--gold);"></div>
-   <div class="pruebas-toolbar">
-  
-  <input type="text" id="searchInputPruebas" placeholder="Buscar pruebas..." oninput="renderPruebas()">
-
-  <div class="view-toggle">
-    <button class="view-btn active" id="pruebaBtnGrid" onclick="setPruebaView('grid')" title="Cuadrícula">⊞</button>
-    <button class="view-btn" id="pruebaBtnList" onclick="setPruebaView('list')" title="Lista">≡</button>
-  </div>
-
-</div>
-  </div>
-
-  <div class="prueba-grid" id="pruebaGrid"></div>
-
-</div>
 
 <div class="main">
   <div class="results-info" id="resultsInfo"></div>
@@ -1074,8 +814,6 @@
 <div class="saving-toast" id="toast"></div>
 
 <script>
-// Pruebas Oficiales y del Artista
-let PRUEBAS_OFICIALES_DATA = []; // Cargado dinámicamente desde Google Sheets (Hoja 10)
 
 // config
 function _cfg() {
@@ -1367,15 +1105,7 @@ const EPOCAS = {
     sheet: 'Hoja 9',
     data: []
   }
-,
-  'pruebas': {
-    id: 'pruebas',
-    titulo: '(1975-2024) Pruebas Oficiales',
-    subtitulo: 'Pruebas Oficiales y del Artista',
-    sello_ref: 'https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_32.jpg',
-    sheet: 'Hoja 10',
-    data: []
-  }
+
 };
 
 let currentEpoca = null;
@@ -1390,12 +1120,6 @@ function getRefUrl(edifil) {
   }
   return null;
 }
-
-function getPruebaRefUrl(codigo) {
-  if (!codigo) return null;
-  return `https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_${codigo.toLowerCase()}.jpg`;
-}
-
 const epocasContadores = {};
 
 // Estado
@@ -1505,95 +1229,6 @@ async function deleteFromSheets(edifil) {
   }
 }
 
-// ==================== PRUEBAS OFICIALES - SHEETS ====================
-const PRUEBAS_SHEET = 'Hoja 10';
-
-
-async function loadPruebasFromSheets() {
-  setSyncStatus('syncing', 'Cargando pruebas desde Google Sheets...');
-  try {
-    const url = `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(PRUEBAS_SHEET)}`;
-    const res = await fetch(url);
-    const text = await res.text();
-    const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\((.*)\);?$/s)[1]);
-    const rows = json.table.rows;
-
-    if (!rows || rows.length === 0) {
-      PRUEBAS_OFICIALES_DATA = [];
-      setSyncStatus('', 'Hoja 10 vacía — sin datos de pruebas.');
-      renderPruebas();
-      return;
-    }
-
-    // A=edifil(id), B=año, C=descripcion, D=codigo, E=valor_facial, F=dentado,
-    // G=estado, H=notas, I=(vacío), J=delante, K=detras, L=filigrana, M=precio_nuevo, N=precio_usado
-    PRUEBAS_OFICIALES_DATA = rows.map(row => {
-      if (!row.c || !row.c[0] || !row.c[0].v) return null;
-      const id = row.c[0].v;
-      const codigo = row.c[3]?.v ? String(row.c[3].v) : '';
-      return {
-        id,
-        codigo,
-        año:          row.c[1]?.v || null,
-        descripcion:  row.c[2]?.v || '',
-        estado:       row.c[6]?.v || null,
-        notas:        row.c[7]?.v || '',
-        referencia:   getPruebaRefUrl(codigo),
-        delante:      row.c[9]?.v || null,
-        detras:       row.c[10]?.v || null,
-        precio_nuevo: row.c[12]?.v || null,
-        precio_usado: row.c[13]?.v || null,
-      };
-    }).filter(Boolean);
-
-    setSyncStatus('', `Pruebas cargadas — ${PRUEBAS_OFICIALES_DATA.length} registros`);
-    try { localStorage.setItem('pruebas_oficiales', JSON.stringify(PRUEBAS_OFICIALES_DATA)); } catch(e) {}
-    renderPruebas();
-  } catch(e) {
-    console.error(e);
-    setSyncStatus('error', 'Sin conexión con Sheets para pruebas');
-    if (!PRUEBAS_OFICIALES_DATA.length) renderPruebas();
-  }
-}
-async function savePruebaToSheets(prueba) {
-  setSyncStatus('syncing', 'Guardando prueba en Google Sheets...');
-  try {
-    // El Apps Script busca por col A (edifil) y escribe por posición de columna
-    // Orden debe coincidir con cabeceras de Hoja 10: id,codigo,descripcion,año,estado,notas,delante,detras,precio_nuevo,precio_usado
-    const payload = {
-      edifil:       prueba.id,
-      año:          prueba.año,
-      descripcion:  prueba.descripcion,
-      color:        prueba.codigo,
-      valor_facial: '',
-      dentado:      '',
-      estado:       prueba.estado,
-      notas:        prueba.notas,
-      referencia:   '',
-      delante:      (prueba.delante && prueba.delante.startsWith('data:')) ? null : prueba.delante,
-      detras:       (prueba.detras  && prueba.detras.startsWith('data:'))  ? null : prueba.detras,
-      filigrana:    '',
-      precio_nuevo: prueba.precio_nuevo,
-      precio_usado: prueba.precio_usado,
-    };
-    const url = _cfg().surl + '?action=save&token=' + _cfg().tok +
-                '&payload=' + encodeURIComponent(JSON.stringify(payload)) +
-                '&sheet=' + encodeURIComponent(PRUEBAS_SHEET);
-    const res = await fetch(url);
-    const json = await res.json();
-    if (json.status === 'ok') {
-      setSyncStatus('', 'Prueba guardada en Sheets ✓');
-      showToast('Prueba guardada en Sheets ✓');
-    } else {
-      throw new Error(json.message);
-    }
-  } catch(e) {
-    console.error(e);
-    setSyncStatus('error', 'Error al guardar prueba — guardado localmente');
-    showToast('Guardado localmente (sin conexión a Sheets)');
-  }
-}
-
 function saveLocal() {
   try {
     const toSave = stamps.map(s => {
@@ -1617,9 +1252,7 @@ function toggleStatFilter(tipo) {
   document.getElementById('statbox-total').classList.toggle('active-filter', activeStatFilter === null && tipo === 'total' && false);
   document.getElementById('statbox-tengo').classList.toggle('active-filter', activeStatFilter === 'tengo');
   document.getElementById('statbox-fotos').classList.toggle('active-filter', activeStatFilter === 'fotos');
-  // Si estamos en pruebas, filtrar pruebas; si no, filtrar sellos normales
-  const inPruebas = document.getElementById('seccionPruebas').classList.contains('open');
-  if (inPruebas) renderPruebas(); else renderStamps();
+  renderStamps();
 }
 
 // ==================== FILTERS ====================
@@ -1787,11 +1420,10 @@ function onSearchInput() {
 function saltarEdifil() {
   const val = document.getElementById('edifilJump').value.trim();
   if (!val) return;
-  // Soportar tanto números puros (48) como variantes (1A, 22B)
   const edifil = /^\d+$/.test(val) ? parseInt(val) : val.toUpperCase();
   document.querySelectorAll('.search-highlight').forEach(el => el.classList.remove('search-highlight'));
 
-  // Buscar en época actual primero (comparar como string para soportar variantes)
+  // Buscar en época actual primero
   if (stamps.find(s => String(s.edifil) === String(edifil))) {
     window._searchOverride = true;
     renderStamps();
@@ -2139,30 +1771,16 @@ function initPhotoDragDrop() {
   document.addEventListener('paste', (e) => {
     if (!isEditor()) return;
     const modalSello = document.getElementById('modalOverlay');
-    const modalPrueba = document.getElementById('modalPrueba');
-    const selloAbierto = modalSello?.classList.contains('open');
-    const pruebaAbierta = modalPrueba?.classList.contains('open');
-    if (!selloAbierto && !pruebaAbierta) return;
-
+    if (!modalSello?.classList.contains('open')) return;
     const items = e.clipboardData?.items;
     if (!items) return;
-
     for (const item of items) {
       if (item.type.startsWith('image/')) {
         const file = item.getAsFile();
         if (!file) continue;
-        if (pruebaAbierta) {
-          const side = window._currentPruebaPhotoSide || 'delante';
-          currentPhotoTarget = 'prueba_' + side;
-          window._currentPruebaPhotoSide = side;
-          const fakeInput = { files: [file] };
-          handlePhoto({ target: fakeInput });
-          showToast('📋 Imagen pegada en ' + (side === 'delante' ? 'Anverso' : 'Reverso'));
-        } else {
-          const target = currentPhotoTarget || 'delante';
-          processFileAsPhoto(file, target);
-          showToast('📋 Imagen pegada en ' + (target === 'delante' ? 'Anverso' : 'Reverso'));
-        }
+        const target = currentPhotoTarget || 'delante';
+        processFileAsPhoto(file, target);
+        showToast('📋 Imagen pegada en ' + (target === 'delante' ? 'Anverso' : 'Reverso'));
         e.preventDefault();
         return;
       }
@@ -2644,11 +2262,10 @@ async function handlePhoto(event) {
       finalCanvas.toBlob(async (blob) => {
       try {
         const formData = new FormData();
-        const esPrueba = currentPhotoTarget.startsWith('prueba_');
-        const uniqueName = (esPrueba ? 'prueba_oficial_' + currentPruebaId : 'sello_' + currentStampId) + '_' + currentPhotoTarget + '_' + Date.now() + '.jpg';
+        const uniqueName = 'sello_' + currentStampId + '_' + currentPhotoTarget + '_' + Date.now() + '.jpg';
         formData.append('file', blob, uniqueName);
         formData.append('upload_preset', _cfg().preset);
-        formData.append('folder', esPrueba ? 'sellos/pruebas-oficiales/mios' : 'sellos/' + currentEpoca + '/mios');
+        formData.append('folder', 'sellos/' + currentEpoca + '/mios');
 
         const res = await fetch(`https://api.cloudinary.com/v1_1/${_cfg().cloud}/image/upload`, {
           method: 'POST',
@@ -2657,43 +2274,24 @@ async function handlePhoto(event) {
         const json = await res.json();
 
         if (json.secure_url) {
-          if (esPrueba) {
-            // Guardar foto en prueba oficial
-            const side = window._currentPruebaPhotoSide;
-            const pidx = PRUEBAS_OFICIALES_DATA.findIndex(p => p.id === currentPruebaId);
-            if (pidx >= 0) {
-              PRUEBAS_OFICIALES_DATA[pidx][side] = json.secure_url;
-              setPruebaSlot(side, json.secure_url);
-              try { localStorage.setItem('pruebas_oficiales', JSON.stringify(PRUEBAS_OFICIALES_DATA)); } catch(e) {}
-              savePruebaToSheets(PRUEBAS_OFICIALES_DATA[pidx]);
-              renderPruebas();
-            }
-            setSyncStatus('', 'Foto guardada en Cloudinary ✓');
-            showToast('Foto guardada ✓');
-          } else {
           const idx = stamps.findIndex(s => s.edifil === currentStampId);
           let autoEstadoMsg = '';
-
-if (idx >= 0) {
-  stamps[idx][currentPhotoTarget] = json.secure_url;
-  setPhotoSlot(currentPhotoTarget, json.secure_url);
-
-  if (!stamps[idx].estado) {
-    stamps[idx].estado = 'Nuevo';
-    const fEstado = document.getElementById('fEstado');
-    if (fEstado) fEstado.value = 'Nuevo';
-    autoEstadoMsg = ' · marcado como Nuevo ✓';
-    renderStamps();
-  }
-
-  await saveToSheets(stamps[idx]);
-  saveLocal();
-  renderStamps();
-}
-
-setSyncStatus('', 'Foto guardada en Cloudinary ✓');
-showToast('Foto guardada ✓' + autoEstadoMsg);
+          if (idx >= 0) {
+            stamps[idx][currentPhotoTarget] = json.secure_url;
+            setPhotoSlot(currentPhotoTarget, json.secure_url);
+            if (!stamps[idx].estado) {
+              stamps[idx].estado = 'Nuevo';
+              const fEstado = document.getElementById('fEstado');
+              if (fEstado) fEstado.value = 'Nuevo';
+              autoEstadoMsg = ' · marcado como Nuevo ✓';
+              renderStamps();
+            }
+            await saveToSheets(stamps[idx]);
+            saveLocal();
+            renderStamps();
           }
+          setSyncStatus('', 'Foto guardada en Cloudinary ✓');
+          showToast('Foto guardada ✓' + autoEstadoMsg);
         } else {
           console.error('Cloudinary error:', json);
           throw new Error(json.error?.message || 'Error en Cloudinary');
@@ -2919,21 +2517,6 @@ function showToast(msg, duration) { duration = duration || 2500;
 // ==================== INIT ====================
 
 function showPortada() {
-  // Cerrar sección pruebas si estuviera abierta
-  const secPruebas = document.getElementById('seccionPruebas');
-  if (secPruebas && secPruebas.classList.contains('open')) {
-    secPruebas.classList.remove('open');
-    secPruebas.style.paddingTop = '';
-    const hEpocas = document.getElementById('header-epocas-btns');
-    const hPruebas = document.getElementById('header-pruebas-btns');
-    if (hEpocas) hEpocas.style.display = 'flex';
-    if (hPruebas) hPruebas.style.display = 'none';
-    const tituloEl = document.getElementById('header-epoca-titulo');
-    if (tituloEl) tituloEl.innerHTML = '';
-    document.getElementById('gridView') && (document.getElementById('gridView').style.display = ''); document.getElementById('listView') && (document.getElementById('listView').style.display = '');
-    const sb = document.getElementById('syncBar');
-    if (sb) sb.style.display = '';
-  }
   const portada = document.getElementById('portada');
   portada.classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -2942,7 +2525,7 @@ function showPortada() {
 
   const container = document.getElementById('portadaEpocas');
   container.innerHTML = Object.values(EPOCAS).map(ep => {
-    const labelItem = ep.id === 'pruebas' ? 'pruebas' : 'sellos';
+    const labelItem = 'sellos';
     const totalLabel = epocasTotales[ep.id] !== undefined
       ? `<strong>${epocasTotales[ep.id]}</strong>${labelItem}`
       : `<strong style="opacity:0.4;font-size:0.8rem">…</strong>${labelItem}`;
@@ -2950,7 +2533,7 @@ function showPortada() {
       ? `<strong>${epocasContadores[ep.id]}</strong>en colección`
       : `<strong style="opacity:0.4;font-size:0.8rem">…</strong>en colección`;
     return `
-    <div class="portada-card${ep.id === currentEpoca ? ' active' : ''}${ep.id === 'pruebas' ? ' pruebas-card' : ''}" data-epoca="${ep.id}" onclick="entrarEpoca('${ep.id}')">
+    <div class="portada-card${ep.id === currentEpoca ? ' active' : ''}" data-epoca="${ep.id}" onclick="entrarEpoca('${ep.id}')">
       <img class="portada-card-img" src="${ep.sello_ref}" onerror="this.style.display='none'" alt="">
       <div class="portada-card-fecha">${ep.titulo.match(/\(.*?\)/)?.[0] || ''}</div>
       <div class="portada-card-nombre">${ep.titulo.replace(/\(.*?\)\s*/,'')}</div>
@@ -2965,7 +2548,6 @@ function showPortada() {
 
 function entrarEpoca(epocaId) {
   // Las Pruebas Oficiales usan su propia sección y funciones
-  if (epocaId === 'pruebas') { entrarPruebas(); return; }
   // Asegurar que el toolbar de épocas está visible (por si veníamos de pruebas)
   const tw = document.getElementById('epocas-toolbar-wrap');
   if (tw) tw.style.display = '';
@@ -3066,7 +2648,7 @@ async function precargarContadores() {
       epocasTotales[ep.id] = validRows.length;
       let count = 0;
       validRows.forEach(row => {
-        if (ep.id !== 'pruebas') { edifilEpocaMap[row.c[0].v] = ep.id; if (row.c[0].f) edifilEpocaMap[row.c[0].f] = ep.id; } // mapear edifil -> época
+        edifilEpocaMap[row.c[0].v] = ep.id; if (row.c[0].f) edifilEpocaMap[row.c[0].f] = ep.id;
         if (row.c[6] && row.c[6].v) count++;
       });
       epocasContadores[ep.id] = count;
@@ -3117,336 +2699,7 @@ function toggleDarkMode() {
   }
 })();
 
-// ── PRUEBAS OFICIALES Y DEL ARTISTA ──────────────────────────────────────────
-let currentPruebaId = null;
-let pruebaVista = 'grid'; // 'grid' | 'list'
-
-function setPruebaView(modo) {
-  pruebaVista = modo;
-  const grid = document.getElementById('pruebaGrid');
-  const btnGrid = document.getElementById('pruebaBtnGrid');
-  const btnList = document.getElementById('pruebaBtnList');
-  if (modo === 'list') {
-    grid.classList.add('vista-lista');
-    if (btnGrid) btnGrid.classList.remove('active');
-    if (btnList) btnList.classList.add('active');
-  } else {
-    grid.classList.remove('vista-lista');
-    if (btnGrid) btnGrid.classList.add('active');
-    if (btnList) btnList.classList.remove('active');
-  }
-}
-
-function entrarPruebas() {
-  // Ocultar portada y app principal, mostrar sección pruebas
-  document.getElementById('portada').classList.remove('open');
-  document.body.style.overflow = '';
-  const secPruebas = document.getElementById('seccionPruebas');
-  secPruebas.classList.add('open');
-  // Actualizar header fijo igual que las épocas normales
-  const tituloEl = document.getElementById('header-epoca-titulo');
-  if (tituloEl) tituloEl.innerHTML = '<span style="color:#e0b84a;font-style:italic">Pruebas Oficiales y del Artista</span>';
-  const subEl = document.getElementById('header-epoca-sub');
-  if (subEl) { subEl.textContent = ''; subEl.style.display = 'none'; }
-  // Ocultar vistas de sellos pero mantener .main para resultsInfo
-  document.getElementById('gridView') && (document.getElementById('gridView').style.display = 'none');
-  document.getElementById('listView') && (document.getElementById('listView').style.display = 'none');
-  document.getElementById('syncBar') && (document.getElementById('syncBar').style.display = '');
-  document.getElementById('readOnlyNotice') && (document.getElementById('readOnlyNotice').style.display = 'none');
-  // Ocultar toolbar de épocas (búsqueda/filtros normales) — tiene su propio buscador
-  const toolbarWrap = document.getElementById('epocas-toolbar-wrap');
-  if (toolbarWrap) toolbarWrap.style.display = 'none';
-  // Intercambiar botones del header
-  const hEpocas = document.getElementById('header-epocas-btns');
-  const hPruebas = document.getElementById('header-pruebas-btns');
-  if (hEpocas) hEpocas.style.display = 'none';
-  if (hPruebas) hPruebas.style.display = 'flex';
-  history.pushState({ view: 'pruebas' }, '', '');
-  window.scrollTo(0, 0);
-  renderPruebas();
-  // Cargar desde Google Sheets si hay sesión
-  if (isEditor() || _googleCredentialToken) loadPruebasFromSheets();
-  // Móvil
-  if (window.innerWidth <= 600) {
-    const ap = document.getElementById('authPortada');
-    if (ap) ap.style.display = 'none';
-    const av = document.getElementById('headerAvatar');
-    if (av && isEditor()) av.style.display = '';
-  }
-}
-
-function volverPortadaDesdePruebas() {
-  document.getElementById('seccionPruebas').classList.remove('open');
-  document.getElementById('seccionPruebas').style.paddingTop = '';
-  // Restaurar botones del header
-  const hEpocas = document.getElementById('header-epocas-btns');
-  const hPruebas = document.getElementById('header-pruebas-btns');
-  if (hEpocas) hEpocas.style.display = 'flex';
-  if (hPruebas) hPruebas.style.display = 'none';
-  // Limpiar título del header fijo
-  const tituloEl = document.getElementById('header-epoca-titulo');
-  if (tituloEl) tituloEl.innerHTML = '';
-  // Restaurar contenido principal
-  document.getElementById('gridView') && (document.getElementById('gridView').style.display = ''); document.getElementById('listView') && (document.getElementById('listView').style.display = '');
-  const sb = document.getElementById('syncBar');
-  if (sb) sb.style.display = '';
-  // Restaurar toolbar de épocas
-  const tw = document.getElementById('epocas-toolbar-wrap');
-  if (tw) tw.style.display = '';
-  showPortada();
-}
-
-function etiquetaCodigo(codigo) {
-    if (codigo.startsWith('CALC-')) return '🖨️ Calcográfica ' + codigo.replace('CALC-','');
-    if (codigo.startsWith('ESP-'))  return '⭐ Prueba Especial ' + codigo.replace('ESP-','');
-    if (codigo.startsWith('ABONADOS-')) return '📋 Abonados ' + codigo.replace('ABONADOS-','');
-    if (codigo.startsWith('SN-'))   return 'S/N';
-    return 'Prueba nº ' + codigo;
-  }
-
-function renderPruebas() {
-  const grid = document.getElementById('pruebaGrid');
-const searchInput = document.getElementById('searchInputPruebas');
-const searchVal = (searchInput?.value || '').toLowerCase().trim();
-const info = document.getElementById('resultsInfoPruebas');
-
-  // Filtrar
-  const filtered = PRUEBAS_OFICIALES_DATA.filter(p => {
-    // Filtro por stat-box activo
-    if (activeStatFilter === 'tengo' && !p.estado) return false;
-    if (activeStatFilter === 'fotos' && !p.delante && !p.detras) return false;
-    if (searchVal) {
-      const haystack = [p.codigo, p.descripcion, String(p.año||'')].join(' ').toLowerCase();
-      if (!haystack.includes(searchVal)) return false;
-    }
-    return true;
-  });
-
-  const tengo = PRUEBAS_OFICIALES_DATA.filter(p => p.estado && p.estado !== '').length;
-  const conFoto = PRUEBAS_OFICIALES_DATA.filter(p => p.delante || p.detras).length;
-  // Actualizar stat-boxes del header fijo
-  const elTotal = document.getElementById('stat-total');
-  const elTengo = document.getElementById('stat-tengo');
-  const elFotos = document.getElementById('stat-fotos');
-  if (elTotal) elTotal.textContent = PRUEBAS_OFICIALES_DATA.length;
-  if (elTengo) elTengo.textContent = tengo;
-  if (elFotos) elFotos.textContent = conFoto;
-  const sfBox = document.getElementById('statbox-fotos');
-  if (sfBox) sfBox.style.display = '';
-  // Info de resultados reutilizando el mismo elemento de épocas
-  const ri = document.getElementById('resultsInfo');
-  if (ri) ri.textContent = `Mostrando ${filtered.length} de ${PRUEBAS_OFICIALES_DATA.length} pruebas`;
-  grid.innerHTML = filtered.map(p => {
-    const imgHtml = p.referencia
-      ? `<img src="${p.referencia}" alt="" loading="lazy">`
-      : `<div class="prueba-img-placeholder">🎨</div>`;
-    
-    // Volvemos a 'prueba-card' para que no se estiren, pero mantenemos 'tengo'
-    return `<div class="prueba-card ${p.estado ? 'tengo' : ''}" onclick="abrirPrueba('${p.id}')">
-      <div class="prueba-img-area">${imgHtml}</div>
-      <div class="prueba-info">
-        <div class="prueba-num">${etiquetaCodigo(p.codigo)}</div>
-        <div class="prueba-desc">${p.descripcion}</div>
-        <div class="prueba-año">${p.año || '—'}</div>
-        <div class="prueba-precio">
-          ${p.precio_nuevo ? '<span class=\"pn\">' + p.precio_nuevo + ' €</span>' : ''}
-          ${p.precio_usado ? '<span class=\"pu\">' + p.precio_usado + ' €</span>' : ''}
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function abrirPrueba(id) {
-  const p = PRUEBAS_OFICIALES_DATA.find(x => x.id === id);
-  if (!p) return;
-  currentPruebaId = id;
-
-  document.getElementById('pNum').textContent = etiquetaCodigo(p.codigo);
-  document.getElementById('pTitle').textContent = p.descripcion;
-  document.getElementById('pFNum').value = p.codigo;
-  document.getElementById('pFAño').value = p.año || '';
-  document.getElementById('pFDesc').value = p.descripcion;
-  document.getElementById('pFEstado').value = p.estado || '';
-  document.getElementById('pFNotas').value = p.notas || '';
-
-  // Precio
-  const precioEl = document.getElementById('precio-prueba-modal');
-  if (precioEl) {
-    if (p.precio_nuevo || p.precio_usado) {
-      precioEl.innerHTML = `<div style="font-size:0.75rem;color:var(--sepia);padding:4px 0 8px;display:flex;gap:16px">
-        ${p.precio_nuevo ? '<span>Nuevo: <strong>' + p.precio_nuevo + ' €</strong></span>' : ''}
-        ${p.precio_usado ? '<span>Usado: <strong>' + p.precio_usado + ' €</strong></span>' : ''}
-      </div>`;
-    } else { precioEl.innerHTML = ''; }
-  }
-
-  // Fotos
-  setPruebaSlot('referencia', p.referencia);
-  setPruebaSlot('delante', p.delante);
-  setPruebaSlot('detras', p.detras);
-
-  // Drag & drop / paste en slots de prueba
-  const editable = isEditor();
-  ['pSlotDelante','pSlotDetras'].forEach(slotId => {
-    const slot = document.getElementById(slotId);
-    if (!slot || !editable) return;
-    const side = slotId === 'pSlotDelante' ? 'delante' : 'detras';
-    slot.ondragover = e => { e.preventDefault(); slot.classList.add('drag-over'); };
-    slot.ondragleave = () => slot.classList.remove('drag-over');
-    slot.ondrop = e => {
-      e.preventDefault(); slot.classList.remove('drag-over');
-      const file = e.dataTransfer.files[0];
-      if (file && file.type.startsWith('image/')) {
-        currentPhotoTarget = 'prueba_' + side;
-        window._currentPruebaPhotoSide = side;
-        const fakeInput = { files: [file] };
-        handlePhoto({ target: fakeInput });
-      }
-    };
-  });
-
-  // Permisos edición
-  ['pFAño','pFDesc','pFNotas'].forEach(fid => {
-    const el = document.getElementById(fid);
-    if (el) { el.readOnly = !editable; el.style.background = editable ? '' : '#f5f0e8'; }
-  });
-  const sel = document.getElementById('pFEstado');
-  if (sel) sel.disabled = !editable;
-  document.querySelectorAll('.edit-only').forEach(el => { el.style.display = editable ? '' : 'none'; });
-
-  document.getElementById('modalPrueba').classList.add('open');
-  actualizarNavPrueba();
-}
-
-function setPruebaSlot(side, src) {
-  const ids = { referencia: 'pSlotRef', delante: 'pSlotDelante', detras: 'pSlotDetras' };
-  const slot = document.getElementById(ids[side]);
-  if (!slot) return;
-  const preview = slot.querySelector('.photo-slot-preview') || slot;
-  const existing = preview.querySelector('img');
-  if (existing) existing.remove();
-  slot.classList.remove('has-photo');
-  preview.onclick = null;
-  if (src) {
-    const captions = { referencia: 'Imagen de referencia', delante: 'Mi prueba · Cara delantera', detras: 'Mi prueba · Cara trasera' };
-    const img = document.createElement('img');
-    img.src = src;
-    img.addEventListener('click', (e) => { e.stopPropagation(); openLightbox(src, captions[side]||''); });
-    preview.insertBefore(img, preview.firstChild);
-    slot.classList.add('has-photo');
-    preview.onclick = (e) => { e.stopPropagation(); openLightbox(src, captions[side]||''); };
-  }
-}
-
-function cerrarModalPrueba(e) {
-  if (e && e.target !== document.getElementById('modalPrueba')) return;
-  document.getElementById('modalPrueba').classList.remove('open');
-  currentPruebaId = null;
-}
-
-function guardarPrueba() {
-  if (!isEditor()) return;
-  const idx = PRUEBAS_OFICIALES_DATA.findIndex(p => p.id === currentPruebaId);
-  if (idx < 0) return;
-  PRUEBAS_OFICIALES_DATA[idx].año = parseInt(document.getElementById('pFAño').value) || null;
-  PRUEBAS_OFICIALES_DATA[idx].descripcion = document.getElementById('pFDesc').value;
-  PRUEBAS_OFICIALES_DATA[idx].estado = document.getElementById('pFEstado').value || null;
-  PRUEBAS_OFICIALES_DATA[idx].notas = document.getElementById('pFNotas').value;
-  // Guardar en localStorage
-  try { localStorage.setItem('pruebas_oficiales', JSON.stringify(PRUEBAS_OFICIALES_DATA)); } catch(e) {}
-  // Guardar en Google Sheets
-  savePruebaToSheets(PRUEBAS_OFICIALES_DATA[idx]);
-  renderPruebas();
-}
-
-function eliminarPrueba() {
-  if (!isEditor()) return;
-  if (!confirm('¿Eliminar los datos de esta prueba?')) return;
-  const idx = PRUEBAS_OFICIALES_DATA.findIndex(p => p.id === currentPruebaId);
-  if (idx < 0) return;
-  PRUEBAS_OFICIALES_DATA[idx].estado = null;
-  PRUEBAS_OFICIALES_DATA[idx].notas = '';
-  PRUEBAS_OFICIALES_DATA[idx].delante = null;
-  PRUEBAS_OFICIALES_DATA[idx].detras = null;
-  try { localStorage.setItem('pruebas_oficiales', JSON.stringify(PRUEBAS_OFICIALES_DATA)); } catch(e) {}
-  savePruebaToSheets(PRUEBAS_OFICIALES_DATA[idx]);
-  cerrarModalPrueba();
-  renderPruebas();
-  showToast('Datos eliminados');
-}
-
-function navegarPrueba(dir) {
-  const idx = PRUEBAS_OFICIALES_DATA.findIndex(p => p.id === currentPruebaId);
-  if (idx < 0) return;
-  const next = idx + dir;
-  if (next < 0 || next >= PRUEBAS_OFICIALES_DATA.length) return;
-  abrirPrueba(PRUEBAS_OFICIALES_DATA[next].id);
-}
-
-function actualizarNavPrueba() {
-  const idx = PRUEBAS_OFICIALES_DATA.findIndex(p => p.id === currentPruebaId);
-  const btnP = document.getElementById('pruebNavPrev');
-  const btnN = document.getElementById('pruebNavNext');
-  if (btnP) btnP.disabled = idx <= 0;
-  if (btnN) btnN.disabled = idx >= PRUEBAS_OFICIALES_DATA.length - 1;
-}
-
-function triggerPruebaPhoto(side) {
-  currentPhotoTarget = 'prueba_' + side;
-  window._currentPruebaPhotoSide = side;
-  window._fromCamera = true;
-  document.getElementById('fileCamera').click();
-}
-function triggerPruebaPhotoGallery(side) {
-  currentPhotoTarget = 'prueba_' + side;
-  window._currentPruebaPhotoSide = side;
-  window._fromCamera = false;
-  document.getElementById('fileGallery').click();
-}
-function quitarFotoPrueba(side) {
-  const idx = PRUEBAS_OFICIALES_DATA.findIndex(p => p.id === currentPruebaId);
-  if (idx < 0) return;
-  PRUEBAS_OFICIALES_DATA[idx][side] = null;
-  setPruebaSlot(side, null);
-  try { localStorage.setItem('pruebas_oficiales', JSON.stringify(PRUEBAS_OFICIALES_DATA)); } catch(e) {}
-}
-
-// Los datos de pruebas se cargan siempre desde Google Sheets
-
-// Swipe táctil en modal de pruebas
-(function() {
-  let tx = 0, ty = 0;
-  document.addEventListener('touchstart', (e) => {
-    if (!document.getElementById('modalPrueba')?.classList.contains('open')) return;
-    tx = e.touches[0].clientX; ty = e.touches[0].clientY;
-  }, { passive: true });
-  document.addEventListener('touchend', (e) => {
-    if (!document.getElementById('modalPrueba')?.classList.contains('open')) return;
-    const dx = e.changedTouches[0].clientX - tx;
-    const dy = e.changedTouches[0].clientY - ty;
-    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) navegarPrueba(dx < 0 ? 1 : -1);
-  }, { passive: true });
-})();
-
-// Historial: volver desde pruebas
-window.addEventListener('popstate', function(e) {
-  if (document.getElementById('seccionPruebas').classList.contains('open')) {
-    document.getElementById('seccionPruebas').classList.remove('open');
-    document.getElementById('seccionPruebas').style.paddingTop = '';
-    const hEpocas = document.getElementById('header-epocas-btns');
-    const hPruebas = document.getElementById('header-pruebas-btns');
-    if (hEpocas) hEpocas.style.display = 'flex';
-    if (hPruebas) hPruebas.style.display = 'none';
-    const tituloEl = document.getElementById('header-epoca-titulo');
-    if (tituloEl) tituloEl.innerHTML = '';
-    document.getElementById('gridView') && (document.getElementById('gridView').style.display = ''); document.getElementById('listView') && (document.getElementById('listView').style.display = '');
-    const sb = document.getElementById('syncBar');
-    if (sb) sb.style.display = '';
-    showPortada();
-  }
-});
-// ── FIN PRUEBAS OFICIALES ─────────────────────────────────────────────────────
+let pruebaVista = 'grid'; // 'grid' | 'list'// Los datos de pruebas se cargan siempre desde Google Sheets
 
 /**
  * PASO NUEVO: Función para leer los precios desde Google Sheets
