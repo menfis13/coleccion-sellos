@@ -1416,6 +1416,7 @@ function setSyncStatus(status, msg) {
 }
 
 async function loadFromSheets() {
+  console.log('[loadFromSheets] INICIO epoca=' + currentEpoca + ' t=' + Date.now());
   _cargando = true;
   const _epocaAlCargar = currentEpoca;
   setSyncStatus('syncing', 'Cargando datos desde Google Sheets...');
@@ -1468,8 +1469,9 @@ async function loadFromSheets() {
     stamps = [];
     setSyncStatus('error', 'Sin conexión con Sheets — no hay datos locales disponibles');
   }
+  console.log('[loadFromSheets] FIN stamps=' + stamps.length + ' epoca=' + currentEpoca + ' _epocaAlCargar=' + _epocaAlCargar + ' t=' + Date.now());
   _cargando = false;
-  if (currentEpoca !== _epocaAlCargar) return; // el usuario cambió de época durante la carga
+  if (currentEpoca !== _epocaAlCargar) { console.log('[loadFromSheets] ABORT - época cambió'); return; } // el usuario cambió de época durante la carga
   populateFilters();
   renderStamps();
   if (currentEpoca) epocasContadores[currentEpoca] = stamps.filter(s => s.estado).length;
@@ -1656,7 +1658,8 @@ function colorClass(color) {
 }
 
 function renderStamps() {
-  if (_cargando) return; // esperar a que termine loadFromSheets
+  console.log('[renderStamps] stamps=' + stamps.length + ' _cargando=' + _cargando + ' epoca=' + currentEpoca + ' t=' + Date.now());
+  if (_cargando) { console.log('[renderStamps] BLOQUEADO por _cargando'); return; } // esperar a que termine loadFromSheets
   const filtered = getFiltered();
   const withEstado = stamps.filter(s => s.estado).length;
   const withPhoto = stamps.filter(s => s.delante).length;
@@ -3364,7 +3367,7 @@ async function cargarPreciosDesdeSheets() {
             console.log("Precios cargados desde Sheets con éxito");
             
             // Refrescamos la pantalla para que se vean los precios nuevos (solo si no hay carga en curso)
-            if (typeof renderStamps === 'function' && !_cargando) renderStamps();
+            console.log('[precios] llamando renderStamps, _cargando=' + _cargando + ' stamps=' + stamps.length); if (typeof renderStamps === 'function' && !_cargando) renderStamps();
         }
     } catch (error) {
         console.error("Error al obtener precios de Sheets:", error);
