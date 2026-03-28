@@ -1025,9 +1025,9 @@
         <div class="form-group"><label class="form-label">Nº Edifil</label><input class="form-input" type="text" id="fEdifil" placeholder="Ej: 48 ó 48A"></div>
         <div class="form-group"><label class="form-label">Año</label><input class="form-input" type="number" id="fAño" placeholder="Ej: 1856"></div>
         <div class="form-group full"><label class="form-label">Descripción</label><input class="form-input" type="text" id="fDesc" placeholder="Ej: Isabel II"></div>
-        <div class="form-group" id="grupoColor"><label class="form-label">Color</label><input class="form-input" type="text" id="fColor" placeholder="Ej: azul"></div>
-        <div class="form-group" id="grupoValor"><label class="form-label">Valor Facial</label><input class="form-input" type="text" id="fValor" placeholder="Ej: 4 cuartos"></div>
-        <div class="form-group" id="grupoDentado"><label class="form-label">Dentado</label>
+        <div class="form-group"><label class="form-label">Color</label><input class="form-input" type="text" id="fColor" placeholder="Ej: azul"></div>
+        <div class="form-group"><label class="form-label">Valor Facial</label><input class="form-input" type="text" id="fValor" placeholder="Ej: 4 cuartos"></div>
+        <div class="form-group"><label class="form-label">Dentado</label>
           <select class="form-select" id="fDentado">
             <option value="">-- Seleccionar --</option>
             <option value="Sin dentar">Sin dentar</option>
@@ -1057,7 +1057,7 @@
       <button class="btn btn-danger edit-only" id="btnDelete" onclick="deleteStamp()">🗑 Eliminar</button>
       <div style="display:flex;gap:8px;">
         <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
-        <button class="btn btn-primary edit-only" id="btnGuardar" onclick="saveStamp()">Guardar sello</button>
+        <button class="btn btn-primary edit-only" onclick="saveStamp()">Guardar sello</button>
       </div>
     </div>
   </div>
@@ -1400,7 +1400,6 @@ const epocasContadores = {};
 
 // Estado
 let stamps = [];
-let _cargando = false; // bloquea renderStamps mientras carga Sheets
 let currentView = 'grid';
 let sortField = 'edifil';
 let sortDir = 1;
@@ -1416,9 +1415,6 @@ function setSyncStatus(status, msg) {
 }
 
 async function loadFromSheets() {
-  console.log('[loadFromSheets] INICIO epoca=' + currentEpoca + ' t=' + Date.now());
-  _cargando = true;
-  const _epocaAlCargar = currentEpoca;
   setSyncStatus('syncing', 'Cargando datos desde Google Sheets...');
   try {
     const res = await fetch(SHEET_URL);
@@ -1447,11 +1443,10 @@ async function loadFromSheets() {
           descripcion:  row.c[2]?.v || '',
           color:        row.c[3]?.v || '',
           valor_facial: row.c[4]?.v || '',
-          codigo:       row.c[3]?.v ? String(row.c[3].v) : '',
           dentado:      row.c[5]?.v || '',
           estado:       row.c[6]?.v || null,
           notas:        row.c[7]?.v || '',
-          referencia:   row.c[8]?.v || (currentEpoca === 'pruebas' ? getPruebaRefUrl(row.c[3]?.v ? String(row.c[3].v) : '') : getRefUrl(edifil)),
+          referencia:   row.c[8]?.v || getRefUrl(edifil),
           delante:      row.c[9]?.v || null,
           detras:       row.c[10]?.v || null,
           filigrana:    row.c[11]?.v || null,
@@ -1469,9 +1464,6 @@ async function loadFromSheets() {
     stamps = [];
     setSyncStatus('error', 'Sin conexión con Sheets — no hay datos locales disponibles');
   }
-  console.log('[loadFromSheets] FIN stamps=' + stamps.length + ' epoca=' + currentEpoca + ' _epocaAlCargar=' + _epocaAlCargar + ' t=' + Date.now());
-  _cargando = false;
-  if (currentEpoca !== _epocaAlCargar) { console.log('[loadFromSheets] ABORT - época cambió'); return; } // el usuario cambió de época durante la carga
   populateFilters();
   renderStamps();
   if (currentEpoca) epocasContadores[currentEpoca] = stamps.filter(s => s.estado).length;
@@ -1517,8 +1509,52 @@ async function deleteFromSheets(edifil) {
 const PRUEBAS_SHEET = 'Hoja 10';
 
 
-async function loadPruebasFromSheets() { if (currentEpoca === 'pruebas') await loadFromSheets(); }
+async function loadPruebasFromSheets() {
+  setSyncStatus('syncing', 'Cargando pruebas desde Google Sheets...');
+  try {
+    const url = `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(PRUEBAS_SHEET)}`;
+    const res = await fetch(url);
+    const text = await res.text();
+    const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\((.*)\);?$/s)[1]);
+    const rows = json.table.rows;
 
+    if (!rows || rows.length === 0) {
+      PRUEBAS_OFICIALES_DATA = [];
+      setSyncStatus('', 'Hoja 10 vacía — sin datos de pruebas.');
+      renderPruebas();
+      return;
+    }
+
+    // A=edifil(id), B=año, C=descripcion, D=codigo, E=valor_facial, F=dentado,
+    // G=estado, H=notas, I=(vacío), J=delante, K=detras, L=filigrana, M=precio_nuevo, N=precio_usado
+    PRUEBAS_OFICIALES_DATA = rows.map(row => {
+      if (!row.c || !row.c[0] || !row.c[0].v) return null;
+      const id = row.c[0].v;
+      const codigo = row.c[3]?.v ? String(row.c[3].v) : '';
+      return {
+        id,
+        codigo,
+        año:          row.c[1]?.v || null,
+        descripcion:  row.c[2]?.v || '',
+        estado:       row.c[6]?.v || null,
+        notas:        row.c[7]?.v || '',
+        referencia:   getPruebaRefUrl(codigo),
+        delante:      row.c[9]?.v || null,
+        detras:       row.c[10]?.v || null,
+        precio_nuevo: row.c[12]?.v || null,
+        precio_usado: row.c[13]?.v || null,
+      };
+    }).filter(Boolean);
+
+    setSyncStatus('', `Pruebas cargadas — ${PRUEBAS_OFICIALES_DATA.length} registros`);
+    try { localStorage.setItem('pruebas_oficiales', JSON.stringify(PRUEBAS_OFICIALES_DATA)); } catch(e) {}
+    renderPruebas();
+  } catch(e) {
+    console.error(e);
+    setSyncStatus('error', 'Sin conexión con Sheets para pruebas');
+    if (!PRUEBAS_OFICIALES_DATA.length) renderPruebas();
+  }
+}
 async function savePruebaToSheets(prueba) {
   setSyncStatus('syncing', 'Guardando prueba en Google Sheets...');
   try {
@@ -1632,20 +1668,12 @@ function getFiltered() {
 function populateFilters() {
   const years = [...new Set(stamps.map(s => s.año).filter(Boolean))].sort();
   const yearSel = document.getElementById('filterYear');
-  const prevYear = yearSel.value;
-  yearSel.onchange = null;
   yearSel.innerHTML = '<option value="">Todos los años</option>';
   years.forEach(y => { const o = document.createElement('option'); o.value = y; o.textContent = y; yearSel.appendChild(o); });
-  yearSel.value = years.includes(prevYear) ? prevYear : '';
-  yearSel.onchange = () => renderStamps();
   const colors = [...new Set(stamps.map(s => s.color).filter(Boolean))].sort();
   const colorSel = document.getElementById('filterColor');
-  const prevColor = colorSel.value;
-  colorSel.onchange = null;
   colorSel.innerHTML = '<option value="">Todos los colores</option>';
   colors.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c.charAt(0).toUpperCase() + c.slice(1); colorSel.appendChild(o); });
-  colorSel.value = colors.includes(prevColor) ? prevColor : '';
-  colorSel.onchange = () => renderStamps();
 }
 
 // ==================== RENDER ====================
@@ -1658,8 +1686,6 @@ function colorClass(color) {
 }
 
 function renderStamps() {
-  console.log('[renderStamps] stamps=' + stamps.length + ' _cargando=' + _cargando + ' epoca=' + currentEpoca + ' t=' + Date.now());
-  if (_cargando) { console.log('[renderStamps] BLOQUEADO por _cargando'); return; } // esperar a que termine loadFromSheets
   const filtered = getFiltered();
   const withEstado = stamps.filter(s => s.estado).length;
   const withPhoto = stamps.filter(s => s.delante).length;
@@ -1706,11 +1732,10 @@ function renderGrid(filtered) {
     const noTengo = !s.estado;
     const esVariante = s.variante === true;
     const edId = typeof s.edifil === 'string' ? `'${s.edifil}'` : s.edifil;
-    const etiquetaId = (currentEpoca === 'pruebas' && s.codigo) ? etiquetaCodigo(s.codigo) : 'Edifil nº ' + s.edifil;
     return `<div class="stamp-card${noTengo ? '' : ' tengo'}${esVariante ? ' variante' : ''}" onclick="openStamp(${edId})">
       <div class="stamp-img-area">${imgArea}</div>
       <div class="stamp-info">
-        <div class="stamp-edifil">${etiquetaId}</div>
+        <div class="stamp-edifil">Edifil nº ${s.edifil}</div>
         <div class="stamp-desc">${s.descripcion || '—'}</div>
         <div class="stamp-meta">
           <span class="stamp-tag"><span class="stamp-color-dot ${colorClass(s.color)}"></span>${s.color || '—'}</span>
@@ -1722,7 +1747,6 @@ function renderGrid(filtered) {
       </div>
     </div>`;
   }).join('');
-
 }
 
 function renderList(filtered) {
@@ -1732,7 +1756,7 @@ function renderList(filtered) {
     const edId = typeof s.edifil === 'string' ? `'${s.edifil}'` : s.edifil;
     return `
     <tr onclick="openStamp(${edId})">
-      <td><strong>${(currentEpoca === 'pruebas' && s.codigo) ? etiquetaCodigo(s.codigo) : s.edifil}</strong></td><td>${s.año||'—'}</td><td>${s.descripcion||'—'}</td>
+      <td><strong>${s.edifil}</strong></td><td>${s.año||'—'}</td><td>${s.descripcion||'—'}</td>
       <td><span style="display:flex;align-items:center;gap:6px"><span class="stamp-color-dot ${colorClass(s.color)}"></span>${s.color||'—'}</span></td>
       <td>${s.valor_facial||'—'}</td><td>${s.dentado||'—'}</td>
       <td>${s.estado ? `<span style="background:var(--sage);color:white;padding:2px 8px;border-radius:1px;font-size:0.75rem">${s.estado}</span>` : '<span style="color:#aaa">—</span>'}</td>
@@ -1763,11 +1787,12 @@ function onSearchInput() {
 function saltarEdifil() {
   const val = document.getElementById('edifilJump').value.trim();
   if (!val) return;
-  const edifil = parseInt(val);
+  // Soportar tanto números puros (48) como variantes (1A, 22B)
+  const edifil = /^\d+$/.test(val) ? parseInt(val) : val.toUpperCase();
   document.querySelectorAll('.search-highlight').forEach(el => el.classList.remove('search-highlight'));
 
-  // Buscar en época actual primero
-  if (stamps.find(s => s.edifil === edifil)) {
+  // Buscar en época actual primero (comparar como string para soportar variantes)
+  if (stamps.find(s => String(s.edifil) === String(edifil))) {
     window._searchOverride = true;
     renderStamps();
     window._searchOverride = false;
@@ -1787,7 +1812,7 @@ function saltarEdifil() {
   switchEpoca(epocaDestino);
   // Esperar a que carguen los datos de Sheets antes de saltar
   const esperarYSaltar = (intentos) => {
-    const found = stamps.find(s => s.edifil === edifil);
+    const found = stamps.find(s => String(s.edifil) === String(edifil));
     if (found) {
       window._searchOverride = true;
       renderStamps();
@@ -1910,7 +1935,7 @@ function openNew() {
   history.pushState({ view: 'modal' }, '', '');
 }
 function fillModal(s) {
-  document.getElementById('mEdifil').textContent = (currentEpoca === 'pruebas' && s.codigo) ? etiquetaCodigo(s.codigo) : (s.edifil ? `Edifil nº ${s.edifil}` : 'Nuevo sello');
+  document.getElementById('mEdifil').textContent = s.edifil ? `Edifil nº ${s.edifil}` : 'Nuevo sello';
   document.getElementById('mTitle').textContent = s.descripcion || 'Nuevo sello';
   document.getElementById('fEdifil').value = s.edifil || '';
   document.getElementById('fAño').value = s.año || '';
@@ -1985,13 +2010,6 @@ function fillModal(s) {
   setPhotoSlot('referencia', s.referencia);
   setPhotoSlot('delante', s.delante);
   setPhotoSlot('detras', s.detras);
-  const esPrueba = currentEpoca === 'pruebas';
-  ['grupoColor','grupoValor','grupoDentado','grupoFiligrana'].forEach(id => {
-    const el = document.getElementById(id); if (el) el.style.display = esPrueba ? 'none' : '';
-  });
-  if (esPrueba) { const av = document.getElementById('filigrana-aviso-modal'); if (av) av.innerHTML = ''; }
-  const btnG = document.getElementById('btnGuardar');
-  if (btnG) btnG.textContent = esPrueba ? 'Guardar prueba' : 'Guardar sello';
 }
 function closeModal(e) {
   if (e && e.target !== document.getElementById('modalOverlay')) return;
@@ -2019,7 +2037,7 @@ function saveStamp() {
     delante: null, detras: null
   };
   const existing = stamps.find(s => s.edifil === (currentStampId || edifil));
-  if (existing) { data.delante = existing.delante; data.detras = existing.detras; data.referencia = existing.referencia; }
+  if (existing) { data.delante = existing.delante; data.detras = existing.detras; data.referencia = existing.referencia; data.precio_nuevo = existing.precio_nuevo; data.precio_usado = existing.precio_usado; }
   if (currentStampId) {
     const idx = stamps.findIndex(s => s.edifil === currentStampId);
     if (idx >= 0) stamps[idx] = {...stamps[idx], ...data};
@@ -2947,6 +2965,7 @@ function showPortada() {
 
 function entrarEpoca(epocaId) {
   // Las Pruebas Oficiales usan su propia sección y funciones
+  if (epocaId === 'pruebas') { entrarPruebas(); return; }
   // Asegurar que el toolbar de épocas está visible (por si veníamos de pruebas)
   const tw = document.getElementById('epocas-toolbar-wrap');
   if (tw) tw.style.display = '';
@@ -3018,9 +3037,7 @@ history.replaceState({ view: 'portada' }, '', '');
 
 function switchEpoca(epocaId) {
   currentEpoca = epocaId;
-  SHEET_URL = epocaId === 'pruebas'
-    ? `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(EPOCAS[epocaId].sheet)}`
-    : `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=${EPOCAS[epocaId].sheet}&range=A1:N500`;
+  SHEET_URL = `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=${EPOCAS[epocaId].sheet}&range=A1:N500`;
   const ep = EPOCAS[epocaId];
   // Resetear filtro de stat al cambiar de época
   activeStatFilter = null;
@@ -3049,7 +3066,7 @@ async function precargarContadores() {
       epocasTotales[ep.id] = validRows.length;
       let count = 0;
       validRows.forEach(row => {
-        if (ep.id !== 'pruebas') edifilEpocaMap[row.c[0].v] = ep.id; // mapear edifil -> época
+        if (ep.id !== 'pruebas') { edifilEpocaMap[row.c[0].v] = ep.id; if (row.c[0].f) edifilEpocaMap[row.c[0].f] = ep.id; } // mapear edifil -> época
         if (row.c[6] && row.c[6].v) count++;
       });
       epocasContadores[ep.id] = count;
@@ -3121,11 +3138,61 @@ function setPruebaView(modo) {
 }
 
 function entrarPruebas() {
-  // Redirigir al sistema unificado de épocas
-  entrarEpoca('pruebas');
+  // Ocultar portada y app principal, mostrar sección pruebas
+  document.getElementById('portada').classList.remove('open');
+  document.body.style.overflow = '';
+  const secPruebas = document.getElementById('seccionPruebas');
+  secPruebas.classList.add('open');
+  // Actualizar header fijo igual que las épocas normales
+  const tituloEl = document.getElementById('header-epoca-titulo');
+  if (tituloEl) tituloEl.innerHTML = '<span style="color:#e0b84a;font-style:italic">Pruebas Oficiales y del Artista</span>';
+  const subEl = document.getElementById('header-epoca-sub');
+  if (subEl) { subEl.textContent = ''; subEl.style.display = 'none'; }
+  // Ocultar vistas de sellos pero mantener .main para resultsInfo
+  document.getElementById('gridView') && (document.getElementById('gridView').style.display = 'none');
+  document.getElementById('listView') && (document.getElementById('listView').style.display = 'none');
+  document.getElementById('syncBar') && (document.getElementById('syncBar').style.display = '');
+  document.getElementById('readOnlyNotice') && (document.getElementById('readOnlyNotice').style.display = 'none');
+  // Ocultar toolbar de épocas (búsqueda/filtros normales) — tiene su propio buscador
+  const toolbarWrap = document.getElementById('epocas-toolbar-wrap');
+  if (toolbarWrap) toolbarWrap.style.display = 'none';
+  // Intercambiar botones del header
+  const hEpocas = document.getElementById('header-epocas-btns');
+  const hPruebas = document.getElementById('header-pruebas-btns');
+  if (hEpocas) hEpocas.style.display = 'none';
+  if (hPruebas) hPruebas.style.display = 'flex';
+  history.pushState({ view: 'pruebas' }, '', '');
+  window.scrollTo(0, 0);
+  renderPruebas();
+  // Cargar desde Google Sheets si hay sesión
+  if (isEditor() || _googleCredentialToken) loadPruebasFromSheets();
+  // Móvil
+  if (window.innerWidth <= 600) {
+    const ap = document.getElementById('authPortada');
+    if (ap) ap.style.display = 'none';
+    const av = document.getElementById('headerAvatar');
+    if (av && isEditor()) av.style.display = '';
+  }
 }
 
 function volverPortadaDesdePruebas() {
+  document.getElementById('seccionPruebas').classList.remove('open');
+  document.getElementById('seccionPruebas').style.paddingTop = '';
+  // Restaurar botones del header
+  const hEpocas = document.getElementById('header-epocas-btns');
+  const hPruebas = document.getElementById('header-pruebas-btns');
+  if (hEpocas) hEpocas.style.display = 'flex';
+  if (hPruebas) hPruebas.style.display = 'none';
+  // Limpiar título del header fijo
+  const tituloEl = document.getElementById('header-epoca-titulo');
+  if (tituloEl) tituloEl.innerHTML = '';
+  // Restaurar contenido principal
+  document.getElementById('gridView') && (document.getElementById('gridView').style.display = ''); document.getElementById('listView') && (document.getElementById('listView').style.display = '');
+  const sb = document.getElementById('syncBar');
+  if (sb) sb.style.display = '';
+  // Restaurar toolbar de épocas
+  const tw = document.getElementById('epocas-toolbar-wrap');
+  if (tw) tw.style.display = '';
   showPortada();
 }
 
@@ -3137,7 +3204,58 @@ function etiquetaCodigo(codigo) {
     return 'Prueba nº ' + codigo;
   }
 
-function renderPruebas() { if (currentEpoca === 'pruebas') renderStamps(); }
+function renderPruebas() {
+  const grid = document.getElementById('pruebaGrid');
+const searchInput = document.getElementById('searchInputPruebas');
+const searchVal = (searchInput?.value || '').toLowerCase().trim();
+const info = document.getElementById('resultsInfoPruebas');
+
+  // Filtrar
+  const filtered = PRUEBAS_OFICIALES_DATA.filter(p => {
+    // Filtro por stat-box activo
+    if (activeStatFilter === 'tengo' && !p.estado) return false;
+    if (activeStatFilter === 'fotos' && !p.delante && !p.detras) return false;
+    if (searchVal) {
+      const haystack = [p.codigo, p.descripcion, String(p.año||'')].join(' ').toLowerCase();
+      if (!haystack.includes(searchVal)) return false;
+    }
+    return true;
+  });
+
+  const tengo = PRUEBAS_OFICIALES_DATA.filter(p => p.estado && p.estado !== '').length;
+  const conFoto = PRUEBAS_OFICIALES_DATA.filter(p => p.delante || p.detras).length;
+  // Actualizar stat-boxes del header fijo
+  const elTotal = document.getElementById('stat-total');
+  const elTengo = document.getElementById('stat-tengo');
+  const elFotos = document.getElementById('stat-fotos');
+  if (elTotal) elTotal.textContent = PRUEBAS_OFICIALES_DATA.length;
+  if (elTengo) elTengo.textContent = tengo;
+  if (elFotos) elFotos.textContent = conFoto;
+  const sfBox = document.getElementById('statbox-fotos');
+  if (sfBox) sfBox.style.display = '';
+  // Info de resultados reutilizando el mismo elemento de épocas
+  const ri = document.getElementById('resultsInfo');
+  if (ri) ri.textContent = `Mostrando ${filtered.length} de ${PRUEBAS_OFICIALES_DATA.length} pruebas`;
+  grid.innerHTML = filtered.map(p => {
+    const imgHtml = p.referencia
+      ? `<img src="${p.referencia}" alt="" loading="lazy">`
+      : `<div class="prueba-img-placeholder">🎨</div>`;
+    
+    // Volvemos a 'prueba-card' para que no se estiren, pero mantenemos 'tengo'
+    return `<div class="prueba-card ${p.estado ? 'tengo' : ''}" onclick="abrirPrueba('${p.id}')">
+      <div class="prueba-img-area">${imgHtml}</div>
+      <div class="prueba-info">
+        <div class="prueba-num">${etiquetaCodigo(p.codigo)}</div>
+        <div class="prueba-desc">${p.descripcion}</div>
+        <div class="prueba-año">${p.año || '—'}</div>
+        <div class="prueba-precio">
+          ${p.precio_nuevo ? '<span class=\"pn\">' + p.precio_nuevo + ' €</span>' : ''}
+          ${p.precio_usado ? '<span class=\"pu\">' + p.precio_usado + ' €</span>' : ''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
 
 function abrirPrueba(id) {
   const p = PRUEBAS_OFICIALES_DATA.find(x => x.id === id);
@@ -3366,8 +3484,8 @@ async function cargarPreciosDesdeSheets() {
             });
             console.log("Precios cargados desde Sheets con éxito");
             
-            // Refrescamos la pantalla para que se vean los precios nuevos (solo si no hay carga en curso)
-            console.log('[precios] llamando renderStamps, _cargando=' + _cargando + ' stamps=' + stamps.length); if (typeof renderStamps === 'function' && !_cargando) renderStamps();
+            // Refrescamos la pantalla para que se vean los precios nuevos
+            if (typeof renderStamps === 'function') renderStamps();
         }
     } catch (error) {
         console.error("Error al obtener precios de Sheets:", error);
