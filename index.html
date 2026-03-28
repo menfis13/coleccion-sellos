@@ -1463,8 +1463,7 @@ async function loadFromSheets() {
   } catch(e) {
     console.error(e);
     stamps = [];
-    setSyncStatus('error', 'Error: ' + e.message);
-    let dbg = document.getElementById('_dbg'); if (!dbg) { dbg = document.createElement('div'); dbg.id='_dbg'; dbg.style.cssText='position:fixed;top:50%;left:0;right:0;background:red;color:#fff;padding:12px;z-index:9999;font-size:0.85rem;word-break:break-all;'; document.body.appendChild(dbg); } dbg.textContent = 'ERROR loadFromSheets: ' + e.message + ' | URL: ' + SHEET_URL;
+    setSyncStatus('error', 'Sin conexión con Sheets — no hay datos locales disponibles');
   }
   populateFilters();
   renderStamps();
@@ -1652,15 +1651,7 @@ function colorClass(color) {
 }
 
 function renderStamps() {
-  if (currentEpoca === 'pruebas') {
-    const s0 = stamps[0];
-    const gv = document.getElementById('gridView');
-    const filtered_dbg = getFiltered(); const msg = 'stamps=' + stamps.length + ' | filtered=' + filtered_dbg.length + ' | edifil0=' + (s0&&s0.edifil) + ' | codigo0=' + (s0&&s0.codigo) + ' | gridActive=' + gv.classList.contains('active') + ' | gridDisplay=' + (gv.style.display||'(css)') + ' | gridHTML=' + gv.innerHTML.length;
-    // Div fijo en pantalla para diagnóstico
-    let dbg = document.getElementById('_dbg');
-    if (!dbg) { dbg = document.createElement('div'); dbg.id='_dbg'; dbg.style.cssText='position:fixed;top:50%;left:0;right:0;background:#b8860b;color:#000;padding:12px;z-index:9999;font-size:0.85rem;word-break:break-all;'; document.body.appendChild(dbg); }
-    dbg.textContent = msg;
-  }
+
   const filtered = getFiltered();
   const withEstado = stamps.filter(s => s.estado).length;
   const withPhoto = stamps.filter(s => s.delante).length;
@@ -1680,22 +1671,14 @@ function renderStamps() {
   document.getElementById('btnGrid').classList.toggle('active', isGrid);
   document.getElementById('btnList').classList.toggle('active', !isGrid);
 
-  let _renderErr = '';
-  if (isGrid) {
-    try { renderGrid(filtered); } catch(e) { _renderErr = 'ERR:' + e.message; }
-  } else renderList(filtered);
-  if (currentEpoca === 'pruebas') {
-    const gv2 = document.getElementById('gridView');
-    let dbg = document.getElementById('_dbg');
-    if (!dbg) { dbg = document.createElement('div'); dbg.id='_dbg'; dbg.style.cssText='position:fixed;top:50%;left:0;right:0;background:#b8860b;color:#000;padding:12px;z-index:9999;font-size:0.85rem;word-break:break-all;'; document.body.appendChild(dbg); }
-    dbg.textContent = 'stamps=' + stamps.length + ' filtered=' + filtered.length + ' gridHTML=' + gv2.innerHTML.length + ' isGrid=' + isGrid + ' ERR=' + _renderErr;
-  }
+  if (isGrid) renderGrid(filtered);
+  else renderList(filtered);
 }
 
 function renderGrid(filtered) {
   const container = document.getElementById('gridView');
   if (!filtered.length) { container.innerHTML = '<div style="text-align:center;padding:80px;color:var(--sepia);opacity:0.5"><h3 style="font-family:Playfair Display,serif">Sin resultados</h3></div>'; return; }
-  const htmlResult = filtered.map(s => {
+  container.innerHTML = filtered.map(s => {
     const imgArea = s.referencia
       ? `<img class="stamp-photo" src="${s.referencia}" alt="Sello ${s.edifil}">`
       : `<div class="stamp-placeholder"><div class="stamp-placeholder-num">${s.edifil}</div></div>`;
@@ -1731,10 +1714,7 @@ function renderGrid(filtered) {
       </div>
     </div>`;
   }).join('');
-  let dbg2 = document.getElementById('_dbg2');
-  if (!dbg2) { dbg2 = document.createElement('div'); dbg2.id='_dbg2'; dbg2.style.cssText='position:fixed;top:65%;left:0;right:0;background:green;color:#fff;padding:12px;z-index:9999;font-size:0.85rem;word-break:break-all;'; document.body.appendChild(dbg2); }
-  dbg2.textContent = 'renderGrid inside: htmlLen=' + htmlResult.length + ' | item0len=' + (filtered[0] ? JSON.stringify(filtered[0]).length : 'N/A');
-  container.innerHTML = htmlResult;
+
 }
 
 function renderList(filtered) {
