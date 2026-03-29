@@ -984,7 +984,7 @@ function _cfg() {
   ].forEach(([k,v]) => _r[k] = _d(v));
   return _r;
 }
-let SHEET_URL = `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&headers=1&tq=select%20*&sheet=Hoja 1`;
+let SHEET_URL = `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=Hoja 1`;
 
 // ==================== AUTENTICACIÓN GOOGLE ====================
 const AUTHORIZED_EMAIL = _cfg().mail;
@@ -1309,13 +1309,21 @@ async function loadFromSheets() {
     const text = await res.text();
     const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\((.*)\);?$/s)[1]);
     const rows = json.table.rows;
+    console.log('[gviz] filas raw:', rows ? rows.length : 0, 'epoca:', currentEpoca);
+    if (rows && rows.length > 0) {
+      console.log('[gviz] primera fila c[0]:', JSON.stringify(rows[0]?.c?.[0]));
+      console.log('[gviz] ultima fila c[0]:', JSON.stringify(rows[rows.length-1]?.c?.[0]));
+      // Contar filas con c[0] null
+      const nullRows = rows.filter(r => !r.c || !r.c[0] || (r.c[0].v == null && r.c[0].f == null)).length;
+      console.log('[gviz] filas con c[0] nulo:', nullRows);
+    }
 
     if (!rows || rows.length === 0) {
       stamps = [];
       setSyncStatus('', 'Google Sheets vacío para esta época.');
     } else {
       stamps = rows.map(row => {
-        if (!row.c || !row.c[0]) return null;
+        if (!row.c || !row.c[0] || (row.c[0].v == null && row.c[0].f == null)) return null;
         // Sheets puede devolver null en .v para celdas con texto (ej: "1A") si la columna está formateada como número
         // En ese caso el valor viene solo en .f (formatted). Leemos ambos.
         const cell = row.c[0];
@@ -1333,7 +1341,7 @@ async function loadFromSheets() {
             codigo,
             año:          row.c[1]?.v || null,
             descripcion:  row.c[2]?.v || '',
-            estado:       row.c[6]?.v || null,
+            estado:       row.c[6]?.v || row.c[6]?.f || null,
             notas:        row.c[7]?.v || '',
             referencia:   row.c[8]?.v || (codigo ? `https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_${codigo.toLowerCase()}.jpg` : null),
             delante:      row.c[9]?.v || null,
@@ -2838,8 +2846,8 @@ history.replaceState({ view: 'portada' }, '', '');
 function switchEpoca(epocaId) {
   currentEpoca = epocaId;
   SHEET_URL = epocaId === 'pruebas'
-    ? `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&headers=1&tq=select%20*&sheet=${encodeURIComponent(EPOCAS[epocaId].sheet)}`
-    : `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&headers=1&tq=select%20*&sheet=${EPOCAS[epocaId].sheet}`;
+    ? `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(EPOCAS[epocaId].sheet)}`
+    : `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=${EPOCAS[epocaId].sheet}`;
   const ep = EPOCAS[epocaId];
   // Resetear filtro de stat al cambiar de época
   activeStatFilter = null;
@@ -2863,12 +2871,12 @@ const edifilEpocaMap = {}; // edifil -> epochId (construido en precargarContador
 async function precargarContadores() {
   const promesas = Object.values(EPOCAS).map(async ep => {
     try {
-      const url = `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&headers=1&tq=select%20*&sheet=${encodeURIComponent(ep.sheet)}`;
+      const url = `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(ep.sheet)}`;
       const res = await fetch(url);
       const text = await res.text();
       const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\((.*)\);?$/s)[1]);
       const rows = json.table?.rows || [];
-      const validRows = rows.filter(row => row.c && row.c[0] && row.c[0].v);
+      const validRows = rows.filter(row => row.c && row.c[0] && (row.c[0].v != null || row.c[0].f != null));
       epocasTotales[ep.id] = validRows.length;
       let count = 0, variantes = 0;
       validRows.forEach(row => {
@@ -2880,7 +2888,7 @@ async function precargarContadores() {
           // Detectar variante: Edifil con letra (ej: 48A)
           if (/[a-zA-Z]/.test(String(edFmt || edVal))) variantes++;
         }
-        if (row.c[6] && row.c[6].v) count++;
+        if (row.c[6] && (row.c[6].v || row.c[6].f)) count++;
       });
       epocasContadores[ep.id]  = count;
       epocasVariantes[ep.id]   = variantes;
