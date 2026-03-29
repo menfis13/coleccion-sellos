@@ -1309,13 +1309,12 @@ async function loadFromSheets() {
     const text = await res.text();
     const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\((.*)\);?$/s)[1]);
     const rows = json.table.rows;
-    console.log('[gviz] filas raw:', rows ? rows.length : 0, 'epoca:', currentEpoca);
-    if (rows && rows.length > 0) {
-      console.log('[gviz] primera fila c[0]:', JSON.stringify(rows[0]?.c?.[0]));
-      console.log('[gviz] ultima fila c[0]:', JSON.stringify(rows[rows.length-1]?.c?.[0]));
-      // Contar filas con c[0] null
-      const nullRows = rows.filter(r => !r.c || !r.c[0] || (r.c[0].v == null && r.c[0].f == null)).length;
-      console.log('[gviz] filas con c[0] nulo:', nullRows);
+    if (rows && rows.length > 0 && currentEpoca === 'alfonso13') {
+      // Encontrar la primera fila con c[0] null y mostrar toda la fila
+      const filaNull = rows.find(r => r.c && r.c[0] && r.c[0].v == null && r.c[0].f == null);
+      if (filaNull) console.log('[gviz] fila con c[0] null - fila completa:', JSON.stringify(filaNull));
+      const filaBuena = rows.find(r => r.c && r.c[0] && (r.c[0].v != null || r.c[0].f != null));
+      if (filaBuena) console.log('[gviz] fila con c[0] OK - fila completa:', JSON.stringify(filaBuena));
     }
 
     if (!rows || rows.length === 0) {
