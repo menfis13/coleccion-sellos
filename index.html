@@ -1,38 +1,11 @@
-<html lang="es"><head>
+<!DOCTYPE html>
+<html lang="es">
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Colección Filatélica de Menfis</title>
-<link rel="icon" type="image/jpeg" href="https://res.cloudinary.com/do4ltpfbo/image/upload/sello_001A.jpg">
-<link rel="shortcut icon" type="image/jpeg" href="https://res.cloudinary.com/do4ltpfbo/image/upload/sello_001A.jpg">
-<link rel="apple-touch-icon" href="https://res.cloudinary.com/do4ltpfbo/image/upload/sello_001A.jpg">
-<meta name="theme-color" content="#b8860b">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Menfis Sellos">
-<script>
-(function(){
-  var manifest = {
-    name: "Colección Filatélica de Menfis",
-    short_name: "Menfis Sellos",
-    icons: [
-      { src: "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_001A.jpg", sizes: "192x192", type: "image/jpeg" },
-      { src: "https://res.cloudinary.com/do4ltpfbo/image/upload/sello_001A.jpg", sizes: "512x512", type: "image/jpeg" }
-    ],
-    display: "standalone",
-    background_color: "#0d0b07",
-    theme_color: "#b8860b",
-    start_url: "."
-  };
-  var blob = new Blob([JSON.stringify(manifest)], { type: "application/manifest+json" });
-  var url  = URL.createObjectURL(blob);
-  var link = document.createElement("link");
-  link.rel  = "manifest";
-  link.href = url;
-  document.head.appendChild(link);
-})();
-</script><link rel="manifest" href="blob:https://menfis13.github.io/0ed171da-e20c-4354-8044-a00d6e6d4b49">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&amp;family=Crimson+Pro:wght@300;400;600&amp;display=swap" rel="stylesheet">
-<script src="https://accounts.google.com/gsi/client" async="" defer=""></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
   :root {
     --cream: #f5f0e8;
@@ -403,9 +376,6 @@
   .btn-secondary { background: none; color: var(--sepia); border: 1px solid rgba(92,61,30,0.3); }
   .btn-secondary:hover { background: var(--parchment); }
 
-  .stamp-precios { display:flex; gap:8px; padding:4px 10px 6px; border-top:1px solid rgba(92,61,30,0.08); font-size:0.72rem; color:var(--sepia); }
-  .stamp-precios span { display:flex; align-items:center; gap:2px; }
-  .stamp-precios strong { font-family:'Playfair Display',serif; color:var(--gold); font-size:0.8rem; }
   input[type="file"] { display: none; }
   /* Drag & Drop / Paste en slots de foto */
   .photo-slot.drag-over {
@@ -494,7 +464,7 @@
     .stat-box { padding: 3px 8px; }
     .stat-num { font-size: 0.95rem; }
     .stat-label { font-size: 0.52rem; }
-    #statbox-variantes { display: none; }
+    #statbox-fotos { display: none; }
     .header-inner > div:last-child {
       flex-shrink: 0;
       width: auto;
@@ -595,12 +565,12 @@
     }
     .header-title h1, #header-epoca-titulo { font-size: 1rem !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .header-subtitle { display: none; }
-    /* Fila 2: Total, Tengo, No Tengo visibles · Variantes oculto en móvil */
+    /* Fila 2: Total + En colección iguales, Con foto oculto */
     .header-stats { order: 2; gap: 8px; flex-shrink: 0; width: 100%; justify-content: center; display: flex; }
     .stat-box { padding: 4px 8px; }
     .stat-num { font-size: 1.1rem; }
     .stat-label { font-size: 0.6rem; }
-    #statbox-variantes { display: none; }
+    #statbox-fotos { display: none; }
     /* Fila 3: Botones a la derecha */
     .header-inner > div:last-child { order: 3; flex-shrink: 0; width: 100%; justify-content: flex-end; display: flex; gap: 6px; }
     /* Toolbar: buscador en fila completa */
@@ -650,152 +620,25 @@
   .portada-footer { font-size:0.72rem; color:#6a5a3a; letter-spacing:0.1em; text-transform:uppercase; margin-top:48px; }
 
 </style>
-<style id="googleidentityservice_button_styles">.qJTHM{-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none;color:#202124;direction:ltr;-webkit-touch-callout:none;font-family:"Roboto-Regular",arial,sans-serif;-webkit-font-smoothing:antialiased;font-weight:400;margin:0;overflow:hidden;-webkit-text-size-adjust:100%}.ynRLnc{left:-9999px;position:absolute;top:-9999px}.L6cTce{display:none}.bltWBb{overflow-wrap:break-word;word-break:break-word}.hSRGPd{color:#1a73e8;cursor:pointer;font-weight:500;text-decoration:none}.Bz112c-W3lGp{height:16px;width:16px}.Bz112c-E3DyYd{height:20px;width:20px}.Bz112c-r9oPif{height:24px;width:24px}.Bz112c-u2z5K{height:36px;width:36px}.Bz112c-uaxL4e{border-radius:10px}.LgbsSe-Bz112c{display:block}.S9gUrf-YoZ4jf{border:none;margin:0;padding:0}.S9gUrf-YoZ4jf *{border:none;margin:0;padding:0}.fFW7wc-ibnC6b>.aZ2wEe>div{border-color:#4285f4}.P1ekSe-ZMv3u{-webkit-transition:height linear .2s;transition:height linear .2s}.P1ekSe-ZMv3u>div:nth-child(1){background-color:#1a73e8!important;-webkit-transition:width linear .3s;transition:width linear .3s}.P1ekSe-ZMv3u>div:nth-child(2){background-image:-webkit-gradient(linear,left top,right top,from(rgba(255,255,255,.7)),to(rgba(255,255,255,.7))),-webkit-gradient(linear,left top,right top,from(#1a73e8),to(#1a73e8))!important;background-image:-webkit-linear-gradient(left,rgba(255,255,255,.7),rgba(255,255,255,.7)),-webkit-linear-gradient(left,#1a73e8,#1a73e8)!important;background-image:linear-gradient(to right,rgba(255,255,255,.7),rgba(255,255,255,.7)),linear-gradient(to right,#1a73e8,#1a73e8)!important}.P1ekSe-ZMv3u>div:nth-child(3){background-image:-webkit-gradient(linear,left top,right top,from(rgba(255,255,255,.7)),to(rgba(255,255,255,.7))),-webkit-gradient(linear,left top,right top,from(#1a73e8),to(#1a73e8))!important;background-image:-webkit-linear-gradient(left,rgba(255,255,255,.7),rgba(255,255,255,.7)),-webkit-linear-gradient(left,#1a73e8,#1a73e8)!important;background-image:linear-gradient(to right,rgba(255,255,255,.7),rgba(255,255,255,.7)),linear-gradient(to right,#1a73e8,#1a73e8)!important}.haAclf{display:inline-block}.nsm7Bb-HzV7m-LgbsSe{border-radius:4px;box-sizing:border-box;-webkit-transition:background-color .218s,border-color .218s;transition:background-color .218s,border-color .218s;-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none;-webkit-appearance:none;background-color:#fff;background-image:none;border:1px solid #dadce0;color:#3c4043;cursor:pointer;font-family:"Google Sans",arial,sans-serif;font-size:14px;height:40px;letter-spacing:.25px;outline:none;overflow:hidden;padding:0 12px;position:relative;text-align:center;vertical-align:middle;white-space:nowrap;width:auto}@media screen and (-ms-high-contrast:active){.nsm7Bb-HzV7m-LgbsSe{border:2px solid windowText;color:windowText}}@media screen and (preferes-contrast:more){.nsm7Bb-HzV7m-LgbsSe{color:#000}}.nsm7Bb-HzV7m-LgbsSe.pSzOP-SxQuSe{font-size:14px;height:32px;letter-spacing:.25px;padding:0 10px}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe{font-size:11px;height:20px;letter-spacing:.3px;padding:0 8px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe{padding:0;width:40px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe.pSzOP-SxQuSe{width:32px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe.purZT-SxQuSe{width:20px}.nsm7Bb-HzV7m-LgbsSe.JGcpL-RbRzK{border-radius:20px}.nsm7Bb-HzV7m-LgbsSe.JGcpL-RbRzK.pSzOP-SxQuSe{border-radius:16px}.nsm7Bb-HzV7m-LgbsSe.JGcpL-RbRzK.purZT-SxQuSe{border-radius:10px}.nsm7Bb-HzV7m-LgbsSe.MFS4be-Ia7Qfc{border:none;color:#fff}.nsm7Bb-HzV7m-LgbsSe.MFS4be-v3pZbf-Ia7Qfc{background-color:#1a73e8}.nsm7Bb-HzV7m-LgbsSe.MFS4be-JaPV2b-Ia7Qfc{background-color:#202124;color:#e8eaed}@media screen and (prefers-contrast:more){.nsm7Bb-HzV7m-LgbsSe.MFS4be-JaPV2b-Ia7Qfc{color:#fff}}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{height:18px;margin-right:8px;min-width:18px;width:18px}.nsm7Bb-HzV7m-LgbsSe.pSzOP-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{height:14px;min-width:14px;width:14px}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{height:10px;min-width:10px;width:10px}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-Bz112c{margin-left:8px;margin-right:-4px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{margin:0;padding:10px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe.pSzOP-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{padding:8px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe.purZT-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{padding:4px}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-top-left-radius:3px;border-bottom-left-radius:3px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;-webkit-box-align:center;-webkit-align-items:center;align-items:center;background-color:#fff;height:36px;margin-left:-10px;margin-right:12px;min-width:36px;width:36px}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf .nsm7Bb-HzV7m-LgbsSe-Bz112c,.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf .nsm7Bb-HzV7m-LgbsSe-Bz112c{margin:0;padding:0}.nsm7Bb-HzV7m-LgbsSe.pSzOP-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{height:28px;margin-left:-8px;margin-right:10px;min-width:28px;width:28px}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{height:16px;margin-left:-6px;margin-right:8px;min-width:16px;width:16px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-radius:3px;margin-left:2px;margin-right:0;padding:0}.nsm7Bb-HzV7m-LgbsSe.JGcpL-RbRzK .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-radius:18px}.nsm7Bb-HzV7m-LgbsSe.pSzOP-SxQuSe.JGcpL-RbRzK .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-radius:14px}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe.JGcpL-RbRzK .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-radius:8px}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-bN97Pc-sM5MNb{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-align-items:center;-webkit-box-align:center;align-items:center;-webkit-flex-direction:row;-webkit-box-orient:horizontal;-webkit-box-direction:normal;flex-direction:row;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;-webkit-flex-wrap:nowrap;flex-wrap:nowrap;height:100%;position:relative;width:100%}.nsm7Bb-HzV7m-LgbsSe .oXtfBe-l4eHX{-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-BPrWId{-webkit-flex-grow:1;-webkit-box-flex:1;flex-grow:1;font-family:"Google Sans",arial,sans-serif;font-weight:500;overflow:hidden;text-overflow:ellipsis;vertical-align:top}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe .nsm7Bb-HzV7m-LgbsSe-BPrWId{font-weight:300}.nsm7Bb-HzV7m-LgbsSe .oXtfBe-l4eHX .nsm7Bb-HzV7m-LgbsSe-BPrWId{-webkit-flex-grow:0;-webkit-box-flex:0;flex-grow:0}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-MJoBVe{-webkit-transition:background-color .218s;transition:background-color .218s;bottom:0;left:0;position:absolute;right:0;top:0}.nsm7Bb-HzV7m-LgbsSe:hover,.nsm7Bb-HzV7m-LgbsSe:focus{box-shadow:none;border-color:rgb(210,227,252);outline:none}.nsm7Bb-HzV7m-LgbsSe:focus-within{outline:2px solid #00639b;border-color:transparent}.nsm7Bb-HzV7m-LgbsSe:hover .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(66,133,244,.08)}.nsm7Bb-HzV7m-LgbsSe:active .nsm7Bb-HzV7m-LgbsSe-MJoBVe,.nsm7Bb-HzV7m-LgbsSe:focus .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(66,133,244,.1)}.nsm7Bb-HzV7m-LgbsSe.MFS4be-Ia7Qfc:hover .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(255,255,255,.24)}.nsm7Bb-HzV7m-LgbsSe.MFS4be-Ia7Qfc:active .nsm7Bb-HzV7m-LgbsSe-MJoBVe,.nsm7Bb-HzV7m-LgbsSe.MFS4be-Ia7Qfc:focus .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(255,255,255,.32)}.nsm7Bb-HzV7m-LgbsSe .n1UuX-DkfjY{border-radius:50%;display:-webkit-box;display:-webkit-flex;display:flex;height:20px;margin-left:-4px;margin-right:8px;min-width:20px;width:20px}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId{font-family:"Roboto";font-size:12px;text-align:left}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .ssJRIf,.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff .fmcmS{overflow:hidden;text-overflow:ellipsis}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-align-items:center;-webkit-box-align:center;align-items:center;color:#5f6368;fill:#5f6368;font-size:11px;font-weight:400}.nsm7Bb-HzV7m-LgbsSe.jVeSEe.MFS4be-Ia7Qfc .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff{color:#e8eaed;fill:#e8eaed}@media screen and (prefers-contrast:more){.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff,.nsm7Bb-HzV7m-LgbsSe.jVeSEe.MFS4be-Ia7Qfc .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff{color:#000;fill:#000}}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff .Bz112c{height:18px;margin:-3px -3px -3px 2px;min-width:18px;width:18px}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-top-left-radius:0;border-bottom-left-radius:0;border-top-right-radius:3px;border-bottom-right-radius:3px;margin-left:12px;margin-right:-10px}.nsm7Bb-HzV7m-LgbsSe.jVeSEe.JGcpL-RbRzK .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-radius:18px}.L5Fo6c-sM5MNb{border:0;display:block;left:0;position:relative;top:0}.L5Fo6c-bF1uUb{border-radius:4px;bottom:0;cursor:pointer;left:0;position:absolute;right:0;top:0}.L5Fo6c-bF1uUb:focus{border:none;outline:none}sentinel{}</style><link id="googleidentityservice" type="text/css" media="all" href="https://accounts.google.com/gsi/style" rel="stylesheet"></head>
-<body class="dark-mode" style="overflow: hidden; padding-top: 117px;">
+</head>
+<body>
 
 
 <!-- ── Botón modo oscuro (en header) ── -->
 
-<div id="portada" class="open">
+<div id="portada">
   <div class="portada-bg"></div>
   <div class="portada-inner">
     <div class="portada-corona">
-      <img src="https://res.cloudinary.com/do4ltpfbo/image/upload/v1774202113/corona.png" class="corona-nueva" alt="Corona Real">
+  <img src="https://res.cloudinary.com/do4ltpfbo/image/upload/v1774202113/corona.png" class="corona-nueva" alt="Corona Real">
+</div>
     </div>
     <div class="portada-titulo">Colección Filatélica<span>de Menfis</span></div>
     <div class="portada-sub">Sellos de España</div>
     <div class="portada-divisor"></div>
-    <div class="portada-epocas" id="portadaEpocas">
-    <div class="portada-card" data-epoca="isabel2" onclick="entrarEpoca('isabel2')">
-      <img class="portada-card-img" src="https://res.cloudinary.com/do4ltpfbo/image/upload/portada_isabel2.jpg" onerror="this.style.display='none'" alt="">
-      <div class="portada-card-fecha">(1850-1870)</div>
-      <div class="portada-card-nombre">Isabel II</div>
-      <div class="portada-card-sub">Primera época de la filatelia española</div>
-      <div class="portada-card-sellos">
-        <div><strong>118</strong>sellos</div>
-        <div><strong>17</strong>variantes</div>
-        <div><strong>16</strong>tengo</div>
-        <div><strong>102</strong>no tengo</div>
-      </div>
-    </div>
-    <div class="portada-card" data-epoca="duque" onclick="entrarEpoca('duque')">
-      <img class="portada-card-img" src="https://res.cloudinary.com/do4ltpfbo/image/upload/portada_duque.jpg" onerror="this.style.display='none'" alt="">
-      <div class="portada-card-fecha">(1870-1872)</div>
-      <div class="portada-card-nombre">Regencia Duque De La Torre</div>
-      <div class="portada-card-sub">Efigie alegórica de España</div>
-      <div class="portada-card-sellos">
-        <div><strong>13</strong>sellos</div>
-        <div><strong>0</strong>variantes</div>
-        <div><strong>4</strong>tengo</div>
-        <div><strong>9</strong>no tengo</div>
-      </div>
-    </div>
-    <div class="portada-card" data-epoca="amadeo1" onclick="entrarEpoca('amadeo1')">
-      <img class="portada-card-img" src="https://res.cloudinary.com/do4ltpfbo/image/upload/portada_amadeo1.jpg" onerror="this.style.display='none'" alt="">
-      <div class="portada-card-fecha">(1872-1873)</div>
-      <div class="portada-card-nombre">Amadeo I</div>
-      <div class="portada-card-sub">Corona Real, Cifras y Busto de Amadeo I</div>
-      <div class="portada-card-sellos">
-        <div><strong>16</strong>sellos</div>
-        <div><strong>1</strong>variantes</div>
-        <div><strong>1</strong>tengo</div>
-        <div><strong>15</strong>no tengo</div>
-      </div>
-    </div>
-    <div class="portada-card" data-epoca="republica1" onclick="entrarEpoca('republica1')">
-      <img class="portada-card-img" src="https://res.cloudinary.com/do4ltpfbo/image/upload/portada_republica1.jpg" onerror="this.style.display='none'" alt="">
-      <div class="portada-card-fecha">(1873-1875)</div>
-      <div class="portada-card-nombre">1ª República</div>
-      <div class="portada-card-sub">Corona mural y Alegoría de la República</div>
-      <div class="portada-card-sellos">
-        <div><strong>28</strong>sellos</div>
-        <div><strong>2</strong>variantes</div>
-        <div><strong>4</strong>tengo</div>
-        <div><strong>24</strong>no tengo</div>
-      </div>
-    </div>
-    <div class="portada-card" data-epoca="carlos7" onclick="entrarEpoca('carlos7')">
-      <img class="portada-card-img" src="https://res.cloudinary.com/do4ltpfbo/image/upload/portada_carlos7.jpg" onerror="this.style.display='none'" alt="">
-      <div class="portada-card-fecha">(1873-1875)</div>
-      <div class="portada-card-nombre">Carlos VII</div>
-      <div class="portada-card-sub">Pretendiente carlista al trono</div>
-      <div class="portada-card-sellos">
-        <div><strong>7</strong>sellos</div>
-        <div><strong>1</strong>variantes</div>
-        <div><strong>0</strong>tengo</div>
-        <div><strong>7</strong>no tengo</div>
-      </div>
-    </div>
-    <div class="portada-card" data-epoca="alfonso12" onclick="entrarEpoca('alfonso12')">
-      <img class="portada-card-img" src="https://res.cloudinary.com/do4ltpfbo/image/upload/portada_alfonso12.jpg" onerror="this.style.display='none'" alt="">
-      <div class="portada-card-fecha">(1875-1885)</div>
-      <div class="portada-card-nombre">Alfonso XII</div>
-      <div class="portada-card-sub">Reinado de Alfonso XII</div>
-      <div class="portada-card-sellos">
-        <div><strong>51</strong>sellos</div>
-        <div><strong>0</strong>variantes</div>
-        <div><strong>21</strong>tengo</div>
-        <div><strong>30</strong>no tengo</div>
-      </div>
-    </div>
-    <div class="portada-card" data-epoca="alfonso13" onclick="entrarEpoca('alfonso13')">
-      <img class="portada-card-img" src="https://res.cloudinary.com/do4ltpfbo/image/upload/portada_alfonso13.jpg" onerror="this.style.display='none'" alt="">
-      <div class="portada-card-fecha">(1889-1931)</div>
-      <div class="portada-card-nombre">Alfonso XIII</div>
-      <div class="portada-card-sub">Reinado de Alfonso XIII</div>
-      <div class="portada-card-sellos">
-        <div><strong>220</strong>sellos</div>
-        <div><strong>0</strong>variantes</div>
-        <div><strong>219</strong>tengo</div>
-        <div><strong>1</strong>no tengo</div>
-      </div>
-    </div>
-    <div class="portada-card" data-epoca="republica2" onclick="entrarEpoca('republica2')">
-      <img class="portada-card-img" src="https://res.cloudinary.com/do4ltpfbo/image/upload/portada_republica2.jpg" onerror="this.style.display='none'" alt="">
-      <div class="portada-card-fecha">(1931-1939)</div>
-      <div class="portada-card-nombre">2ª República</div>
-      <div class="portada-card-sub">Segunda República Española</div>
-      <div class="portada-card-sellos">
-        <div><strong>209</strong>sellos</div>
-        <div><strong>1</strong>variantes</div>
-        <div><strong>155</strong>tengo</div>
-        <div><strong>54</strong>no tengo</div>
-      </div>
-    </div>
-    <div class="portada-card" data-epoca="franco" onclick="entrarEpoca('franco')">
-      <img class="portada-card-img" src="https://res.cloudinary.com/do4ltpfbo/image/upload/portada_franco.jpg" onerror="this.style.display='none'" alt="">
-      <div class="portada-card-fecha">(1936-1975)</div>
-      <div class="portada-card-nombre">F. Franco</div>
-      <div class="portada-card-sub">Estado Español. Francisco Franco</div>
-      <div class="portada-card-sellos">
-        <div><strong>499</strong>sellos</div>
-        <div><strong>0</strong>variantes</div>
-        <div><strong>493</strong>tengo</div>
-        <div><strong>6</strong>no tengo</div>
-      </div>
-    </div>
-    <div class="portada-card" data-epoca="pruebas" onclick="entrarEpoca('pruebas')">
-      <img class="portada-card-img" src="https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_32.jpg" onerror="this.style.display='none'" alt="">
-      <div class="portada-card-fecha"></div>
-      <div class="portada-card-nombre">Pruebas Oficiales</div>
-      <div class="portada-card-sub">Pruebas Oficiales y del Artista</div>
-      <div class="portada-card-sellos">
-        <div><strong>223</strong>sellos</div>
-        <div><strong>0</strong>variantes</div>
-        <div><strong>67</strong>tengo</div>
-        <div><strong>156</strong>no tengo</div>
-      </div>
-    </div></div>
+    <div class="portada-epocas" id="portadaEpocas"></div>
     <div class="portada-footer">Haz clic en una época para entrar directamente</div>
-    <div id="backupBtn" style="margin-top: 24px; text-align: left;">
-      <button onclick="hacerCopiaSeguridad()" style="background: rgba(13, 11, 7, 0.6); border-width: 1px; border-style: solid; border-color: var(--gold); border-image: initial; color: rgb(212, 168, 67); font-family: &quot;Crimson Pro&quot;, serif; font-size: 0.78rem; padding: 7px 14px; border-radius: 2px; cursor: pointer; letter-spacing: 0.06em; transition: 0.2s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='#d4a843'" onmouseout="this.style.borderColor='rgba(184,134,11,0.35)';this.style.color='#8a7050'">💾 Copia de seguridad</button>
-    </div>
-    <div id="authPortada" style="position:fixed;bottom:24px;right:28px;z-index:10">
-          <div style="display:flex;align-items:center;gap:10px;background:rgba(0,0,0,0.4);padding:8px 14px;border-radius:3px;border:1px solid rgba(184,134,11,0.2)">
-            <img src="https://lh3.googleusercontent.com/a/ACg8ocIA3zjioZtokjLS8ZI9LK7Szcy7mgXP9nAwvfrhx_8J0nBUNQ=s96-c" alt="" style="width:26px;height:26px;border-radius:50%;border:1px solid var(--gold)">
-            <span style="font-size:0.78rem;color:#a89070">Paco Balaguer Ferrando</span>
-            <button class="btn-logout" onclick="signOut()">Salir</button>
-          </div></div>
+    <div id="authPortada" style="position:fixed;bottom:24px;right:28px;z-index:10"></div>
   </div>
 </div>
 
@@ -808,9 +651,8 @@
     </div>
     <div class="header-stats">
       <div class="stat-box" id="statbox-total" onclick="toggleStatFilter('total')" title="Ver todos los sellos"><span class="stat-num" id="stat-total">—</span><span class="stat-label">Total</span></div>
-      <div class="stat-box" id="statbox-variantes" onclick="toggleStatFilter('variantes')" title="Ver variantes"><span class="stat-num" id="stat-variantes">—</span><span class="stat-label">Variantes</span></div>
       <div class="stat-box" id="statbox-tengo" onclick="toggleStatFilter('tengo')" title="Ver sellos en mi colección"><span class="stat-num" id="stat-tengo">—</span><span class="stat-label">Tengo</span></div>
-      <div class="stat-box" id="statbox-notengo" onclick="toggleStatFilter('notengo')" title="Ver sellos que me faltan"><span class="stat-num" id="stat-notengo">—</span><span class="stat-label">No tengo</span></div>
+      <div class="stat-box" id="statbox-fotos" onclick="toggleStatFilter('fotos')" title="Ver sellos con foto"><span class="stat-num" id="stat-fotos">—</span><span class="stat-label">Con foto</span></div>
     </div>
     <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
       <div id="header-epocas-btns" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
@@ -818,14 +660,18 @@
         <button onclick="irAlPrimerSello()" class="header-btn" title="Ir al primer sello" style="background:transparent;border:1px solid rgba(184,134,11,0.35);color:#a89070;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold-light)'" onmouseout="this.style.borderColor='rgba(184,134,11,0.35)';this.style.color='#a89070'">↑ Arriba</button>
         <div style="position:relative;flex-shrink:0">
           <span style="position:absolute;left:7px;top:50%;transform:translateY(-50%);color:#8a7050;font-size:0.85rem;pointer-events:none">#</span>
-          <input type="number" id="edifilJump" min="1" placeholder="Edifil…" style="width:72px;height:46px;padding:0 6px 0 20px;background:rgba(255,255,255,0.07);border:1px solid rgba(184,134,11,0.35);color:#d4c8a8;font-family:'Crimson Pro',serif;font-size:0.85rem;border-radius:2px;outline:none;-moz-appearance:textfield" oninput="this.style.borderColor=this.value?'var(--gold)':'rgba(184,134,11,0.35)'" onkeydown="if(event.key==='Enter'){saltarEdifil();}" onblur="saltarEdifil()">
+          <input type="number" id="edifilJump" min="1" placeholder="Edifil…"
+            style="width:72px;height:46px;padding:0 6px 0 20px;background:rgba(255,255,255,0.07);border:1px solid rgba(184,134,11,0.35);color:#d4c8a8;font-family:'Crimson Pro',serif;font-size:0.85rem;border-radius:2px;outline:none;-moz-appearance:textfield"
+            oninput="this.style.borderColor=this.value?'var(--gold)':'rgba(184,134,11,0.35)'"
+            onkeydown="if(event.key==='Enter'){saltarEdifil();}"
+            onblur="saltarEdifil()">
         </div>
       </div>
-      <div id="authArea"><button class="btn-add-header" onclick="openNew()">＋ Añadir sello</button></div>
+      <div id="authArea"></div>
       <div style="width:1px;height:28px;background:rgba(184,134,11,0.25);margin:0 4px;flex-shrink:0"></div>
       <button id="darkModeBtn" onclick="toggleDarkMode()" title="Cambiar modo claro/oscuro">
-        <span id="darkModeIcon">☀️</span>
-        <span class="dm-tip" id="darkModeTip">Modo claro</span>
+        <span id="darkModeIcon">🌙</span>
+        <span class="dm-tip" id="darkModeTip">Modo oscuro</span>
       </button>
     </div>
   </div>
@@ -919,9 +765,9 @@
         <div class="form-group"><label class="form-label">Nº Edifil</label><input class="form-input" type="text" id="fEdifil" placeholder="Ej: 48 ó 48A"></div>
         <div class="form-group"><label class="form-label">Año</label><input class="form-input" type="number" id="fAño" placeholder="Ej: 1856"></div>
         <div class="form-group full"><label class="form-label">Descripción</label><input class="form-input" type="text" id="fDesc" placeholder="Ej: Isabel II"></div>
-        <div class="form-group" id="grupoColor"><label class="form-label">Color</label><input class="form-input" type="text" id="fColor" placeholder="Ej: azul"></div>
-        <div class="form-group" id="grupoValor"><label class="form-label">Valor Facial</label><input class="form-input" type="text" id="fValor" placeholder="Ej: 4 cuartos"></div>
-        <div class="form-group" id="grupoDentado"><label class="form-label">Dentado</label>
+        <div class="form-group"><label class="form-label">Color</label><input class="form-input" type="text" id="fColor" placeholder="Ej: azul"></div>
+        <div class="form-group"><label class="form-label">Valor Facial</label><input class="form-input" type="text" id="fValor" placeholder="Ej: 4 cuartos"></div>
+        <div class="form-group"><label class="form-label">Dentado</label>
           <select class="form-select" id="fDentado">
             <option value="">-- Seleccionar --</option>
             <option value="Sin dentar">Sin dentar</option>
@@ -951,14 +797,14 @@
       <button class="btn btn-danger edit-only" id="btnDelete" onclick="deleteStamp()">🗑 Eliminar</button>
       <div style="display:flex;gap:8px;">
         <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
-        <button class="btn btn-primary edit-only" id="btnGuardar" onclick="saveStamp()">Guardar sello</button>
+        <button class="btn btn-primary edit-only" onclick="saveStamp()">Guardar sello</button>
       </div>
     </div>
   </div>
   <button class="modal-nav next" id="modalNavNext" onclick="event.stopPropagation(); navegarSello(1)" title="Sello siguiente (→)">›</button>
 </div>
 
-<div class="lightbox" id="lightbox" onclick="if(!lbDrag.active &amp;&amp; lbScale&lt;=1) closeLightbox()">
+<div class="lightbox" id="lightbox" onclick="if(!lbDrag.active && lbScale<=1) closeLightbox()">
   <button class="lightbox-close" onclick="closeLightbox()">✕</button>
   <img id="lightboxImg" src="" alt="">
   <div class="lightbox-caption" id="lightboxCaption"></div>
@@ -984,7 +830,7 @@ function _cfg() {
   ].forEach(([k,v]) => _r[k] = _d(v));
   return _r;
 }
-let SHEET_URL = `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&tq=select%20*%20limit%209999&sheet=Hoja 1`;
+let SHEET_URL = `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=Hoja 1&range=A1:N500`;
 
 // ==================== AUTENTICACIÓN GOOGLE ====================
 const AUTHORIZED_EMAIL = _cfg().mail;
@@ -1068,8 +914,6 @@ function applyAuthUI() {
     }
   }
   document.querySelectorAll('.edit-only').forEach(el => { el.style.display = isEditor() ? '' : 'none'; });
-  const backupBtn = document.getElementById('backupBtn');
-  if (backupBtn) backupBtn.style.display = (isEditor() && window.innerWidth > 768) ? '' : 'none';
 }
 
 async function handleGoogleCredential(response) {
@@ -1260,14 +1104,6 @@ const EPOCAS = {
     sello_ref: 'https://res.cloudinary.com/do4ltpfbo/image/upload/portada_franco.jpg',
     sheet: 'Hoja 9',
     data: []
-  },
-  'pruebas': {
-    id: 'pruebas',
-    titulo: 'Pruebas Oficiales',
-    subtitulo: 'Pruebas Oficiales y del Artista',
-    sello_ref: 'https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_32.jpg',
-    sheet: 'Hoja 10',
-    data: []
   }
 
 };
@@ -1302,55 +1138,20 @@ function setSyncStatus(status, msg) {
   msgEl.textContent = msg;
 }
 
-function _parseCSVLine(line) {
-  const result = [];
-  let cur = '', inQ = false;
-  for (let i = 0; i < line.length; i++) {
-    const ch = line[i];
-    if (ch === '"') {
-      if (inQ && line[i+1] === '"') { cur += '"'; i++; }
-      else inQ = !inQ;
-    } else if (ch === ',' && !inQ) { result.push(cur); cur = ''; }
-    else cur += ch;
-  }
-  result.push(cur);
-  return result;
-}
-
-async function fetchAllSheetRows(sheetName) {
-  const sid = _cfg().sid;
-  // CSV format devuelve TODOS los valores como texto, evitando que gviz
-  // infiera tipo NUMBER en columna A y convierta a null las celdas con texto (ej: "213A")
-  const url = 'https://docs.google.com/spreadsheets/d/' + sid
-    + '/gviz/tq?tqx=out:csv&range=A1:N2000&sheet='
-    + encodeURIComponent(sheetName);
-  const res = await fetch(url);
-  const text = await res.text();
-  const lines = text.trim().split('\n');
-  // La primera línea es la cabecera — la saltamos
-  return lines.slice(1).map(line => {
-    const vals = _parseCSVLine(line.replace(/\r$/, ''));
-    return { c: vals.map(v => v === '' ? null : { v: v, f: v }) };
-  });
-}
-
 async function loadFromSheets() {
   setSyncStatus('syncing', 'Cargando datos desde Google Sheets...');
   try {
-    const rows = await fetchAllSheetRows(EPOCAS[currentEpoca].sheet);
-
+    const res = await fetch(SHEET_URL);
+    const text = await res.text();
+    const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\((.*)\);?$/s)[1]);
+    const rows = json.table.rows;
 
     if (!rows || rows.length === 0) {
       stamps = [];
       setSyncStatus('', 'Google Sheets vacío para esta época.');
     } else {
-      let _descartadas = 0;
       stamps = rows.map(row => {
-        if (!row.c || !row.c[0] || (row.c[0].v == null && row.c[0].f == null)) {
-          _descartadas++;
-          if (_descartadas <= 3) console.log('[map] fila descartada c[0]:', JSON.stringify(row.c?.[0]), 'row.c length:', row.c?.length, 'c[1]:', JSON.stringify(row.c?.[1]));
-          return null;
-        }
+        if (!row.c || !row.c[0]) return null;
         // Sheets puede devolver null en .v para celdas con texto (ej: "1A") si la columna está formateada como número
         // En ese caso el valor viene solo en .f (formatted). Leemos ambos.
         const cell = row.c[0];
@@ -1360,24 +1161,6 @@ async function loadFromSheets() {
                        ? cell.f
                        : null;
         if (edifil === null) return null;
-        // Pruebas Oficiales tienen columnas diferentes a los sellos normales
-        if (currentEpoca === 'pruebas') {
-          const codigo = row.c[3]?.v ? String(row.c[3].v) : '';
-          return {
-            edifil,
-            codigo,
-            año:          row.c[1]?.v || null,
-            descripcion:  row.c[2]?.v || '',
-            estado:       row.c[6]?.v || row.c[6]?.f || null,
-            notas:        row.c[7]?.v || '',
-            referencia:   row.c[8]?.v || (codigo ? `https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_${codigo.toLowerCase()}.jpg` : null),
-            delante:      row.c[9]?.v || null,
-            detras:       row.c[10]?.v || null,
-            precio_nuevo: row.c[12]?.v || null,
-            precio_usado: row.c[13]?.v || null,
-            color: '', valor_facial: '', dentado: '', filigrana: '', variante: false,
-          };
-        }
         return {
           edifil,
           año:          row.c[1]?.v || null,
@@ -1396,7 +1179,6 @@ async function loadFromSheets() {
           variante:     /[a-zA-Z]/.test(String(edifil)),
         };
       }).filter(Boolean);
-      console.log('[map] descartadas:', _descartadas, 'restantes:', stamps.length);
       const variantes = stamps.filter(s => s.variante);
       console.log('VARIANTES ENCONTRADAS:', variantes.map(s => s.edifil));
       setSyncStatus('', `Sincronizado con Google Sheets — ${stamps.length} registros`);
@@ -1406,10 +1188,8 @@ async function loadFromSheets() {
     stamps = [];
     setSyncStatus('error', 'Sin conexión con Sheets — no hay datos locales disponibles');
   }
-  console.log('[load] FIN loadFromSheets: stamps=' + stamps.length + ' epoca=' + currentEpoca + ' t=' + Date.now());
   populateFilters();
   renderStamps();
-  console.log('[load] TRAS renderStamps: stamps=' + stamps.length);
   if (currentEpoca) epocasContadores[currentEpoca] = stamps.filter(s => s.estado).length;
 }
 async function saveToSheets(stamp) {
@@ -1469,11 +1249,9 @@ function toggleStatFilter(tipo) {
     activeStatFilter = (activeStatFilter === tipo) ? null : tipo;
   }
   // Actualizar clases visuales
-  ['total','variantes','tengo','notengo'].forEach(t => {
-    const el = document.getElementById('statbox-' + t);
-    if (el) el.classList.toggle('active-filter',
-      t === 'total' ? activeStatFilter === null : activeStatFilter === t);
-  });
+  document.getElementById('statbox-total').classList.toggle('active-filter', activeStatFilter === null && tipo === 'total' && false);
+  document.getElementById('statbox-tengo').classList.toggle('active-filter', activeStatFilter === 'tengo');
+  document.getElementById('statbox-fotos').classList.toggle('active-filter', activeStatFilter === 'fotos');
   renderStamps();
 }
 
@@ -1487,9 +1265,8 @@ function getFiltered() {
   const filterColor = document.getElementById('filterColor').value;
   return stamps.filter(s => {
     // Filtro por stat-box activo
-    if (activeStatFilter === 'tengo'    && !s.estado) return false;
-    if (activeStatFilter === 'notengo'  && s.estado) return false;
-    if (activeStatFilter === 'variantes' && !s.variante) return false;
+    if (activeStatFilter === 'tengo' && !s.estado) return false;
+    if (activeStatFilter === 'fotos' && !s.delante && !s.detras) return false;
     if (search) {
       // Si es solo número, buscar Edifil exacto
       if (/^\d+$/.test(search)) {
@@ -1506,21 +1283,12 @@ function getFiltered() {
     if (filterColor && !s.color?.toLowerCase().includes(filterColor.toLowerCase())) return false;
     return true;
   }).sort((a,b) => {
-    // Ordenación por edifil: 1, 1A, 2... y para pruebas PO-1, PO-2, CALC-1...
+    // Ordenación especial por edifil: 1, 1A, 1B, 2, 2A, 22, 22B...
     if (sortField === 'edifil') {
-      const parse = v => {
-        const s = String(v||'');
-        // Extraer número final (PO-32 → 32, CALC-5 → 5, 1A → 1, 22 → 22)
-        const mEnd = s.match(/(\d+)([A-Za-z]*)$/);
-        const n = mEnd ? parseInt(mEnd[1]) : 0;
-        const prefix = s.replace(/(\d+)([A-Za-z]*)$/, '').toLowerCase(); // PO-, CALC-, ''
-        const suffix = mEnd ? mEnd[2].toLowerCase() : '';                  // A, B, ''
-        return [prefix, n, suffix];
-      };
-      const [ap,an,al] = parse(a.edifil); const [bp,bn,bl] = parse(b.edifil);
-      if (ap !== bp) return (ap<bp?-1:1)*sortDir; // agrupar por prefijo (PO, CALC...)
-      if (an !== bn) return (an-bn)*sortDir;       // luego por número
-      return (al<bl?-1:al>bl?1:0)*sortDir;         // luego por letra (1A, 1B)
+      const parse = v => { const s = String(v||''); const n = parseInt(s)||0; const l = s.replace(/^\d+/,'').toLowerCase(); return [n,l]; };
+      const [an,al] = parse(a.edifil); const [bn,bl] = parse(b.edifil);
+      if (an !== bn) return (an-bn)*sortDir;
+      return (al<bl?-1:al>bl?1:0)*sortDir;
     }
     let av = a[sortField], bv = b[sortField];
     if (av == null) av = ''; if (bv == null) bv = '';
@@ -1551,18 +1319,15 @@ function colorClass(color) {
 }
 
 function renderStamps() {
-  if (currentEpoca === 'alfonso13') console.log('[render] renderStamps stamps=' + stamps.length + ' t=' + Date.now());
   const filtered = getFiltered();
-  const withEstado   = stamps.filter(s => s.estado).length;
-  const withVariante = stamps.filter(s => s.variante).length;
-  document.getElementById('stat-total').textContent      = stamps.length;
-  document.getElementById('stat-variantes').textContent  = withVariante;
-  document.getElementById('stat-tengo').textContent      = withEstado;
-  document.getElementById('stat-notengo').textContent    = stamps.length - withEstado;
+  const withEstado = stamps.filter(s => s.estado).length;
+  const withPhoto = stamps.filter(s => s.delante).length;
+  document.getElementById('stat-total').textContent = stamps.length;
+  document.getElementById('stat-tengo').textContent = withEstado;
+  document.getElementById('stat-fotos').textContent = withPhoto;
   let infoExtra = '';
-  if (activeStatFilter === 'tengo')     infoExtra = ' · <strong style="color:var(--gold)">Filtro: Tengo</strong> <span style="cursor:pointer;color:var(--sepia)" onclick="toggleStatFilter(\'tengo\')" title="Quitar filtro">✕</span>';
-  if (activeStatFilter === 'notengo')   infoExtra = ' · <strong style="color:var(--gold)">Filtro: No tengo</strong> <span style="cursor:pointer;color:var(--sepia)" onclick="toggleStatFilter(\'notengo\')" title="Quitar filtro">✕</span>';
-  if (activeStatFilter === 'variantes') infoExtra = ' · <strong style="color:var(--gold)">Filtro: Variantes</strong> <span style="cursor:pointer;color:var(--sepia)" onclick="toggleStatFilter(\'variantes\')" title="Quitar filtro">✕</span>';
+  if (activeStatFilter === 'tengo') infoExtra = ' · <strong style="color:var(--gold)">Filtro: En colección</strong> <span style="cursor:pointer;color:var(--sepia)" onclick="toggleStatFilter(\'tengo\')" title="Quitar filtro">✕</span>';
+  if (activeStatFilter === 'fotos') infoExtra = ' · <strong style="color:var(--gold)">Filtro: Con foto</strong> <span style="cursor:pointer;color:var(--sepia)" onclick="toggleStatFilter(\'fotos\')" title="Quitar filtro">✕</span>';
   document.getElementById('resultsInfo').innerHTML = `Mostrando ${filtered.length} de ${stamps.length} sellos${infoExtra}`;
   if (currentEpoca) epocasContadores[currentEpoca] = withEstado;
 
@@ -1603,7 +1368,7 @@ function renderGrid(filtered) {
     return `<div class="stamp-card${noTengo ? '' : ' tengo'}${esVariante ? ' variante' : ''}" onclick="openStamp(${edId})">
       <div class="stamp-img-area">${imgArea}</div>
       <div class="stamp-info">
-        <div class="stamp-edifil">${currentEpoca === 'pruebas' && s.codigo ? 'Prueba nº ' + s.codigo : 'Edifil nº ' + s.edifil}</div>
+        <div class="stamp-edifil">Edifil nº ${s.edifil}</div>
         <div class="stamp-desc">${s.descripcion || '—'}</div>
         <div class="stamp-meta">
           <span class="stamp-tag"><span class="stamp-color-dot ${colorClass(s.color)}"></span>${s.color || '—'}</span>
@@ -1612,10 +1377,6 @@ function renderGrid(filtered) {
           ${s.dentado ? `<span class="stamp-tag">${s.dentado}</span>` : ''}
           ${filBadge}
         </div>
-        ${(s.precio_nuevo || s.precio_usado) ? `<div class="stamp-precios">
-          ${s.precio_nuevo ? `<span title="Nuevo">N: <strong>${s.precio_nuevo}€</strong></span>` : ''}
-          ${s.precio_usado ? `<span title="Usado">U: <strong>${s.precio_usado}€</strong></span>` : ''}
-        </div>` : ''}
       </div>
     </div>`;
   }).join('');
@@ -1628,7 +1389,7 @@ function renderList(filtered) {
     const edId = typeof s.edifil === 'string' ? `'${s.edifil}'` : s.edifil;
     return `
     <tr onclick="openStamp(${edId})">
-      <td><strong>${currentEpoca === 'pruebas' && s.codigo ? 'Prueba nº ' + s.codigo : s.edifil}</strong></td><td>${s.año||'—'}</td><td>${s.descripcion||'—'}</td>
+      <td><strong>${s.edifil}</strong></td><td>${s.año||'—'}</td><td>${s.descripcion||'—'}</td>
       <td><span style="display:flex;align-items:center;gap:6px"><span class="stamp-color-dot ${colorClass(s.color)}"></span>${s.color||'—'}</span></td>
       <td>${s.valor_facial||'—'}</td><td>${s.dentado||'—'}</td>
       <td>${s.estado ? `<span style="background:var(--sage);color:white;padding:2px 8px;border-radius:1px;font-size:0.75rem">${s.estado}</span>` : '<span style="color:#aaa">—</span>'}</td>
@@ -1881,23 +1642,6 @@ function fillModal(s) {
   setPhotoSlot('referencia', s.referencia);
   setPhotoSlot('delante', s.delante);
   setPhotoSlot('detras', s.detras);
-  // Adaptar campos según época
-  const esPrueba = currentEpoca === 'pruebas';
-  ['grupoColor','grupoValor','grupoDentado','grupoFiligrana'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.style.display = esPrueba ? 'none' : '';
-  });
-  if (esPrueba && document.getElementById('filigrana-aviso-modal'))
-    document.getElementById('filigrana-aviso-modal').innerHTML = '';
-  // Etiqueta del campo edifil
-  const lblEdifil = document.querySelector('label[for="fEdifil"]') || document.querySelector('#modal .form-label');
-  // Texto del botón guardar
-  const btnG = document.getElementById('btnGuardar');
-  if (btnG) btnG.textContent = esPrueba ? 'Guardar prueba' : 'Guardar sello';
-  // Cabecera del modal
-  document.getElementById('mEdifil').textContent = (esPrueba && s.codigo)
-    ? 'Prueba nº ' + s.codigo
-    : (s.edifil ? 'Edifil nº ' + s.edifil : 'Nuevo sello');
 }
 function closeModal(e) {
   if (e && e.target !== document.getElementById('modalOverlay')) return;
@@ -1916,10 +1660,9 @@ function saveStamp() {
   const data = {
     edifil, año: parseInt(document.getElementById('fAño').value)||null,
     descripcion: document.getElementById('fDesc').value.trim(),
-    codigo: currentEpoca === 'pruebas' ? (stamps.find(s => String(s.edifil) === String(currentStampId||edifil))?.codigo || '') : undefined,
-    color: currentEpoca === 'pruebas' ? '' : document.getElementById('fColor').value.trim(),
-    valor_facial: currentEpoca === 'pruebas' ? '' : document.getElementById('fValor').value.trim(),
-    dentado: currentEpoca === 'pruebas' ? '' : document.getElementById('fDentado').value,
+    color: document.getElementById('fColor').value.trim(),
+    valor_facial: document.getElementById('fValor').value.trim(),
+    dentado: document.getElementById('fDentado').value,
     estado: document.getElementById('fEstado').value || null,
     filigrana: document.getElementById('fFiligrana').value || null,
     notas: document.getElementById('fNotas').value.trim(),
@@ -2783,10 +2526,12 @@ function showPortada() {
   const container = document.getElementById('portadaEpocas');
   container.innerHTML = Object.values(EPOCAS).map(ep => {
     const labelItem = 'sellos';
-    const totalLabel     = epocasTotales[ep.id]    !== undefined ? `<strong>${epocasTotales[ep.id]}</strong>${labelItem}`       : `<strong style="opacity:0.4;font-size:0.8rem">…</strong>${labelItem}`;
-    const variantesLabel = epocasVariantes[ep.id]  !== undefined ? `<strong>${epocasVariantes[ep.id]}</strong>variantes`          : '';
-    const tengoLabel     = epocasContadores[ep.id] !== undefined ? `<strong>${epocasContadores[ep.id]}</strong>tengo`              : `<strong style="opacity:0.4;font-size:0.8rem">…</strong>tengo`;
-    const notengoLabel   = epocasNoTengo[ep.id]    !== undefined ? `<strong>${epocasNoTengo[ep.id]}</strong>no tengo`             : '';
+    const totalLabel = epocasTotales[ep.id] !== undefined
+      ? `<strong>${epocasTotales[ep.id]}</strong>${labelItem}`
+      : `<strong style="opacity:0.4;font-size:0.8rem">…</strong>${labelItem}`;
+    const tengoLabel = epocasContadores[ep.id] !== undefined
+      ? `<strong>${epocasContadores[ep.id]}</strong>en colección`
+      : `<strong style="opacity:0.4;font-size:0.8rem">…</strong>en colección`;
     return `
     <div class="portada-card${ep.id === currentEpoca ? ' active' : ''}" data-epoca="${ep.id}" onclick="entrarEpoca('${ep.id}')">
       <img class="portada-card-img" src="${ep.sello_ref}" onerror="this.style.display='none'" alt="">
@@ -2795,9 +2540,7 @@ function showPortada() {
       <div class="portada-card-sub">${ep.subtitulo}</div>
       <div class="portada-card-sellos">
         <div>${totalLabel}</div>
-        ${variantesLabel ? `<div>${variantesLabel}</div>` : ''}
         <div>${tengoLabel}</div>
-        ${notengoLabel ? `<div>${notengoLabel}</div>` : ''}
       </div>
     </div>`;
   }).join('');
@@ -2876,16 +2619,12 @@ history.replaceState({ view: 'portada' }, '', '');
 
 function switchEpoca(epocaId) {
   currentEpoca = epocaId;
-  SHEET_URL = epocaId === 'pruebas'
-    ? `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&tq=select%20*%20limit%209999&sheet=${encodeURIComponent(EPOCAS[epocaId].sheet)}`
-    : `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&tq=select%20*%20limit%209999&sheet=${EPOCAS[epocaId].sheet}`;
+  SHEET_URL = `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=${EPOCAS[epocaId].sheet}&range=A1:N500`;
   const ep = EPOCAS[epocaId];
   // Resetear filtro de stat al cambiar de época
   activeStatFilter = null;
-  ['variantes','tengo','notengo'].forEach(t => {
-    const el = document.getElementById('statbox-' + t);
-    if (el) el.classList.remove('active-filter');
-  });
+  document.getElementById('statbox-tengo').classList.remove('active-filter');
+  document.getElementById('statbox-fotos').classList.remove('active-filter');
   // Actualizar header
   const tituloEl = document.getElementById('header-epoca-titulo');
   tituloEl.innerHTML = '<span style="color:#e0b84a;font-style:italic">' + ep.titulo + '</span>';
@@ -2895,31 +2634,24 @@ function switchEpoca(epocaId) {
 
 // Mostrar portada al inicio — esperar contadores de Sheets antes de renderizar
 const epocasTotales = {};
-const epocasVariantes = {};
-const epocasNoTengo = {};
 const edifilEpocaMap = {}; // edifil -> epochId (construido en precargarContadores)
 
 async function precargarContadores() {
   const promesas = Object.values(EPOCAS).map(async ep => {
     try {
-      const rows = await fetchAllSheetRows(ep.sheet);
-      const validRows = rows.filter(row => row.c && row.c[0] && (row.c[0].v != null || row.c[0].f != null));
+      const url = `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(ep.sheet)}&range=A1:N500`;
+      const res = await fetch(url);
+      const text = await res.text();
+      const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\((.*)\);?$/s)[1]);
+      const rows = json.table?.rows || [];
+      const validRows = rows.filter(row => row.c && row.c[0] && row.c[0].v);
       epocasTotales[ep.id] = validRows.length;
-      let count = 0, variantes = 0;
+      let count = 0;
       validRows.forEach(row => {
-        if (ep.id !== 'pruebas') {
-          const edVal = row.c[0].v;
-          const edFmt = row.c[0].f;
-          edifilEpocaMap[edVal] = ep.id;
-          if (edFmt) edifilEpocaMap[edFmt] = ep.id;
-          // Detectar variante: Edifil con letra (ej: 48A)
-          if (/[a-zA-Z]/.test(String(edFmt || edVal))) variantes++;
-        }
-        if (row.c[6] && (row.c[6].v || row.c[6].f)) count++;
+        edifilEpocaMap[row.c[0].v] = ep.id; if (row.c[0].f) edifilEpocaMap[row.c[0].f] = ep.id;
+        if (row.c[6] && row.c[6].v) count++;
       });
-      epocasContadores[ep.id]  = count;
-      epocasVariantes[ep.id]   = variantes;
-      epocasNoTengo[ep.id]     = validRows.length - count;
+      epocasContadores[ep.id] = count;
     } catch(e) {}
   });
   await Promise.all(promesas);
@@ -2974,32 +2706,6 @@ let pruebaVista = 'grid'; // 'grid' | 'list'// Los datos de pruebas se cargan si
  * Esta función busca en la pestaña 'STAMPS', toma el número Edifil (Columna A)
  * y los precios de las columnas K y L.
  */
-function hacerCopiaSeguridad() {
-  if (!confirm('¿Descargar copia de seguridad?\n\nSe descargarán dos archivos:\n· HTML de la página\n· Datos de Sheets (Excel)')) return;
-
-  const fecha = new Date().toISOString().slice(0,10); // YYYY-MM-DD
-
-  // 1. Descargar el HTML
-  const htmlBlob = new Blob([document.documentElement.outerHTML], { type: 'text/html;charset=utf-8' });
-  const htmlUrl = URL.createObjectURL(htmlBlob);
-  const htmlLink = document.createElement('a');
-  htmlLink.href = htmlUrl;
-  htmlLink.download = 'menfis_html_' + fecha + '.html';
-  htmlLink.click();
-  setTimeout(() => URL.revokeObjectURL(htmlUrl), 5000);
-
-  // 2. Descargar el Sheets como Excel
-  setTimeout(() => {
-    const sid = _cfg().sid;
-    const xlsxUrl = `https://docs.google.com/spreadsheets/d/${sid}/export?format=xlsx&token=${_googleCredentialToken}`;
-    const xlsxLink = document.createElement('a');
-    xlsxLink.href = xlsxUrl;
-    xlsxLink.download = 'menfis_datos_' + fecha + '.xlsx';
-    xlsxLink.click();
-    showToast('💾 Copia de seguridad descargada');
-  }, 800);
-}
-
 async function cargarPreciosDesdeSheets() {
     const SPREADSHEET_ID = '1X58_YshD6l7h1-B-lCid_m9m5v63Xz-B6e7Yqf0';
     
@@ -3051,10 +2757,9 @@ async function cargarPreciosDesdeSheets() {
   <div class="crop-btns">
     <button id="btnCropSkip" onclick="confirmCrop(false)">Sin recortar</button>
     <button id="btnCropRotate" onclick="rotateCrop()" title="Rotar 90°">↻</button>
-    <button id="btnCropOk" onclick="confirmCrop(true)">✓ Recortar</button>
+    <button id="btnCropOk"   onclick="confirmCrop(true)">✓ Recortar</button>
   </div>
 </div>
+</body>
+</html>
 
-
-
-</body></html>
