@@ -1309,13 +1309,7 @@ async function loadFromSheets() {
     const text = await res.text();
     const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\((.*)\);?$/s)[1]);
     const rows = json.table.rows;
-    if (rows && rows.length > 0 && currentEpoca === 'alfonso13') {
-      // Encontrar la primera fila con c[0] null y mostrar toda la fila
-      const filaNull = rows.find(r => r.c && r.c[0] && r.c[0].v == null && r.c[0].f == null);
-      if (filaNull) console.log('[gviz] fila con c[0] null - fila completa:', JSON.stringify(filaNull));
-      const filaBuena = rows.find(r => r.c && r.c[0] && (r.c[0].v != null || r.c[0].f != null));
-      if (filaBuena) console.log('[gviz] fila con c[0] OK - fila completa:', JSON.stringify(filaBuena));
-    }
+
 
     if (!rows || rows.length === 0) {
       stamps = [];
@@ -1377,8 +1371,10 @@ async function loadFromSheets() {
     stamps = [];
     setSyncStatus('error', 'Sin conexión con Sheets — no hay datos locales disponibles');
   }
+  console.log('[load] FIN loadFromSheets: stamps=' + stamps.length + ' epoca=' + currentEpoca + ' t=' + Date.now());
   populateFilters();
   renderStamps();
+  console.log('[load] TRAS renderStamps: stamps=' + stamps.length);
   if (currentEpoca) epocasContadores[currentEpoca] = stamps.filter(s => s.estado).length;
 }
 async function saveToSheets(stamp) {
@@ -1520,6 +1516,7 @@ function colorClass(color) {
 }
 
 function renderStamps() {
+  if (currentEpoca === 'alfonso13') console.log('[render] renderStamps stamps=' + stamps.length + ' t=' + Date.now());
   const filtered = getFiltered();
   const withEstado   = stamps.filter(s => s.estado).length;
   const withVariante = stamps.filter(s => s.variante).length;
