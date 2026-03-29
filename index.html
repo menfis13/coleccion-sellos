@@ -260,34 +260,6 @@
   .list-table tr:nth-child(even) td { background: rgba(237,229,208,0.2); }
 
   .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(26,18,8,0.75); z-index: 500; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(2px); }
-  /* Botones navegación modal anterior/siguiente */
-  .modal-nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(20,14,6,0.75);
-    border: 1px solid rgba(184,134,11,0.35);
-    color: var(--gold-light);
-    font-size: 1.4rem;
-    width: 38px; height: 64px;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-    border-radius: 3px;
-    z-index: 510;
-    transition: background 0.15s, border-color 0.15s;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .modal-nav:hover { background: rgba(184,134,11,0.18); border-color: var(--gold); }
-  .modal-nav:active { background: rgba(184,134,11,0.3); }
-  .modal-nav.prev { left: 6px; }
-  .modal-nav.next { right: 6px; }
-  .modal-nav:disabled { opacity: 0.2; cursor: default; pointer-events: none; }
-  @media (max-width: 600px) {
-    .modal-nav { width: 32px; height: 52px; font-size: 1.1rem; }
-    .modal-nav.prev { left: 2px; }
-    .modal-nav.next { right: 2px; }
-  }
   .modal-overlay.open { display: flex; }
   .modal { background: var(--cream); max-width: 680px; width: 100%; max-height: 90vh; overflow-y: auto; border-radius: 3px; box-shadow: 0 24px 80px rgba(0,0,0,0.4); border-top: 4px solid var(--gold); animation: modalIn 0.25s ease; }
   @keyframes modalIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
@@ -329,23 +301,6 @@
   .btn-secondary:hover { background: var(--parchment); }
 
   input[type="file"] { display: none; }
-  /* Drag & Drop / Paste en slots de foto */
-  .photo-slot.drag-over {
-    outline: 2.5px dashed var(--gold) !important;
-    background: rgba(184,134,11,0.07) !important;
-    transition: outline 0.15s, background 0.15s;
-  }
-  .photo-slot .drop-hint {
-    position: absolute;
-    bottom: 28px;
-    left: 0; right: 0;
-    text-align: center;
-    font-size: 0.65rem;
-    color: var(--sepia);
-    opacity: 0.55;
-    pointer-events: none;
-    letter-spacing: 0.05em;
-  }
 
   .lightbox { display: none; position: fixed; inset: 0; background: rgba(10,7,3,0.93); z-index: 900; align-items: center; justify-content: center; cursor: zoom-out; backdrop-filter: blur(4px); touch-action: none; }
   .lightbox.open { display: flex; }
@@ -567,30 +522,6 @@
   .portada-card-img { width:80px; height:80px; object-fit:contain; float:right; margin:-8px -4px 0 16px; opacity:0.85; border-radius:2px; outline:none; border:none; box-shadow:none; }
   .portada-card-sellos { font-size:0.78rem; color:#9a8060; border-top:1px solid rgba(184,134,11,0.12); padding-top:14px; margin-top:14px; display:flex; gap:16px; }
   .portada-card-sellos strong { color:#e0b84a; font-size:1rem; font-family:'Playfair Display',serif; display:block; }
-  /* Tarjeta especial para Pruebas Oficiales */
-  .portada-card.pruebas-card { border-color:rgba(184,134,11,0.3); }
-  .portada-card.pruebas-card:hover { border-color:rgba(184,134,11,0.7); box-shadow:0 16px 48px rgba(184,134,11,0.15); }
-  /* Sección de Pruebas Oficiales */
-  #seccionPruebas { display:none; }
-  #seccionPruebas.open { display:block; }
-  .prueba-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:16px; padding:16px; padding-top:20px; }
-  .prueba-card { background:var(--cream); border:1px solid rgba(184,134,11,0.2); border-radius:3px; overflow:hidden; cursor:pointer; transition:all 0.2s; position:relative; }
-  .prueba-card:hover { border-color:rgba(184,134,11,0.6); transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,0.15); }
-  .prueba-card.tengo { border-color:rgba(184,134,11,0.5); }
-  .prueba-card.tengo::after { content:'✓'; position:absolute; top:6px; right:8px; color:var(--gold-light); font-size:1rem; font-weight:bold; text-shadow:0 0 4px rgba(0,0,0,0.5); }
-  .prueba-img-area { width:100%; height:150px; display:flex; align-items:center; justify-content:center; background:#fff; overflow:hidden; }
-  .prueba-img-area img { width:100%; height:100%; object-fit:contain; }
-  .prueba-img-placeholder { font-size:2rem; opacity:0.2; }
-  .prueba-info { padding:10px 12px 12px; }
-  .prueba-num { font-size:0.65rem; letter-spacing:0.15em; color:var(--gold); text-transform:uppercase; margin-bottom:3px; }
-  .prueba-desc { font-family:'Playfair Display',serif; font-size:0.85rem; color:var(--ink); line-height:1.3; }
-  .prueba-año { font-size:0.72rem; color:var(--sepia); margin-top:4px; }
-  /* Header de la sección pruebas */
-  .pruebas-header { display:none; }
-  .pruebas-stats { font-size:0.8rem; color:var(--sepia); }
-  @media(max-width:600px) {
-    .prueba-grid { grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px; padding:10px; }
-  }
   .portada-entrar:hover { background:#e0b84a; transform:translateY(-1px); }
   .portada-footer { font-size:0.72rem; color:#6a5a3a; letter-spacing:0.1em; text-transform:uppercase; margin-top:48px; }
 </style>
@@ -635,21 +566,15 @@
       <div class="stat-box" id="statbox-fotos" onclick="toggleStatFilter('fotos')" title="Ver sellos con foto"><span class="stat-num" id="stat-fotos">—</span><span class="stat-label">Con foto</span></div>
     </div>
     <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
-      <div id="header-epocas-btns" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
-        <button onclick="showPortada()" class="header-btn" style="background:transparent;border:1px solid rgba(184,134,11,0.5);color:var(--gold-light);" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(184,134,11,0.5)'">◀ Épocas</button>
-        <button onclick="irAlPrimerSello()" class="header-btn" title="Ir al primer sello" style="background:transparent;border:1px solid rgba(184,134,11,0.35);color:#a89070;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold-light)'" onmouseout="this.style.borderColor='rgba(184,134,11,0.35)';this.style.color='#a89070'">↑ Arriba</button>
-        <div style="position:relative;flex-shrink:0">
-          <span style="position:absolute;left:7px;top:50%;transform:translateY(-50%);color:#8a7050;font-size:0.85rem;pointer-events:none">#</span>
-          <input type="number" id="edifilJump" min="1" placeholder="Edifil…"
-            style="width:72px;height:46px;padding:0 6px 0 20px;background:rgba(255,255,255,0.07);border:1px solid rgba(184,134,11,0.35);color:#d4c8a8;font-family:'Crimson Pro',serif;font-size:0.85rem;border-radius:2px;outline:none;-moz-appearance:textfield"
-            oninput="this.style.borderColor=this.value?'var(--gold)':'rgba(184,134,11,0.35)'"
-            onkeydown="if(event.key==='Enter'){saltarEdifil();}"
-            onblur="saltarEdifil()">
-        </div>
-      </div>
-      <div id="header-pruebas-btns" style="display:none;align-items:center;gap:6px">
-        <button onclick="volverPortadaDesdePruebas()" class="header-btn" style="background:transparent;border:1px solid rgba(184,134,11,0.5);color:var(--gold-light);" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(184,134,11,0.5)'">◀ Épocas</button>
-        <button onclick="window.scrollTo({top:0,behavior:'smooth'})" class="header-btn" style="background:transparent;border:1px solid rgba(184,134,11,0.35);color:#a89070;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold-light)'" onmouseout="this.style.borderColor='rgba(184,134,11,0.35)';this.style.color='#a89070'">↑ Arriba</button>
+      <button onclick="showPortada()" class="header-btn" style="background:transparent;border:1px solid rgba(184,134,11,0.5);color:var(--gold-light);" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(184,134,11,0.5)'">◀ Épocas</button>
+      <button onclick="irAlPrimerSello()" class="header-btn" title="Ir al primer sello" style="background:transparent;border:1px solid rgba(184,134,11,0.35);color:#a89070;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold-light)'" onmouseout="this.style.borderColor='rgba(184,134,11,0.35)';this.style.color='#a89070'">↑ Arriba</button>
+      <div style="position:relative;flex-shrink:0">
+        <span style="position:absolute;left:7px;top:50%;transform:translateY(-50%);color:#8a7050;font-size:0.85rem;pointer-events:none">#</span>
+        <input type="number" id="edifilJump" min="1" placeholder="Edifil…"
+          style="width:72px;height:46px;padding:0 6px 0 20px;background:rgba(255,255,255,0.07);border:1px solid rgba(184,134,11,0.35);color:#d4c8a8;font-family:'Crimson Pro',serif;font-size:0.85rem;border-radius:2px;outline:none;-moz-appearance:textfield"
+          oninput="this.style.borderColor=this.value?'var(--gold)':'rgba(184,134,11,0.35)'"
+          onkeydown="if(event.key==='Enter'){saltarEdifil();}"
+          onblur="saltarEdifil()">
       </div>
       <div id="authArea"></div>
       <div style="width:1px;height:28px;background:rgba(184,134,11,0.25);margin:0 4px;flex-shrink:0"></div>
@@ -661,74 +586,6 @@
   </div>
 </header>
 
-<!-- Sección Pruebas Oficiales y del Artista -->
-<div id="seccionPruebas">
-  <div class="prueba-grid" id="pruebaGrid"></div>
-</div>
-
-<!-- Modal Prueba Oficial -->
-<div class="modal-overlay" id="modalPrueba" onclick="cerrarModalPrueba(event)">
-  <button class="modal-nav prev" id="pruebNavPrev" onclick="event.stopPropagation(); navegarPrueba(-1)">‹</button>
-  <div class="modal" id="modalPruebaInner" style="max-width:700px">
-    <div class="modal-header">
-      <div>
-        <div class="modal-edifil" id="pNum"></div>
-        <div class="modal-title" id="pTitle"></div>
-      </div>
-      <button class="modal-close" onclick="cerrarModalPrueba()">✕</button>
-    </div>
-    <div class="modal-body">
-      <div id="precio-prueba-modal"></div>
-      <div class="photo-section">
-        <div class="photo-slot" id="pSlotRef"><div class="photo-slot-preview"></div>
-          <div style="text-align:center;font-size:0.62rem;color:var(--sepia);padding:4px 0 3px;letter-spacing:0.07em;border-top:1px solid rgba(92,61,30,0.1);background:#faf7f2">REFERENCIA</div>
-        </div>
-        <div class="photo-slot" id="pSlotDelante"><div class="photo-slot-preview"></div>
-          <div style="text-align:center;font-size:0.62rem;color:var(--sepia);padding:4px 0 3px;letter-spacing:0.07em;border-top:1px solid rgba(92,61,30,0.1);background:#faf7f2">ANVERSO</div>
-          <span class="drop-hint edit-only">📋 pegar · arrastrar</span>
-          <div class="photo-actions edit-only" id="pOverlayDelante">
-            <button onclick="event.stopPropagation(); triggerPruebaPhoto('delante')"><span class="btn-icon">📷</span><span>Cámara</span></button>
-            <button onclick="event.stopPropagation(); triggerPruebaPhotoGallery('delante')"><span class="btn-icon">🖼️</span><span>Galería</span></button>
-            <button class="btn-quitar" onclick="event.stopPropagation(); quitarFotoPrueba('delante')"><span class="btn-icon">🗑️</span><span>Quitar</span></button>
-          </div>
-        </div>
-        <div class="photo-slot" id="pSlotDetras"><div class="photo-slot-preview"></div>
-          <div style="text-align:center;font-size:0.62rem;color:var(--sepia);padding:4px 0 3px;letter-spacing:0.07em;border-top:1px solid rgba(92,61,30,0.1);background:#faf7f2">REVERSO</div>
-          <span class="drop-hint edit-only">📋 pegar · arrastrar</span>
-          <div class="photo-actions edit-only" id="pOverlayDetras">
-            <button onclick="event.stopPropagation(); triggerPruebaPhoto('detras')"><span class="btn-icon">📷</span><span>Cámara</span></button>
-            <button onclick="event.stopPropagation(); triggerPruebaPhotoGallery('detras')"><span class="btn-icon">🖼️</span><span>Galería</span></button>
-            <button class="btn-quitar" onclick="event.stopPropagation(); quitarFotoPrueba('detras')"><span class="btn-icon">🗑️</span><span>Quitar</span></button>
-          </div>
-        </div>
-      </div>
-      <div class="form-grid">
-        <div class="form-group"><label class="form-label">Nº Prueba</label><input class="form-input" id="pFNum" readonly style="pointer-events:none;background:#f5f0e8"></div>
-        <div class="form-group"><label class="form-label">Año</label><input class="form-input" id="pFAño" type="number" min="1975" max="2030"></div>
-        <div class="form-group full"><label class="form-label">Descripción</label><input class="form-input" id="pFDesc"></div>
-        <div class="form-group"><label class="form-label">Estado en tu colección</label>
-          <select class="form-select" id="pFEstado">
-            <option value="">-- No tengo esta prueba --</option>
-            <option value="Nuevo">Nuevo</option>
-            <option value="Nuevo Fijasello">Nuevo Fijasello</option>
-            <option value="Usado">Usado</option>
-            <option value="Usado Fijasello">Usado Fijasello</option>
-          </select>
-        </div>
-        <div class="form-group full"><label class="form-label">Notas personales</label><textarea class="form-textarea" id="pFNotas" placeholder="Observaciones, procedencia, valor estimado..."></textarea></div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-danger edit-only" onclick="eliminarPrueba()">🗑 Eliminar</button>
-      <div style="display:flex;gap:8px;">
-        <button class="btn btn-secondary" onclick="cerrarModalPrueba()">Cancelar</button>
-        <button class="btn btn-primary edit-only" onclick="guardarPrueba()">Guardar prueba</button>
-      </div>
-    </div>
-  </div>
-  <button class="modal-nav next" id="pruebNavNext" onclick="event.stopPropagation(); navegarPrueba(1)">›</button>
-</div>
-
 <div id="syncBar" class="sync-bar">
   <div class="sync-dot"></div>
   <span id="syncMsg">Conectando con Google Sheets...</span>
@@ -738,7 +595,7 @@
 </div>
 
 <div style="max-width:1400px;margin:0 auto;">
-  <div class="toolbar" id="epocas-toolbar">
+  <div class="toolbar">
     <div class="search-wrap">
       <span class="search-icon">🔍</span>
       <input type="text" id="searchInput" placeholder="Buscar descripción, color, año…" oninput="onSearchInput()">
@@ -775,7 +632,6 @@
 </div>
 
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
-  <button class="modal-nav prev" id="modalNavPrev" onclick="event.stopPropagation(); navegarSello(-1)" title="Sello anterior (←)">‹</button>
   <div class="modal" id="modal">
     <div class="modal-header">
       <div><div class="modal-edifil" id="mEdifil"></div><div class="modal-title" id="mTitle"></div></div>
@@ -792,7 +648,6 @@
         <div class="photo-slot" id="slotDelante">
           <div class="photo-slot-preview"></div>
           <div style="text-align:center;font-size:0.62rem;color:var(--sepia);padding:4px 0 3px;letter-spacing:0.07em;border-top:1px solid rgba(92,61,30,0.1);background:#faf7f2">ANVERSO</div>
-          <span class="drop-hint edit-only">📋 pegar · arrastrar</span>
           <div class="photo-actions edit-only" id="overlayDelante">
             <button onclick="event.stopPropagation(); triggerPhotoCamera('delante')"><span class="btn-icon">📷</span><span>Cámara</span></button>
             <button onclick="event.stopPropagation(); triggerPhotoGallery('delante')"><span class="btn-icon">🖼️</span><span>Galería</span></button>
@@ -802,7 +657,6 @@
         <div class="photo-slot" id="slotDetras">
           <div class="photo-slot-preview"></div>
           <div style="text-align:center;font-size:0.62rem;color:var(--sepia);padding:4px 0 3px;letter-spacing:0.07em;border-top:1px solid rgba(92,61,30,0.1);background:#faf7f2">REVERSO</div>
-          <span class="drop-hint edit-only">📋 pegar · arrastrar</span>
           <div class="photo-actions edit-only" id="overlayDetras">
             <button onclick="event.stopPropagation(); triggerPhotoCamera('detras')"><span class="btn-icon">📷</span><span>Cámara</span></button>
             <button onclick="event.stopPropagation(); triggerPhotoGallery('detras')"><span class="btn-icon">🖼️</span><span>Galería</span></button>
@@ -853,7 +707,6 @@
       </div>
     </div>
   </div>
-  <button class="modal-nav next" id="modalNavNext" onclick="event.stopPropagation(); navegarSello(1)" title="Sello siguiente (→)">›</button>
 </div>
 
 <div class="lightbox" id="lightbox" onclick="if(!lbDrag.active && lbScale<=1) closeLightbox()">
@@ -866,233 +719,6 @@
 <div class="saving-toast" id="toast"></div>
 
 <script>
-// Pruebas Oficiales y del Artista
-const PRUEBAS_OFICIALES_DATA = [
-  {id:"PO-1",codigo:"1",descripcion:"España 75 - Exposición Mundial de Filatelia (I)",año:1975,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_1.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:28,precio_usado:null},
-  {id:"PO-2",codigo:"2",descripcion:"España 75 - Exposición Mundial de Filatelia (II)",año:1975,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_2.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:28,precio_usado:null},
-  {id:"PO-3",codigo:"3",descripcion:"Espamer 80 - Exposición Filatélica de América y Europa. Madrid",año:1980,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_3.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:26,precio_usado:null},
-  {id:"PO-4",codigo:"4",descripcion:"España 82 - Copa Mundial de Fútbol (I)",año:1982,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_4.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:42,precio_usado:null},
-  {id:"PO-5",codigo:"5",descripcion:"España 82 - Copa Mundial de Fútbol (II)",año:1982,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_5.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:42,precio_usado:null},
-  {id:"PO-6",codigo:"6",descripcion:"España 84 - Exposición Mundial de Filatelia (I)",año:1984,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_6.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:96,precio_usado:null},
-  {id:"PO-7",codigo:"7",descripcion:"España 84 - Exposición Mundial de Filatelia (II)",año:1984,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_7.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:96,precio_usado:null},
-  {id:"PO-8",codigo:"8",descripcion:"EXFILNA 85 - Exposición Filatélica Mundial. Madrid",año:1985,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_8.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:50,precio_usado:null},
-  {id:"PO-9",codigo:"9",descripcion:"FILATEM 86 - Exposición Nacional de Filatelia Temática. Calella",año:1986,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_9.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:560,precio_usado:null},
-  {id:"PO-10",codigo:"10",descripcion:"EXFILNA 86 - Córdoba",año:1986,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_10.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:50,precio_usado:null},
-  {id:"PO-11",codigo:"11",descripcion:"Exposición Filatélica Rumbo al 92. Sevilla",año:1987,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_11.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:60,precio_usado:null},
-  {id:"PO-12",codigo:"12",descripcion:"Espamer 87 - Exposición Filatélica de América y Europa. La Coruña (I)",año:1987,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_12.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:24,precio_usado:null},
-  {id:"PO-13",codigo:"13",descripcion:"Espamer 87 - Exposición Filatélica de América y Europa. La Coruña (II)",año:1987,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_13.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:24,precio_usado:null},
-  {id:"PO-14",codigo:"14",descripcion:"EXFILNA 87 - Gerona",año:1987,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_14.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:36,precio_usado:null},
-  {id:"PO-15",codigo:"15",descripcion:"50 Cumpleaños de SS. MM. los Reyes de España",año:1988,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_15.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:70,precio_usado:null},
-  {id:"PO-15A",codigo:"15A",descripcion:"EXFILNA 88 - Pamplona",año:1988,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_15a.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:30,precio_usado:null},
-  {id:"PO-16",codigo:"16",descripcion:"XXV Aniversario de la FESOFI",año:1988,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_16.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:46,precio_usado:null},
-  {id:"PO-17",codigo:"17",descripcion:"Carlos III y La Ilustración",año:1988,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_17.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:36,precio_usado:null},
-  {id:"PO-18",codigo:"18",descripcion:"Centenario de la Creación del Cuerpo de Correos",año:1989,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_18.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:28,precio_usado:null},
-  {id:"PO-19",codigo:"19",descripcion:"EXFILNA 89 - Toledo",año:1989,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_19.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:7,precio_usado:null},
-  {id:"PO-20",codigo:"20",descripcion:"Día del Sello 1990",año:1990,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_20.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:13,precio_usado:null},
-  {id:"PO-21",codigo:"21",descripcion:"EXFILNA 90 - Zaragoza",año:1990,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_21.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:9,precio_usado:null},
-  {id:"PO-22",codigo:"22",descripcion:"EXFIME 90 - Barcelona",año:1990,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_22.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:32,precio_usado:null},
-  {id:"PO-23",codigo:"23",descripcion:"Exposición Filatélica Rumbo al 92. Sevilla",año:1991,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_23.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:8,precio_usado:null},
-  {id:"PO-24",codigo:"24",descripcion:"EXFILNA 91 - Madrid",año:1991,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_24.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:8,precio_usado:null},
-  {id:"PO-25",codigo:"25",descripcion:"EXFILNA 92 - Granada",año:1992,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_25.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:8,precio_usado:null},
-  {id:"PO-26",codigo:"26",descripcion:"OLYMPHILEX 92 - Exposición Mundial de Filatelia Olímpica. Barcelona",año:1992,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_26.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:8,precio_usado:null},
-  {id:"PO-27",codigo:"27",descripcion:"EXFILNA 92 - Valladolid",año:1992,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_27.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:8,precio_usado:null},
-  {id:"PO-28",codigo:"28",descripcion:"Día del Sello 1993",año:1993,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_28.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:8,precio_usado:null},
-  {id:"PO-29",codigo:"29",descripcion:"EXFILNA 93 - Alcañiz",año:1993,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_29.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:8,precio_usado:null},
-  {id:"PO-30",codigo:"30",descripcion:"JUVENIA 93 - La Coruña",año:1993,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_30.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:8,precio_usado:null},
-  {id:"PO-31",codigo:"31",descripcion:"Día del Sello 1994",año:1994,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_31.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:14,precio_usado:null},
-  {id:"PO-32",codigo:"32",descripcion:"Salvador Dalí",año:1994,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_32.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:8,precio_usado:null},
-  {id:"PO-33",codigo:"33",descripcion:"EXFILNA 94 - Las Palmas de Gran Canaria",año:1994,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_33.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:8,precio_usado:null},
-  {id:"PO-34",codigo:"34",descripcion:"Día del Sello 1995",año:1995,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_34.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:14,precio_usado:null},
-  {id:"PO-35",codigo:"35",descripcion:"EXFILNA 95 - Málaga",año:1995,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_35.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:8,precio_usado:null},
-  {id:"PO-36",codigo:"36",descripcion:"Antonio María Esquivel",año:1995,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_36.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:8,precio_usado:null},
-  {id:"PO-37",codigo:"37",descripcion:"XX Aniversario Proclamación Don Juan Carlos I - Autonomía 1",año:1995,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_37.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:300,precio_usado:null},
-  {id:"PO-38",codigo:"38",descripcion:"XX Aniversario Proclamación Don Juan Carlos I - Autonomía 2",año:1995,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_38.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-39",codigo:"39",descripcion:"XX Aniversario Proclamación Don Juan Carlos I - Autonomía 3",año:1995,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_39.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-40",codigo:"40",descripcion:"XX Aniversario Proclamación Don Juan Carlos I - Autonomía 4",año:1995,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_40.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-41",codigo:"41",descripcion:"XX Aniversario Proclamación Don Juan Carlos I - Autonomía 5",año:1995,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_41.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-42",codigo:"42",descripcion:"XX Aniversario Proclamación Don Juan Carlos I - Autonomía 6",año:1995,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_42.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-43",codigo:"43",descripcion:"XX Aniversario Proclamación Don Juan Carlos I - Autonomía 7",año:1995,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_43.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-44",codigo:"44",descripcion:"XX Aniversario Proclamación Don Juan Carlos I - Autonomía 8",año:1995,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_44.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-45",codigo:"45",descripcion:"XX Aniversario Proclamación Don Juan Carlos I - Autonomía 9",año:1995,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_45.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-46",codigo:"46",descripcion:"XX Aniversario Proclamación Don Juan Carlos I - Autonomía 10",año:1995,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_46.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-47",codigo:"47",descripcion:"XX Aniversario Proclamación Don Juan Carlos I - Autonomía 11",año:1995,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_47.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-48",codigo:"48",descripcion:"XX Aniversario Proclamación Don Juan Carlos I - Autonomía 12",año:1995,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_48.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-49",codigo:"49",descripcion:"XX Aniversario Proclamación Don Juan Carlos I - Autonomía 13",año:1995,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_49.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-50",codigo:"50",descripcion:"XX Aniversario Proclamación Don Juan Carlos I - Autonomía 14",año:1995,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_50.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-51",codigo:"51",descripcion:"XX Aniversario Proclamación Don Juan Carlos I - Autonomía 15",año:1995,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_51.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-52",codigo:"52",descripcion:"XX Aniversario Proclamación Don Juan Carlos I - Autonomía 16",año:1995,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_52.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-53",codigo:"53",descripcion:"XX Aniversario Proclamación Don Juan Carlos I - Autonomía 17",año:1995,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_53.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-54",codigo:"54",descripcion:"XX Aniversario Proclamación Don Juan Carlos I - Autonomía 18",año:1995,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_54.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-55",codigo:"55",descripcion:"XX Aniversario Proclamación Don Juan Carlos I - Autonomía 19",año:1995,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_55.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-56",codigo:"56",descripcion:"XX Aniversario Proclamación Don Juan Carlos I - Autonomía 20",año:1995,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_56.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-SN-1",codigo:"SN-1",descripcion:"S/N - Barcos de España (I)",año:1995,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_sn-1.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-SN-2",codigo:"SN-2",descripcion:"S/N - Barcos de España (II)",año:1995,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_sn-2.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-57",codigo:"57",descripcion:"Día del Sello 1996",año:1996,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_57.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:11,precio_usado:null},
-  {id:"PO-58",codigo:"58",descripcion:"Espamer 96 - Exposición Filatélica de América y Europa. Sevilla",año:1996,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_58.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:10,precio_usado:null},
-  {id:"PO-59",codigo:"59",descripcion:"Exposición Mundial Aviación y Espacio 96. Sevilla",año:1996,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_59.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:10,precio_usado:null},
-  {id:"PO-60",codigo:"60",descripcion:"Francisco de Goya",año:1996,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_60.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:8,precio_usado:null},
-  {id:"PO-61",codigo:"61",descripcion:"EXFILNA 96 - Vitoria",año:1996,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_61.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:8,precio_usado:null},
-  {id:"PO-62",codigo:"62",descripcion:"Día del Sello 1997",año:1997,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_62.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:14,precio_usado:null},
-  {id:"PO-63",codigo:"63",descripcion:"Las Edades del Hombre",año:1997,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_63.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:8,precio_usado:null},
-  {id:"PO-64",codigo:"64",descripcion:"EXFILNA 97 - Gijón",año:1997,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_64.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:8,precio_usado:null},
-  {id:"PO-64A",codigo:"64A",descripcion:"Carné 3544C - Carterita del Rey S.M. Don Juan Carlos I",año:1998,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_64a.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:90,precio_usado:null},
-  {id:"PO-64B",codigo:"64B",descripcion:"Prueba Oficial 64B",año:1997,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_64b.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-64C",codigo:"64C",descripcion:"Prueba Oficial 64C",año:1997,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_64c.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-64D",codigo:"64D",descripcion:"Prueba Oficial 64D",año:1997,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_64d.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-64E",codigo:"64E",descripcion:"Prueba Oficial 64E",año:1997,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_64e.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-64F",codigo:"64F",descripcion:"Hojas Bloque 3544-3545 (I)",año:1997,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_64f.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-64G",codigo:"64G",descripcion:"Hojas Bloque 3544-3545 (II)",año:1997,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_64g.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-65",codigo:"65",descripcion:"Centenario del Nacimiento de Federico García Lorca",año:1998,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_65.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:9,precio_usado:null},
-  {id:"PO-66",codigo:"66",descripcion:"EXFILNA 98 - Barcelona",año:1998,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_66.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:9,precio_usado:null},
-  {id:"PO-67",codigo:"67",descripcion:"150 Años del Ferrocarril en España",año:1998,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_67.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:9,precio_usado:null},
-  {id:"PO-68",codigo:"68",descripcion:"EXFILNA 99 - Zaragoza",año:1999,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_68.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:9,precio_usado:null},
-  {id:"PO-69",codigo:"69",descripcion:"Reservas y Parques Naturales",año:1999,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_69.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:9,precio_usado:null},
-  {id:"PO-70",codigo:"70",descripcion:"Monasterio de San Millán de Yuso",año:1999,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_70.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:8,precio_usado:null},
-  {id:"PO-71",codigo:"71",descripcion:"Monasterio de San Millán de Suso",año:1999,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_71.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:8,precio_usado:null},
-  {id:"PO-71A",codigo:"71A",descripcion:"Carpeta 3711AC - 150 Aniversario Primer Sello Español (A)",año:2000,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_71a.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:60,precio_usado:null},
-  {id:"PO-71B",codigo:"71B",descripcion:"Carpeta 3711AC - 150 Aniversario Primer Sello Español (B)",año:2000,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_71b.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-71C",codigo:"71C",descripcion:"Carpeta 3711AC - 150 Aniversario Primer Sello Español (C)",año:2000,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_71c.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-71D",codigo:"71D",descripcion:"Carpeta 3711AC - 150 Aniversario Primer Sello Español (D)",año:2000,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_71d.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-71E",codigo:"71E",descripcion:"Carpeta 3711AC - 150 Aniversario Primer Sello Español (E)",año:2000,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_71e.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-71F",codigo:"71F",descripcion:"Carpeta 3711AC - 150 Aniversario Primer Sello Español (F)",año:2000,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_71f.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-71G",codigo:"71G",descripcion:"Carpeta 3711AC - 150 Aniversario Primer Sello Español (G)",año:2000,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_71g.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-71H",codigo:"71H",descripcion:"Carpeta 3711AC - 150 Aniversario Primer Sello Español (H)",año:2000,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_71h.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-71I",codigo:"71I",descripcion:"Carpeta 3711AC - 150 Aniversario Primer Sello Español (I)",año:2000,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_71i.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-72",codigo:"72",descripcion:"EXFILNA 2000 - Avilés",año:2000,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_72.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:9,precio_usado:null},
-  {id:"PO-73",codigo:"73",descripcion:"Iglesia Santa María la Real, Aranda de Duero",año:2000,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_73.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:9,precio_usado:null},
-  {id:"PO-74",codigo:"74",descripcion:"Centenario de la Consagración de la Basílica de Covadonga",año:2001,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_74.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:8,precio_usado:null},
-  {id:"PO-75",codigo:"75",descripcion:"EXFILNA 2001 - Vigo",año:2001,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_75.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:8,precio_usado:null},
-  {id:"PO-76",codigo:"76",descripcion:"25 Aniversario del Reinado de S.M. Don Juan Carlos I",año:2001,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_76.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:8,precio_usado:null},
-  {id:"PO-77",codigo:"77",descripcion:"Castillo de Calatorao, Zaragoza",año:2002,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_77.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:9,precio_usado:null},
-  {id:"PO-78",codigo:"78",descripcion:"EXFILNA 2002 - Salamanca",año:2002,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_78.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:8,precio_usado:null},
-  {id:"PO-79",codigo:"79",descripcion:"Arte Español - Crucero do Hío",año:2002,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_79.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:9,precio_usado:null},
-  {id:"PO-80",codigo:"80",descripcion:"EXFILNA 2003 - Granada",año:2003,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_80.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:8,precio_usado:null},
-  {id:"PO-81",codigo:"81",descripcion:"VII Centenario de la Catedral de Santa María. León",año:2003,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_81.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:8,precio_usado:null},
-  {id:"PO-82",codigo:"82",descripcion:"Centenario de la Aviación",año:2003,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_82.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:8,precio_usado:null},
-  {id:"PO-83",codigo:"83",descripcion:"Monasterio de Santa María de Carracedo",año:2004,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_83.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:8,precio_usado:null},
-  {id:"PO-84",codigo:"84",descripcion:"EXFILNA 2004 - Valladolid",año:2004,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_84.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:8,precio_usado:null},
-  {id:"PO-85",codigo:"85",descripcion:"Vidrieras de la Catedral de Toledo",año:2004,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_85.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:8,precio_usado:null},
-  {id:"PO-85A",codigo:"85A",descripcion:"Producto Especial - Exposición Mundial de Filatelia España 2004",año:2004,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_85a.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-86",codigo:"86",descripcion:"IV Centenario de la publicación de El Quijote (I)",año:2005,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_86.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:20,precio_usado:null},
-  {id:"PO-87",codigo:"87",descripcion:"IV Centenario de la publicación de El Quijote (II)",año:2005,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_87.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-88",codigo:"88",descripcion:"IV Centenario de la publicación de El Quijote (III)",año:2005,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_88.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-89",codigo:"89",descripcion:"IV Centenario de la publicación de El Quijote (IV)",año:2005,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_89.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-90",codigo:"90",descripcion:"EXFILNA 2005 - Alicante",año:2005,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_90.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:8,precio_usado:null},
-  {id:"PO-91",codigo:"91",descripcion:"Vidrieras de la Catedral de Ávila",año:2005,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_91.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:8,precio_usado:null},
-  {id:"PO-92",codigo:"92",descripcion:"EXFILNA 2006 - Algeciras",año:2006,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_92.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:8,precio_usado:null},
-  {id:"PO-93",codigo:"93",descripcion:"Vidrieras de la Escuela Técnica Superior de Arquitectura de Madrid",año:2006,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_93.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:9,precio_usado:null},
-  {id:"PO-94",codigo:"94",descripcion:"EXFILNA 2007 - Palma de Mallorca",año:2007,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_94.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:8,precio_usado:null},
-  {id:"PO-95",codigo:"95",descripcion:"Vidrieras Banco de España",año:2007,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_95.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:8,precio_usado:null},
-  {id:"PO-CALC-2008",codigo:"CALC-2008",descripcion:"Prueba Oficial Calcográfica - Servicio Filatélico",año:2008,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_calc-2008.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-96",codigo:"96",descripcion:"Expo Zaragoza 2008",año:2008,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_96.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:8,precio_usado:null},
-  {id:"PO-97",codigo:"97",descripcion:"Vidrieras Real Academia Española",año:2008,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_97.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:8,precio_usado:null},
-  {id:"PO-98",codigo:"98",descripcion:"X Aniversario de la creación del Euro",año:2009,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_98.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:9,precio_usado:null},
-  {id:"PO-99",codigo:"99",descripcion:"Pintura. Obras de Velázquez",año:2009,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_99.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:8,precio_usado:null},
-  {id:"PO-100",codigo:"100",descripcion:"Navidad",año:2009,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_100.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:10,precio_usado:null},
-  {id:"PO-CALC-2009",codigo:"CALC-2009",descripcion:"Prueba Oficial Calcográfica - Servicio Filatélico",año:2009,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_calc-2009.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-101",codigo:"101",descripcion:"Catedrales de Plasencia",año:2010,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_101.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:13,precio_usado:null},
-  {id:"PO-102",codigo:"102",descripcion:"Catedral de Segovia",año:2010,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_102.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:12,precio_usado:null},
-  {id:"PO-103",codigo:"103",descripcion:"Patrimonio Mundial. Mezquita Catedral de Córdoba",año:2010,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_103.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:12,precio_usado:null},
-  {id:"PO-CALC-2010",codigo:"CALC-2010",descripcion:"Prueba Oficial Calcográfica - Servicio Filatélico",año:2010,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_calc-2010.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-104",codigo:"104",descripcion:"Catedral de Sigüenza",año:2011,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_104.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:12,precio_usado:null},
-  {id:"PO-105",codigo:"105",descripcion:"Alhambra de Granada",año:2011,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_105.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:12,precio_usado:null},
-  {id:"PO-106",codigo:"106",descripcion:"Catedral de Tarazona",año:2011,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_106.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:12,precio_usado:null},
-  {id:"PO-CALC-2011",codigo:"CALC-2011",descripcion:"Prueba Oficial Calcográfica - Servicio Filatélico",año:2011,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_calc-2011.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-107",codigo:"107",descripcion:"Catedral de Burgos",año:2012,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_107.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:12,precio_usado:null},
-  {id:"PO-108",codigo:"108",descripcion:"Catedral de Toledo",año:2012,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_108.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:12,precio_usado:null},
-  {id:"PO-109",codigo:"109",descripcion:"Catedral de Oviedo",año:2012,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_109.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:12,precio_usado:null},
-  {id:"PO-110",codigo:"110",descripcion:"Catedral de León",año:2012,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_110.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:18,precio_usado:null},
-  {id:"PO-CALC-2012",codigo:"CALC-2012",descripcion:"Prueba Oficial Calcográfica - Servicio Filatélico",año:2012,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_calc-2012.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-111",codigo:"111",descripcion:"Real Monasterio de San Lorenzo de El Escorial",año:2013,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_111.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:14,precio_usado:null},
-  {id:"PO-112",codigo:"112",descripcion:"Tapiz Boda de Zenobia y Odonato",año:2013,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_112.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:14,precio_usado:null},
-  {id:"PO-113",codigo:"113",descripcion:"Puente Romano de Mérida",año:2013,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_113.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:14,precio_usado:null},
-  {id:"PO-CALC-2013",codigo:"CALC-2013",descripcion:"Prueba Oficial Calcográfica - Servicio Filatélico",año:2013,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_calc-2013.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-114",codigo:"114",descripcion:"75 Cumpleaños de SS. MM. los Reyes de España",año:2013,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_114.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:20,precio_usado:null},
-  {id:"PO-115",codigo:"115",descripcion:"EXFILNA 2014 - Torremolinos",año:2014,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_115.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:14,precio_usado:null},
-  {id:"PO-116",codigo:"116",descripcion:"Patrimonio Mundial. Parque Güell",año:2014,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_116.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:26,precio_usado:null},
-  {id:"PO-117",codigo:"117",descripcion:"Patrimonio de la Humanidad. Conjunto Urbano de Toledo",año:2014,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_117.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:14,precio_usado:null},
-  {id:"PO-118",codigo:"118",descripcion:"IV Centenario del Fallecimiento del Greco",año:2014,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_118.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:30,precio_usado:null},
-  {id:"PO-119",codigo:"119",descripcion:"Tapiz Muerte de Dido",año:2014,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_119.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:14,precio_usado:null},
-  {id:"PO-CALC-2014",codigo:"CALC-2014",descripcion:"Prueba Oficial Calcográfica - Servicio Filatélico",año:2014,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_calc-2014.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-ESP-2014",codigo:"ESP-2014",descripcion:"Prueba Especial - V Centenario Santa Teresa de Jesús",año:2014,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_esp-2014.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-120",codigo:"120",descripcion:"Felipe IV Rey de España",año:2015,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_120.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:32,precio_usado:null},
-  {id:"PO-120AB",codigo:"120AB",descripcion:"Copa Mundial de Fútbol ESPAÑA'82 (reedición)",año:2015,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_120ab.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-121",codigo:"121",descripcion:"EXFILNA 2015 - Avilés",año:2015,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_121.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:14,precio_usado:null},
-  {id:"PO-122",codigo:"122",descripcion:"Patrimonio Mundial. Cueva de Altamira",año:2015,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_122.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:26,precio_usado:null},
-  {id:"PO-CALC-2015",codigo:"CALC-2015",descripcion:"Prueba Oficial Calcográfica - Servicio Filatélico",año:2015,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_calc-2015.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-123",codigo:"123",descripcion:"Patrimonio de la Humanidad. Conjunto Urbano de Segovia",año:2015,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_123.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:14,precio_usado:null},
-  {id:"PO-124",codigo:"124",descripcion:"400 años de la Casa de Moneda de Madrid",año:2015,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_124.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:14,precio_usado:null},
-  {id:"PO-125",codigo:"125",descripcion:"300 años de Correos en España. Primera Centuria",año:2016,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_125.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:19.2,precio_usado:null},
-  {id:"PO-126",codigo:"126",descripcion:"300 años de Correos en España. Segunda Centuria",año:2016,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_126.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:24,precio_usado:null},
-  {id:"PO-127",codigo:"127",descripcion:"EXFILNA 2016 - Zaragoza",año:2016,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_127.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:12.8,precio_usado:null},
-  {id:"PO-128",codigo:"128",descripcion:"300 años de Correos en España. Tercera Centuria",año:2016,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_128.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:28.8,precio_usado:null},
-  {id:"PO-CALC-2016",codigo:"CALC-2016",descripcion:"Prueba Oficial Calcográfica - Servicio Filatélico",año:2016,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_calc-2016.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-129",codigo:"129",descripcion:"Patrimonio de la Humanidad. Acueducto de Segovia",año:2016,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_129.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:12.8,precio_usado:null},
-  {id:"PO-130",codigo:"130",descripcion:"MCCLV Aniversario de la Batalla de Vitoria",año:2017,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_130.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:12.8,precio_usado:null},
-  {id:"PO-131",codigo:"131",descripcion:"Patrimonio Mundial. Monumentos de Oviedo y Reino de Asturias",año:2017,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_131.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:24,precio_usado:null},
-  {id:"PO-132",codigo:"132",descripcion:"Centenario del Nacimiento de Camilo José Cela",año:2017,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_132.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:12.8,precio_usado:null},
-  {id:"PO-133",codigo:"133",descripcion:"EXFILNA 2017 - Portugalete",año:2017,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_133.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:28.8,precio_usado:null},
-  {id:"PO-134",codigo:"134",descripcion:"Patrimonio de la Humanidad. Conjunto Urbano de Granada (I)",año:2017,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_134.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:25.6,precio_usado:null},
-  {id:"PO-135",codigo:"135",descripcion:"Patrimonio de la Humanidad. Conjunto Urbano de Granada (II)",año:2017,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_135.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:25.6,precio_usado:null},
-  {id:"PO-CALC-2017",codigo:"CALC-2017",descripcion:"Prueba Oficial Calcográfica - Servicio Filatélico",año:2017,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_calc-2017.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-136",codigo:"136",descripcion:"Patrimonio Mundial. Santiago de Compostela",año:2018,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_136.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:24,precio_usado:null},
-  {id:"PO-137",codigo:"137",descripcion:"IV Centenario de la Plaza Mayor de Madrid",año:2018,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_137.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:28.8,precio_usado:null},
-  {id:"PO-138",codigo:"138",descripcion:"Centenario Nacimiento de Gloria Fuertes",año:2018,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_138.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:12.8,precio_usado:null},
-  {id:"PO-ESP-2018",codigo:"ESP-2018",descripcion:"Prueba Especial - Centenario del nacimiento de Gloria Fuertes",año:2018,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_esp-2018.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-139",codigo:"139",descripcion:"EXFILNA 2018 - Sevilla",año:2018,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_139.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:28.8,precio_usado:null},
-  {id:"PO-140",codigo:"140",descripcion:"Patrimonio de la Humanidad. Conjunto Urbano de Cuenca",año:2018,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_140.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:12.8,precio_usado:null},
-  {id:"PO-CALC-2018",codigo:"CALC-2018",descripcion:"Prueba Oficial Calcográfica - Servicio Filatélico",año:2018,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_calc-2018.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-141",codigo:"141",descripcion:"Patrimonio Mundial. Ávila",año:2019,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_141.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:24,precio_usado:null},
-  {id:"PO-142",codigo:"142",descripcion:"JUVENIA 2019",año:2019,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_142.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:12.8,precio_usado:null},
-  {id:"PO-143",codigo:"143",descripcion:"Centenario del Palacio de Comunicaciones",año:2019,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_143.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:28.8,precio_usado:null},
-  {id:"PO-ESP-2019",codigo:"ESP-2019",descripcion:"Prueba Especial - Centenario del Palacio de Comunicaciones",año:2019,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_esp-2019.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-144",codigo:"144",descripcion:"Centenario del Parque Nacional Montaña de Covadonga",año:2019,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_144.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:12.8,precio_usado:null},
-  {id:"PO-145",codigo:"145",descripcion:"EXFILNA 2019 - Santander",año:2019,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_145.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:28.8,precio_usado:null},
-  {id:"PO-CALC-2019",codigo:"CALC-2019",descripcion:"Prueba Oficial Calcográfica - Servicio Filatélico",año:2019,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_calc-2019.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-146",codigo:"146",descripcion:"Patrimonio Mundial. Arquitectura Mudéjar de Aragón",año:2020,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_146.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:24,precio_usado:null},
-  {id:"PO-147",codigo:"147",descripcion:"Mujeres en el Deporte. Olímpicas",año:2020,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_147.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:19.2,precio_usado:null},
-  {id:"PO-148",codigo:"148",descripcion:"150 Aniversario del Instituto Geográfico Nacional",año:2020,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_148.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:12.8,precio_usado:null},
-  {id:"PO-149",codigo:"149",descripcion:"Centenario de la Selección Española de Fútbol",año:2020,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_149.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:28.8,precio_usado:null},
-  {id:"PO-150",codigo:"150",descripcion:"Patrimonio de la Humanidad. Conjuntos Urbanos de Tarragona",año:2020,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_150.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:12.8,precio_usado:null},
-  {id:"PO-CALC-2020",codigo:"CALC-2020",descripcion:"Prueba Oficial Calcográfica - Servicio Filatélico",año:2020,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_calc-2020.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-ESP-2020",codigo:"ESP-2020",descripcion:"Prueba Especial - Ciudad califal de Medina Azahara",año:2020,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_esp-2020.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-151",codigo:"151",descripcion:"EXFILNA 2020 - Cáceres",año:2020,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_151.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:28.8,precio_usado:null},
-  {id:"PO-152",codigo:"152",descripcion:"Patrimonio Mundial. Toledo",año:2021,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_152.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:24,precio_usado:null},
-  {id:"PO-153",codigo:"153",descripcion:"VII Centenario de la Catedral de Palencia",año:2021,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_153.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:12.8,precio_usado:null},
-  {id:"PO-154",codigo:"154",descripcion:"Mujeres en el Deporte. Olímpicas",año:2021,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_154.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:35.2,precio_usado:null},
-  {id:"PO-155",codigo:"155",descripcion:"VIII Centenario de la Catedral de Burgos",año:2021,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_155.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:12.8,precio_usado:null},
-  {id:"PO-ESP-2021",codigo:"ESP-2021",descripcion:"Prueba Especial - VIII Centenario de la Catedral de Burgos",año:2021,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_esp-2021.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-156",codigo:"156",descripcion:"75 Aniversario del Servicio Filatélico Español",año:2021,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_156.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:32,precio_usado:null},
-  {id:"PO-157",codigo:"157",descripcion:"Patrimonio de la Humanidad. Conjuntos Urbanos de Cáceres",año:2021,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_157.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:19.2,precio_usado:null},
-  {id:"PO-158",codigo:"158",descripcion:"EXFILNA 2021 - Lugo",año:2021,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_158.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:28.8,precio_usado:null},
-  {id:"PO-CALC-2021",codigo:"CALC-2021",descripcion:"Prueba Oficial Calcográfica - Servicio Filatélico",año:2021,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_calc-2021.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-159",codigo:"159",descripcion:"Patrimonio Mundial. Parque Nacional de Garajonay",año:2022,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_159.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:24,precio_usado:null},
-  {id:"PO-160",codigo:"160",descripcion:"Patrimonio Mundial de Madrid",año:2022,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_160.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:32,precio_usado:null},
-  {id:"PO-ESP-2022",codigo:"ESP-2022",descripcion:"Prueba Especial - Paseo del Prado y Buen Retiro",año:2022,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_esp-2022.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-161",codigo:"161",descripcion:"Flora. Ilustración Botánica",año:2022,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_161.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:16,precio_usado:null},
-  {id:"PO-CALC-2022",codigo:"CALC-2022",descripcion:"Prueba Oficial Calcográfica - Servicio Filatélico",año:2022,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_calc-2022.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-162",codigo:"162",descripcion:"Numismática. Xacobeo 21-22",año:2022,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_162.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:32,precio_usado:null},
-  {id:"PO-163",codigo:"163",descripcion:"EXFILNA 2022 - Irún",año:2022,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_163.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:28.8,precio_usado:null},
-  {id:"PO-164",codigo:"164",descripcion:"Antonio de Nebrija",año:2022,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_164.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:16,precio_usado:null},
-  {id:"PO-165",codigo:"165",descripcion:"Patrimonio de la Humanidad. San Cristóbal de La Laguna",año:2022,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_165.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:24,precio_usado:null},
-  {id:"PO-166",codigo:"166",descripcion:"Patrimonio Mundial. Cáceres",año:2023,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_166.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:24,precio_usado:null},
-  {id:"PO-167",codigo:"167",descripcion:"EXFILNA 2023 - Teruel",año:2023,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_167.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:28.8,precio_usado:null},
-  {id:"PO-168",codigo:"168",descripcion:"Numismática. Billete de 100 pesetas",año:2023,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_168.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:16,precio_usado:null},
-  {id:"PO-169",codigo:"169",descripcion:"Patrimonio de la Humanidad. Ibiza/Eivissa",año:2023,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_169.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:24,precio_usado:null},
-  {id:"PO-170",codigo:"170",descripcion:"Castillos. Castillo de Marcilla, Navarra",año:2023,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_170.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:16,precio_usado:null},
-  {id:"PO-171",codigo:"171",descripcion:"Ciudad Sostenible. Parques Históricos de Madrid",año:2023,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_171.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:36,precio_usado:null},
-  {id:"PO-CALC-2023",codigo:"CALC-2023",descripcion:"Prueba Oficial Calcográfica - Servicio Filatélico",año:2023,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_calc-2023.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-172",codigo:"172",descripcion:"Santiago Ramón y Cajal. Escuela Neurohistológica Española",año:2023,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_172.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:24,precio_usado:null},
-  {id:"PO-173",codigo:"173",descripcion:"Patrimonio Mundial. Real Alcázar de Sevilla",año:2024,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_173.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:24,precio_usado:null},
-  {id:"PO-174",codigo:"174",descripcion:"Literatura. Antonio Gala",año:2024,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_174.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:16,precio_usado:null},
-  {id:"PO-175",codigo:"175",descripcion:"Serie básica S.M. El Rey Felipe VI",año:2024,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_175.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:36,precio_usado:null},
-  {id:"PO-176",codigo:"176",descripcion:"EXFILNA 2024 - Valladolid",año:2024,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_176.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:36,precio_usado:null},
-  {id:"PO-177",codigo:"177",descripcion:"Castillos. Castillo de Hostalric, Girona",año:2024,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_177.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:16,precio_usado:null},
-  {id:"PO-178",codigo:"178",descripcion:"Patrimonio de la Humanidad. Mérida",año:2024,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_178.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:40,precio_usado:null},
-  {id:"PO-ABONADOS-2024",codigo:"ABONADOS-2024",descripcion:"Prueba de Abonados - S.M. El Rey Felipe VI",año:2024,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_abonados-2024.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-  {id:"PO-ABONADOS-2025",codigo:"ABONADOS-2025",descripcion:"Prueba de Abonados - Ilustración Botánica. Paeonia cambessedesii",año:2025,referencia:"https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_abonados-2025.jpg",estado:null,notas:"",delante:null,detras:null,precio_nuevo:null,precio_usado:null},
-];
-
 // config
 function _cfg() {
   const _d = atob;
@@ -1119,77 +745,32 @@ const AUTHORIZED_EMAIL = _cfg().mail;
 const GOOGLE_CLIENT_ID = _cfg().cid;
 
 let currentUser = null;
-let _googleCredentialToken = null; // Token JWT real de Google
 
 function isEditor() {
-  // SEGURIDAD: requiere token JWT real de Google en memoria, no datos de localStorage
-  return currentUser && currentUser.email === AUTHORIZED_EMAIL && _googleCredentialToken !== null;
+  return currentUser && currentUser.email === AUTHORIZED_EMAIL;
 }
 
 function applyAuthUI() {
   const area = document.getElementById('authArea');
   const authPortada = document.getElementById('authPortada');
   const notice = document.getElementById('readOnlyNotice');
-  const isMobile = window.innerWidth <= 600;
-
   if (isEditor()) {
     notice.style.display = 'none';
     area.innerHTML = `<button class="btn-add-header" onclick="openNew()">＋ Añadir sello</button>`;
-
-    if (isMobile) {
-      // Móvil con sesión: ocultar panel flotante, mostrar solo avatar en header
-      if (authPortada) authPortada.style.display = 'none';
-      let avatarBtn = document.getElementById('headerAvatar');
-      if (!avatarBtn) {
-        avatarBtn = document.createElement('button');
-        avatarBtn.id = 'headerAvatar';
-        avatarBtn.title = currentUser.name + ' · Toca para cerrar sesión';
-        avatarBtn.style.cssText = 'background:none;border:2px solid var(--gold);border-radius:50%;cursor:pointer;padding:0;width:32px;height:32px;overflow:hidden;flex-shrink:0;opacity:0.85;';
-        avatarBtn.innerHTML = `<img src="${currentUser.picture}" alt="" style="width:100%;height:100%;object-fit:cover;">`;
-        avatarBtn.onclick = () => { if (confirm('¿Cerrar sesión?')) signOut(); };
-        const darkBtn = document.getElementById('darkModeBtn');
-        if (darkBtn && darkBtn.parentNode) darkBtn.parentNode.insertBefore(avatarBtn, darkBtn);
-      } else {
-        avatarBtn.style.display = '';
-        avatarBtn.innerHTML = `<img src="${currentUser.picture}" alt="" style="width:100%;height:100%;object-fit:cover;">`;
-      }
-    } else {
-      // Escritorio con sesión: panel flotante discreto
-      if (authPortada) {
-        authPortada.style.display = '';
-        authPortada.innerHTML = `
-          <div style="display:flex;align-items:center;gap:10px;background:rgba(0,0,0,0.4);padding:8px 14px;border-radius:3px;border:1px solid rgba(184,134,11,0.2)">
-            <img src="${currentUser.picture}" alt="" style="width:26px;height:26px;border-radius:50%;border:1px solid var(--gold)">
-            <span style="font-size:0.78rem;color:#a89070">${currentUser.name}</span>
-            <button class="btn-logout" onclick="signOut()">Salir</button>
-          </div>`;
-      }
-    }
+    if (authPortada) authPortada.innerHTML = `
+      <div style="display:flex;align-items:center;gap:10px;background:rgba(0,0,0,0.4);padding:8px 14px;border-radius:3px;border:1px solid rgba(184,134,11,0.2)">
+        <img src="${currentUser.picture}" alt="" style="width:26px;height:26px;border-radius:50%;border:1px solid var(--gold)">
+        <span style="font-size:0.78rem;color:#a89070">${currentUser.name}</span>
+        <button class="btn-logout" onclick="signOut()">Salir</button>
+      </div>`;
   } else {
     notice.style.display = 'block';
     area.innerHTML = '';
-    // Ocultar avatar del header si existía
-    const avatarBtn = document.getElementById('headerAvatar');
-    if (avatarBtn) avatarBtn.style.display = 'none';
-
-    if (authPortada) {
-      authPortada.style.display = '';
-      if (isMobile) {
-        // Móvil sin sesión: botón compacto
-        authPortada.innerHTML = `
-          <button class="btn-login-google" onclick="triggerSignIn()" style="font-size:0.8rem;padding:6px 10px;gap:6px;">
-            <svg width="16" height="16" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/><path fill="#FBBC05" d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707s.102-1.167.282-1.707V4.961H.957C.347 6.175 0 7.55 0 9s.348 2.825.957 4.039l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.961L3.964 7.293C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
-            Entrar
-          </button>`;
-      } else {
-        // Escritorio sin sesión: botón completo
-        authPortada.innerHTML = `
-          <button class="btn-login-google" onclick="triggerSignIn()">
-            <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/><path fill="#FBBC05" d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707s.102-1.167.282-1.707V4.961H.957C.347 6.175 0 7.55 0 9s.348 2.825.957 4.039l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.961L3.964 7.293C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
-            Iniciar sesión
-          </button>`;
-      }
-    }
+    if (authPortada) authPortada.innerHTML = `
+      <button class="btn-login-google" onclick="triggerSignIn()">
+        <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/><path fill="#FBBC05" d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707s.102-1.167.282-1.707V4.961H.957C.347 6.175 0 7.55 0 9s.348 2.825.957 4.039l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.961L3.964 7.293C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
+        Iniciar sesión
+      </button>`;
   }
   document.querySelectorAll('.edit-only').forEach(el => { el.style.display = isEditor() ? '' : 'none'; });
 }
@@ -1201,10 +782,7 @@ function handleGoogleCredential(response) {
     return;
   }
   currentUser = { name: payload.name, email: payload.email, picture: payload.picture };
-  _googleCredentialToken = response.credential; // Guardar token JWT real en memoria
-  // Guardar el TOKEN COMPLETO en localStorage (seguro - está firmado por Google)
-  // No guardamos datos del usuario directamente (eso sí era manipulable)
-  localStorage.setItem('sellos_google_token', response.credential);
+  localStorage.setItem('sellos_user', JSON.stringify(currentUser));
   applyAuthUI();
   showToast('✓ Sesión iniciada · ' + payload.name);
 }
@@ -1225,39 +803,18 @@ function triggerSignIn() {
 
 function signOut() {
   currentUser = null;
-  _googleCredentialToken = null; // Limpiar token de memoria
-  localStorage.removeItem('sellos_google_token'); // Limpiar token guardado
+  localStorage.removeItem('sellos_user');
   google.accounts.id.disableAutoSelect();
   applyAuthUI();
   showToast('Sesión cerrada');
 }
 
 window.addEventListener('load', () => {
-  // SEGURIDAD: Restaurar sesión desde el token JWT completo de Google (no desde datos de usuario)
-  // El token JWT está firmado por Google - aunque alguien lo lea no puede falsificarlo
-  // Solo guardamos el token completo, nunca los datos del usuario directamente
+  // Recuperar sesión guardada
   try {
-    const savedToken = localStorage.getItem('sellos_google_token');
-    if (savedToken) {
-      // Decodificar el payload del JWT (parte central entre los dos puntos)
-      const parts = savedToken.split('.');
-      if (parts.length === 3) {
-        const payload = JSON.parse(atob(parts[1]));
-        const now = Math.floor(Date.now() / 1000);
-        // Verificar que el token no ha expirado Y que el email es el autorizado
-        if (payload.exp > now && payload.email === AUTHORIZED_EMAIL) {
-          currentUser = { name: payload.name, email: payload.email, picture: payload.picture };
-          _googleCredentialToken = savedToken;
-          // Token válido restaurado silenciosamente
-        } else {
-          // Token expirado o email no autorizado - limpiar
-          localStorage.removeItem('sellos_google_token');
-        }
-      }
-    }
-  } catch(e) {
-    localStorage.removeItem('sellos_google_token');
-  }
+    const saved = localStorage.getItem('sellos_user');
+    if (saved) { currentUser = JSON.parse(saved); }
+  } catch(e) {}
 
   const t = setInterval(() => {
     if (window.google && google.accounts) {
@@ -1269,7 +826,6 @@ window.addEventListener('load', () => {
         cancel_on_tap_outside: true,
       });
       applyAuthUI();
-      initPhotoDragDrop(); // Activar drag & drop y paste en slots de foto
     }
   }, 200);
 });
@@ -2695,109 +2251,6 @@ async function deleteFromSheets(edifil) {
   }
 }
 
-// ==================== PRUEBAS OFICIALES - SHEETS ====================
-const PRUEBAS_SHEET = 'Hoja 10';
-
-
-async function loadPruebasFromSheets() {
-  setSyncStatus('syncing', 'Cargando pruebas desde Google Sheets...');
-  try {
-    const url = `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(PRUEBAS_SHEET)}`;
-    const res = await fetch(url);
-    const text = await res.text();
-    const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\((.*)\);?$/s)[1]);
-    const rows = json.table.rows;
-
-    if (!rows || rows.length === 0) {
-      setSyncStatus('', 'Hoja 10 vacía — mostrando datos locales');
-      return;
-    }
-
-    // Columnas igual que sellos normales:
-    // A=edifil/id, B=año, C=descripcion, D=codigo(color), E=valor_facial, F=dentado, G=estado, H=notas, I=(vacio), J=delante, K=detras, L=filigrana, M=precio_nuevo, N=precio_usado
-    const sheetsData = {};
-    rows.forEach(row => {
-      if (!row.c || !row.c[0] || !row.c[0].v) return;
-      const id = row.c[0].v;
-      sheetsData[id] = {
-        id:           id,
-        año:          row.c[1]?.v || null,
-        descripcion:  row.c[2]?.v || '',
-        codigo:       row.c[3]?.v || '',
-        estado:       row.c[6]?.v || null,
-        notas:        row.c[7]?.v || '',
-        delante:      row.c[9]?.v || null,
-        detras:       row.c[10]?.v || null,
-        precio_nuevo: row.c[12]?.v || null,
-        precio_usado: row.c[13]?.v || null,
-      };
-    });
-
-    // Combinar con datos de referencia (imagen)
-    PRUEBAS_OFICIALES_DATA.forEach((p, idx) => {
-      const s = sheetsData[p.id];
-      if (s) {
-        PRUEBAS_OFICIALES_DATA[idx].estado       = s.estado;
-        PRUEBAS_OFICIALES_DATA[idx].notas        = s.notas;
-        PRUEBAS_OFICIALES_DATA[idx].año          = s.año;
-        PRUEBAS_OFICIALES_DATA[idx].descripcion  = s.descripcion;
-        PRUEBAS_OFICIALES_DATA[idx].delante      = s.delante;
-        PRUEBAS_OFICIALES_DATA[idx].detras       = s.detras;
-        // Conservar precios del catálogo local si Sheets no tiene valor
-        if (s.precio_nuevo !== null && s.precio_nuevo !== undefined) PRUEBAS_OFICIALES_DATA[idx].precio_nuevo = s.precio_nuevo;
-        if (s.precio_usado !== null && s.precio_usado !== undefined) PRUEBAS_OFICIALES_DATA[idx].precio_usado = s.precio_usado;
-      }
-    });
-
-    // Actualizar localStorage
-    try { localStorage.setItem('pruebas_oficiales', JSON.stringify(PRUEBAS_OFICIALES_DATA)); } catch(e) {}
-    setSyncStatus('', `Pruebas sincronizadas — ${rows.length} registros`);
-    renderPruebas();
-  } catch(e) {
-    console.error('Error cargando pruebas de Sheets:', e);
-    setSyncStatus('error', 'Sin conexión con Sheets — mostrando datos locales');
-  }
-}
-
-async function savePruebaToSheets(prueba) {
-  setSyncStatus('syncing', 'Guardando prueba en Google Sheets...');
-  try {
-    // El Apps Script busca por col A (edifil) y escribe por posición de columna
-    // Orden debe coincidir con cabeceras de Hoja 10: id,codigo,descripcion,año,estado,notas,delante,detras,precio_nuevo,precio_usado
-    const payload = {
-      edifil:       prueba.id,
-      año:          prueba.año,
-      descripcion:  prueba.descripcion,
-      color:        prueba.codigo,
-      valor_facial: '',
-      dentado:      '',
-      estado:       prueba.estado,
-      notas:        prueba.notas,
-      referencia:   '',
-      delante:      (prueba.delante && prueba.delante.startsWith('data:')) ? null : prueba.delante,
-      detras:       (prueba.detras  && prueba.detras.startsWith('data:'))  ? null : prueba.detras,
-      filigrana:    '',
-      precio_nuevo: prueba.precio_nuevo,
-      precio_usado: prueba.precio_usado,
-    };
-    const url = _cfg().surl + '?action=save&token=' + _cfg().tok +
-                '&payload=' + encodeURIComponent(JSON.stringify(payload)) +
-                '&sheet=' + encodeURIComponent(PRUEBAS_SHEET);
-    const res = await fetch(url);
-    const json = await res.json();
-    if (json.status === 'ok') {
-      setSyncStatus('', 'Prueba guardada en Sheets ✓');
-      showToast('Prueba guardada en Sheets ✓');
-    } else {
-      throw new Error(json.message);
-    }
-  } catch(e) {
-    console.error(e);
-    setSyncStatus('error', 'Error al guardar prueba — guardado localmente');
-    showToast('Guardado localmente (sin conexión a Sheets)');
-  }
-}
-
 function saveLocal() {
   try {
     const toSave = stamps.map(s => {
@@ -3057,60 +2510,6 @@ function scrollAndHighlight(edifil) {
 }
 
 // ==================== MODAL ====================
-// ── Navegación entre sellos en el modal ──────────────────────────────────────
-function navegarSello(dir) {
-  if (!currentStampId) return;
-  const filtered = getFiltered();
-  const idx = filtered.findIndex(s => s.edifil === currentStampId);
-  if (idx === -1) return;
-  const nextIdx = idx + dir;
-  if (nextIdx < 0 || nextIdx >= filtered.length) return;
-  openStamp(filtered[nextIdx].edifil);
-}
-
-function actualizarNavModal() {
-  if (!currentStampId) return;
-  const filtered = getFiltered();
-  const idx = filtered.findIndex(s => s.edifil === currentStampId);
-  const btnPrev = document.getElementById('modalNavPrev');
-  const btnNext = document.getElementById('modalNavNext');
-  if (btnPrev) btnPrev.disabled = idx <= 0;
-  if (btnNext) btnNext.disabled = idx >= filtered.length - 1;
-}
-
-// Swipe táctil en el modal
-(function() {
-  let touchStartX = 0, touchStartY = 0;
-  document.addEventListener('touchstart', (e) => {
-    const modal = document.getElementById('modalOverlay');
-    if (!modal || !modal.classList.contains('open')) return;
-    touchStartX = e.touches[0].clientX;
-    touchStartY = e.touches[0].clientY;
-  }, { passive: true });
-
-  document.addEventListener('touchend', (e) => {
-    const modal = document.getElementById('modalOverlay');
-    if (!modal || !modal.classList.contains('open')) return;
-    const dx = e.changedTouches[0].clientX - touchStartX;
-    const dy = e.changedTouches[0].clientY - touchStartY;
-    // Solo swipe horizontal claro (más horizontal que vertical, mínimo 60px)
-    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
-      navegarSello(dx < 0 ? 1 : -1); // swipe izq = siguiente, swipe der = anterior
-    }
-  }, { passive: true });
-})();
-
-// Teclas ← → cuando el modal está abierto
-document.addEventListener('keydown', (e) => {
-  const modal = document.getElementById('modalOverlay');
-  if (!modal || !modal.classList.contains('open')) return;
-  // No interferir si se está editando un campo de texto
-  if (['INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName)) return;
-  if (e.key === 'ArrowLeft')  { e.preventDefault(); navegarSello(-1); }
-  if (e.key === 'ArrowRight') { e.preventDefault(); navegarSello(1); }
-});
-// ── Fin navegación modal ──────────────────────────────────────────────────────
-
 function openStamp(edifil) {
   const s = stamps.find(x => x.edifil === edifil);
   if (!s) return;
@@ -3123,7 +2522,6 @@ function openStamp(edifil) {
   const formInputs = document.querySelectorAll('#modal .form-input, #modal .form-select, #modal .form-textarea');
   formInputs.forEach(el => { el.readOnly = !isEditor(); el.style.pointerEvents = isEditor() ? '' : 'none'; el.style.background = isEditor() ? '' : '#f5f0e8'; });
   applyAuthUI();
-  actualizarNavModal(); // Actualizar estado botones anterior/siguiente
 }
 function openNew() {
   if (!isEditor()) { showToast('🔒 Inicia sesión para añadir sellos'); return; }
@@ -3291,111 +2689,6 @@ function setPhotoSlot(side, src) {
 function triggerPhoto(side) { currentPhotoTarget = side; document.getElementById('fileInput').click(); }
 function triggerPhotoCamera(side) { currentPhotoTarget = side; window._fromCamera = true; document.getElementById('fileCamera').click(); }
 function triggerPhotoGallery(side) { currentPhotoTarget = side; window._fromCamera = false; document.getElementById('fileGallery').click(); }
-
-// ── Drag & Drop y Paste en slots de foto ──────────────────────────────────────
-function initPhotoDragDrop() {
-  const slotsConfig = [
-    { id: 'slotDelante', side: 'delante' },
-    { id: 'slotDetras',  side: 'detras'  },
-  ];
-
-  slotsConfig.forEach(({ id, side }) => {
-    const slot = document.getElementById(id);
-    if (!slot) return;
-
-    // Drag over: resaltar
-    slot.addEventListener('dragover', (e) => {
-      if (!isEditor()) return;
-      e.preventDefault();
-      e.dataTransfer.dropEffect = 'copy';
-      slot.classList.add('drag-over');
-    });
-
-    // Drag leave: quitar resaltado
-    slot.addEventListener('dragleave', (e) => {
-      if (!slot.contains(e.relatedTarget)) slot.classList.remove('drag-over');
-    });
-
-    // Drop: procesar imagen
-    slot.addEventListener('drop', (e) => {
-      e.preventDefault();
-      slot.classList.remove('drag-over');
-      if (!isEditor()) { showToast('🔒 Inicia sesión para editar'); return; }
-      const file = e.dataTransfer.files[0] || null;
-      if (file && file.type.startsWith('image/')) {
-        processFileAsPhoto(file, side);
-        return;
-      }
-      // Si no hay archivo, puede ser una imagen arrastrada desde el navegador (URL)
-      const imgUrl = e.dataTransfer.getData('text/uri-list') || e.dataTransfer.getData('text/plain');
-      if (imgUrl && /^https?:\/\//.test(imgUrl)) {
-        fetchUrlAsPhoto(imgUrl, side);
-      }
-    });
-  });
-
-  // Paste global: Ctrl+V cuando el modal está abierto
-  document.addEventListener('paste', (e) => {
-    if (!isEditor()) return;
-    const modalSello = document.getElementById('modalOverlay');
-    const modalPrueba = document.getElementById('modalPrueba');
-    const selloAbierto = modalSello?.classList.contains('open');
-    const pruebaAbierta = modalPrueba?.classList.contains('open');
-    if (!selloAbierto && !pruebaAbierta) return;
-
-    const items = e.clipboardData?.items;
-    if (!items) return;
-
-    for (const item of items) {
-      if (item.type.startsWith('image/')) {
-        const file = item.getAsFile();
-        if (!file) continue;
-        if (pruebaAbierta) {
-          const side = window._currentPruebaPhotoSide || 'delante';
-          currentPhotoTarget = 'prueba_' + side;
-          window._currentPruebaPhotoSide = side;
-          const fakeInput = { files: [file] };
-          handlePhoto({ target: fakeInput });
-          showToast('📋 Imagen pegada en ' + (side === 'delante' ? 'Anverso' : 'Reverso'));
-        } else {
-          const target = currentPhotoTarget || 'delante';
-          processFileAsPhoto(file, target);
-          showToast('📋 Imagen pegada en ' + (target === 'delante' ? 'Anverso' : 'Reverso'));
-        }
-        e.preventDefault();
-        return;
-      }
-    }
-  });
-}
-
-// Procesar un File como si viniera del input de archivo (reutiliza todo el flujo existente)
-function processFileAsPhoto(file, side) {
-  currentPhotoTarget = side;
-  window._fromCamera = false;
-  // Crear un evento sintético compatible con handlePhoto
-  const dt = new DataTransfer();
-  dt.items.add(file);
-  const fakeInput = document.createElement('input');
-  fakeInput.type = 'file';
-  Object.defineProperty(fakeInput, 'files', { value: dt.files });
-  handlePhoto({ target: fakeInput });
-}
-
-// Cargar imagen desde URL externa (arrastre desde navegador)
-async function fetchUrlAsPhoto(url, side) {
-  try {
-    showToast('⏳ Cargando imagen...');
-    const resp = await fetch(url);
-    const blob = await resp.blob();
-    if (!blob.type.startsWith('image/')) { showToast('❌ No es una imagen válida'); return; }
-    const file = new File([blob], 'arrastrada.jpg', { type: blob.type });
-    processFileAsPhoto(file, side);
-  } catch(e) {
-    showToast('❌ No se pudo cargar la imagen');
-  }
-}
-// ── Fin Drag & Drop y Paste ───────────────────────────────────────────────────
 
 // ==================== RECORTADOR MANUAL ====================
 let _cropCallback = null;
@@ -3843,11 +3136,10 @@ async function handlePhoto(event) {
       finalCanvas.toBlob(async (blob) => {
       try {
         const formData = new FormData();
-        const esPrueba = currentPhotoTarget.startsWith('prueba_');
-        const uniqueName = (esPrueba ? 'prueba_oficial_' + currentPruebaId : 'sello_' + currentStampId) + '_' + currentPhotoTarget + '_' + Date.now() + '.jpg';
+        const uniqueName = 'sello_' + currentStampId + '_' + currentPhotoTarget + '_' + Date.now() + '.jpg';
         formData.append('file', blob, uniqueName);
         formData.append('upload_preset', _cfg().preset);
-        formData.append('folder', esPrueba ? 'sellos/pruebas-oficiales/mios' : 'sellos/' + currentEpoca + '/mios');
+        formData.append('folder', 'sellos/' + currentEpoca + '/mios');
 
         const res = await fetch(`https://api.cloudinary.com/v1_1/${_cfg().cloud}/image/upload`, {
           method: 'POST',
@@ -3856,41 +3148,16 @@ async function handlePhoto(event) {
         const json = await res.json();
 
         if (json.secure_url) {
-          if (esPrueba) {
-            // Guardar foto en prueba oficial
-            const side = window._currentPruebaPhotoSide;
-            const pidx = PRUEBAS_OFICIALES_DATA.findIndex(p => p.id === currentPruebaId);
-            if (pidx >= 0) {
-              PRUEBAS_OFICIALES_DATA[pidx][side] = json.secure_url;
-              setPruebaSlot(side, json.secure_url);
-              try { localStorage.setItem('pruebas_oficiales', JSON.stringify(PRUEBAS_OFICIALES_DATA)); } catch(e) {}
-              savePruebaToSheets(PRUEBAS_OFICIALES_DATA[pidx]);
-              renderPruebas();
-            }
-            setSyncStatus('', 'Foto guardada en Cloudinary ✓');
-            showToast('Foto guardada ✓');
-          } else {
           const idx = stamps.findIndex(s => s.edifil === currentStampId);
           if (idx >= 0) {
             stamps[idx][currentPhotoTarget] = json.secure_url;
             setPhotoSlot(currentPhotoTarget, json.secure_url);
-            // Auto-estado: si no tenía estado, marcar como Nuevo automáticamente
-            let autoEstadoMsg = '';
-            if (!stamps[idx].estado) {
-              stamps[idx].estado = 'Nuevo';
-              const fEstado = document.getElementById('fEstado');
-              if (fEstado) fEstado.value = 'Nuevo';
-              autoEstadoMsg = ' · marcado como Nuevo ✓';
-              // Actualizar contadores de la cabecera
-              renderStamps();
-            }
             await saveToSheets(stamps[idx]);
             saveLocal();
             renderStamps();
           }
           setSyncStatus('', 'Foto guardada en Cloudinary ✓');
-          showToast('Foto guardada ✓' + autoEstadoMsg);
-          }
+          showToast('Foto guardada ✓');
         } else {
           console.error('Cloudinary error:', json);
           throw new Error(json.error?.message || 'Error en Cloudinary');
@@ -3898,17 +3165,7 @@ async function handlePhoto(event) {
       } catch(err) {
         console.error(err);
         const idx = stamps.findIndex(s => s.edifil === currentStampId);
-        if (idx >= 0) {
-          stamps[idx][currentPhotoTarget] = previewSrc;
-          // Auto-estado también en caso de error (guardado local)
-          if (!stamps[idx].estado) {
-            stamps[idx].estado = 'Nuevo';
-            const fEstado = document.getElementById('fEstado');
-            if (fEstado) fEstado.value = 'Nuevo';
-            showToast('Foto guardada localmente · marcado como Nuevo ✓');
-          }
-          saveLocal(); renderStamps();
-        }
+        if (idx >= 0) { stamps[idx][currentPhotoTarget] = previewSrc; saveLocal(); renderStamps(); }
         setSyncStatus('error', 'Error subiendo foto — guardada localmente');
         showToast('Error: ' + err.message);
       }
@@ -4116,21 +3373,6 @@ function showToast(msg) {
 // ==================== INIT ====================
 
 function showPortada() {
-  // Cerrar sección pruebas si estuviera abierta
-  const secPruebas = document.getElementById('seccionPruebas');
-  if (secPruebas && secPruebas.classList.contains('open')) {
-    secPruebas.classList.remove('open');
-    secPruebas.style.paddingTop = '';
-    const hEpocas = document.getElementById('header-epocas-btns');
-    const hPruebas = document.getElementById('header-pruebas-btns');
-    if (hEpocas) hEpocas.style.display = 'flex';
-    if (hPruebas) hPruebas.style.display = 'none';
-    const tituloEl = document.getElementById('header-epoca-titulo');
-    if (tituloEl) tituloEl.innerHTML = '';
-    document.getElementById('gridView') && (document.getElementById('gridView').style.display = ''); document.getElementById('listView') && (document.getElementById('listView').style.display = '');
-    const sb = document.getElementById('syncBar');
-    if (sb) sb.style.display = '';
-  }
   const portada = document.getElementById('portada');
   portada.classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -4138,19 +3380,6 @@ function showPortada() {
   history.pushState({ view: 'portada' }, '', '');
 
   const container = document.getElementById('portadaEpocas');
-  const tengoProuebas = PRUEBAS_OFICIALES_DATA.filter(p => p.estado && p.estado !== '').length;
-  const cardPruebas = `
-    <div class="portada-card pruebas-card" onclick="entrarPruebas()">
-      <img class="portada-card-img" src="https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_32.jpg" onerror="this.style.display='none'" alt="">
-      <div class="portada-card-fecha">1975 · 2004</div>
-      <div class="portada-card-nombre">🎨 Pruebas Oficiales</div>
-      <div class="portada-card-sub">Pruebas Oficiales y del Artista</div>
-      <div class="portada-card-sellos">
-        <div><strong>${PRUEBAS_OFICIALES_DATA.length}</strong>pruebas</div>
-        <div><strong>${tengoProuebas}</strong>en colección</div>
-      </div>
-    </div>`;
-
   container.innerHTML = Object.values(EPOCAS).map(ep => `
     <div class="portada-card${ep.id === currentEpoca ? ' active' : ''}" data-epoca="${ep.id}" onclick="entrarEpoca('${ep.id}')">
       <img class="portada-card-img" src="${ep.sello_ref}" onerror="this.style.display='none'" alt="">
@@ -4162,20 +3391,13 @@ function showPortada() {
         <div><strong>${epocasContadores[ep.id] !== undefined ? epocasContadores[ep.id] : '<span style="opacity:0.4;font-size:0.8rem">…</span>'}</strong>en colección</div>
       </div>
     </div>
-  `).join('') + cardPruebas;
+  `).join('');
 }
 
 function entrarEpoca(epocaId) {
   currentEpoca = epocaId;
   document.getElementById('portada').classList.remove('open');
   document.body.style.overflow = '';
-  // En móvil: ocultar authPortada flotante, mostrar avatar en header si hay sesión
-  if (window.innerWidth <= 600) {
-    const ap = document.getElementById('authPortada');
-    if (ap) ap.style.display = 'none';
-    const av = document.getElementById('headerAvatar');
-    if (av && isEditor()) av.style.display = '';
-  }
   // Asegurar que portada queda en el historial antes de la época
   history.replaceState({ view: 'portada' }, '', '');
   history.pushState({ view: 'epoca', epocaId }, '', '');
@@ -4185,13 +3407,6 @@ function entrarEpoca(epocaId) {
 function entrarColeccion() {
   document.getElementById('portada').classList.remove('open');
   document.body.style.overflow = '';
-  // En móvil: ocultar authPortada flotante, mostrar avatar en header si hay sesión
-  if (window.innerWidth <= 600) {
-    const ap = document.getElementById('authPortada');
-    if (ap) ap.style.display = 'none';
-    const av = document.getElementById('headerAvatar');
-    if (av && isEditor()) av.style.display = '';
-  }
   switchEpoca(currentEpoca);
 }
 
@@ -4294,320 +3509,6 @@ function toggleDarkMode() {
     if (tip)  tip.textContent  = 'Modo claro';
   }
 })();
-
-// ── PRUEBAS OFICIALES Y DEL ARTISTA ──────────────────────────────────────────
-let currentPruebaId = null;
-
-function entrarPruebas() {
-  // Ocultar portada y app principal, mostrar sección pruebas
-  document.getElementById('portada').classList.remove('open');
-  document.body.style.overflow = '';
-  document.getElementById('seccionPruebas').classList.add('open');
-  // Actualizar header fijo igual que las épocas normales
-  const tituloEl = document.getElementById('header-epoca-titulo');
-  if (tituloEl) tituloEl.innerHTML = '<span style="color:#e0b84a;font-style:italic">Pruebas Oficiales y del Artista</span>';
-  const subEl = document.getElementById('header-epoca-sub');
-  if (subEl) { subEl.textContent = ''; subEl.style.display = 'none'; }
-  // Ocultar vistas de sellos pero mantener .main para resultsInfo
-  document.getElementById('gridView') && (document.getElementById('gridView').style.display = 'none');
-  document.getElementById('listView') && (document.getElementById('listView').style.display = 'none');
-  document.getElementById('syncBar') && (document.getElementById('syncBar').style.display = 'none');
-  document.getElementById('readOnlyNotice') && (document.getElementById('readOnlyNotice').style.display = 'none');
-  // Intercambiar botones del header
-  const hEpocas = document.getElementById('header-epocas-btns');
-  const hPruebas = document.getElementById('header-pruebas-btns');
-  if (hEpocas) hEpocas.style.display = 'none';
-  if (hPruebas) hPruebas.style.display = 'flex';
-  history.pushState({ view: 'pruebas' }, '', '');
-  window.scrollTo(0, 0);
-  renderPruebas();
-  // Cargar desde Google Sheets si hay sesión
-  if (isEditor() || _googleCredentialToken) loadPruebasFromSheets();
-  // Móvil
-  if (window.innerWidth <= 600) {
-    const ap = document.getElementById('authPortada');
-    if (ap) ap.style.display = 'none';
-    const av = document.getElementById('headerAvatar');
-    if (av && isEditor()) av.style.display = '';
-  }
-}
-
-function volverPortadaDesdePruebas() {
-  document.getElementById('seccionPruebas').classList.remove('open');
-  document.getElementById('seccionPruebas').style.paddingTop = '';
-  // Restaurar botones del header
-  const hEpocas = document.getElementById('header-epocas-btns');
-  const hPruebas = document.getElementById('header-pruebas-btns');
-  if (hEpocas) hEpocas.style.display = 'flex';
-  if (hPruebas) hPruebas.style.display = 'none';
-  // Limpiar título del header fijo
-  const tituloEl = document.getElementById('header-epoca-titulo');
-  if (tituloEl) tituloEl.innerHTML = '';
-  // Restaurar contenido principal
-  document.getElementById('gridView') && (document.getElementById('gridView').style.display = ''); document.getElementById('listView') && (document.getElementById('listView').style.display = '');
-  const sb = document.getElementById('syncBar');
-  if (sb) sb.style.display = '';
-  showPortada();
-}
-
-function etiquetaCodigo(codigo) {
-    if (codigo.startsWith('CALC-')) return '🖨️ Calcográfica ' + codigo.replace('CALC-','');
-    if (codigo.startsWith('ESP-'))  return '⭐ Prueba Especial ' + codigo.replace('ESP-','');
-    if (codigo.startsWith('ABONADOS-')) return '📋 Abonados ' + codigo.replace('ABONADOS-','');
-    if (codigo.startsWith('SN-'))   return 'S/N';
-    return 'Prueba nº ' + codigo;
-  }
-
-function renderPruebas() {
-  const grid = document.getElementById('pruebaGrid');
-  const searchVal = (document.getElementById('searchInput')?.value || '').toLowerCase().trim();
-
-  // Filtrar
-  const filtered = PRUEBAS_OFICIALES_DATA.filter(p => {
-    if (searchVal) {
-      const haystack = [p.codigo, p.descripcion, String(p.año||'')].join(' ').toLowerCase();
-      if (!haystack.includes(searchVal)) return false;
-    }
-    return true;
-  });
-
-  const tengo = PRUEBAS_OFICIALES_DATA.filter(p => p.estado && p.estado !== '').length;
-  const conFoto = PRUEBAS_OFICIALES_DATA.filter(p => p.delante || p.detras).length;
-  // Actualizar stat-boxes del header fijo
-  const elTotal = document.getElementById('stat-total');
-  const elTengo = document.getElementById('stat-tengo');
-  const elFotos = document.getElementById('stat-fotos');
-  if (elTotal) elTotal.textContent = PRUEBAS_OFICIALES_DATA.length;
-  if (elTengo) elTengo.textContent = tengo;
-  if (elFotos) elFotos.textContent = conFoto;
-  const sfBox = document.getElementById('statbox-fotos');
-  if (sfBox) sfBox.style.display = '';
-  // Info de resultados reutilizando el mismo elemento de épocas
-  const ri = document.getElementById('resultsInfo');
-  if (ri) ri.textContent = `Mostrando ${filtered.length} de ${PRUEBAS_OFICIALES_DATA.length} pruebas`;
-  grid.innerHTML = filtered.map(p => {
-    const imgHtml = p.referencia
-      ? `<img src="${p.referencia}" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" loading="lazy"><div class="prueba-img-placeholder" style="display:none">🎨</div>`
-      : `<div class="prueba-img-placeholder">🎨</div>`;
-    return `<div class="prueba-card${p.estado && p.estado !== '' ? ' tengo' : ''}" onclick="abrirPrueba('${p.id}')">
-      <div class="prueba-img-area">${imgHtml}</div>
-      <div class="prueba-info">
-        <div class="prueba-num">${etiquetaCodigo(p.codigo)}</div>
-        <div class="prueba-desc">${p.descripcion}</div>
-        <div class="prueba-año">${p.año || '—'}</div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function abrirPrueba(id) {
-  const p = PRUEBAS_OFICIALES_DATA.find(x => x.id === id);
-  if (!p) return;
-  currentPruebaId = id;
-
-  document.getElementById('pNum').textContent = etiquetaCodigo(p.codigo);
-  document.getElementById('pTitle').textContent = p.descripcion;
-  document.getElementById('pFNum').value = p.codigo;
-  document.getElementById('pFAño').value = p.año || '';
-  document.getElementById('pFDesc').value = p.descripcion;
-  document.getElementById('pFEstado').value = p.estado || '';
-  document.getElementById('pFNotas').value = p.notas || '';
-
-  // Precio
-  const precioEl = document.getElementById('precio-prueba-modal');
-  if (precioEl) {
-    if (p.precio_nuevo || p.precio_usado) {
-      precioEl.innerHTML = `<div style="font-size:0.75rem;color:var(--sepia);padding:4px 0 8px;display:flex;gap:16px">
-        ${p.precio_nuevo ? '<span>Nuevo: <strong>' + p.precio_nuevo + ' €</strong></span>' : ''}
-        ${p.precio_usado ? '<span>Usado: <strong>' + p.precio_usado + ' €</strong></span>' : ''}
-      </div>`;
-    } else { precioEl.innerHTML = ''; }
-  }
-
-  // Fotos
-  setPruebaSlot('referencia', p.referencia);
-  setPruebaSlot('delante', p.delante);
-  setPruebaSlot('detras', p.detras);
-
-  // Drag & drop / paste en slots de prueba
-  const editable = isEditor();
-  ['pSlotDelante','pSlotDetras'].forEach(slotId => {
-    const slot = document.getElementById(slotId);
-    if (!slot || !editable) return;
-    const side = slotId === 'pSlotDelante' ? 'delante' : 'detras';
-    slot.ondragover = e => { e.preventDefault(); slot.classList.add('drag-over'); };
-    slot.ondragleave = () => slot.classList.remove('drag-over');
-    slot.ondrop = e => {
-      e.preventDefault(); slot.classList.remove('drag-over');
-      const file = e.dataTransfer.files[0];
-      if (file && file.type.startsWith('image/')) {
-        currentPhotoTarget = 'prueba_' + side;
-        window._currentPruebaPhotoSide = side;
-        const fakeInput = { files: [file] };
-        handlePhoto({ target: fakeInput });
-      }
-    };
-  });
-
-  // Permisos edición
-  ['pFAño','pFDesc','pFNotas'].forEach(fid => {
-    const el = document.getElementById(fid);
-    if (el) { el.readOnly = !editable; el.style.background = editable ? '' : '#f5f0e8'; }
-  });
-  const sel = document.getElementById('pFEstado');
-  if (sel) sel.disabled = !editable;
-  document.querySelectorAll('.edit-only').forEach(el => { el.style.display = editable ? '' : 'none'; });
-
-  document.getElementById('modalPrueba').classList.add('open');
-  actualizarNavPrueba();
-}
-
-function setPruebaSlot(side, src) {
-  const ids = { referencia: 'pSlotRef', delante: 'pSlotDelante', detras: 'pSlotDetras' };
-  const slot = document.getElementById(ids[side]);
-  if (!slot) return;
-  const preview = slot.querySelector('.photo-slot-preview') || slot;
-  const existing = preview.querySelector('img');
-  if (existing) existing.remove();
-  slot.classList.remove('has-photo');
-  preview.onclick = null;
-  if (src) {
-    const captions = { referencia: 'Imagen de referencia', delante: 'Mi prueba · Cara delantera', detras: 'Mi prueba · Cara trasera' };
-    const img = document.createElement('img');
-    img.src = src;
-    img.addEventListener('click', (e) => { e.stopPropagation(); openLightbox(src, captions[side]||''); });
-    preview.insertBefore(img, preview.firstChild);
-    slot.classList.add('has-photo');
-    preview.onclick = (e) => { e.stopPropagation(); openLightbox(src, captions[side]||''); };
-  }
-}
-
-function cerrarModalPrueba(e) {
-  if (e && e.target !== document.getElementById('modalPrueba')) return;
-  document.getElementById('modalPrueba').classList.remove('open');
-  currentPruebaId = null;
-}
-
-function guardarPrueba() {
-  if (!isEditor()) return;
-  const idx = PRUEBAS_OFICIALES_DATA.findIndex(p => p.id === currentPruebaId);
-  if (idx < 0) return;
-  PRUEBAS_OFICIALES_DATA[idx].año = parseInt(document.getElementById('pFAño').value) || null;
-  PRUEBAS_OFICIALES_DATA[idx].descripcion = document.getElementById('pFDesc').value;
-  PRUEBAS_OFICIALES_DATA[idx].estado = document.getElementById('pFEstado').value || null;
-  PRUEBAS_OFICIALES_DATA[idx].notas = document.getElementById('pFNotas').value;
-  // Guardar en localStorage
-  try { localStorage.setItem('pruebas_oficiales', JSON.stringify(PRUEBAS_OFICIALES_DATA)); } catch(e) {}
-  // Guardar en Google Sheets
-  savePruebaToSheets(PRUEBAS_OFICIALES_DATA[idx]);
-  renderPruebas();
-}
-
-function eliminarPrueba() {
-  if (!isEditor()) return;
-  if (!confirm('¿Eliminar los datos de esta prueba?')) return;
-  const idx = PRUEBAS_OFICIALES_DATA.findIndex(p => p.id === currentPruebaId);
-  if (idx < 0) return;
-  PRUEBAS_OFICIALES_DATA[idx].estado = null;
-  PRUEBAS_OFICIALES_DATA[idx].notas = '';
-  PRUEBAS_OFICIALES_DATA[idx].delante = null;
-  PRUEBAS_OFICIALES_DATA[idx].detras = null;
-  try { localStorage.setItem('pruebas_oficiales', JSON.stringify(PRUEBAS_OFICIALES_DATA)); } catch(e) {}
-  savePruebaToSheets(PRUEBAS_OFICIALES_DATA[idx]);
-  cerrarModalPrueba();
-  renderPruebas();
-  showToast('Datos eliminados');
-}
-
-function navegarPrueba(dir) {
-  const idx = PRUEBAS_OFICIALES_DATA.findIndex(p => p.id === currentPruebaId);
-  if (idx < 0) return;
-  const next = idx + dir;
-  if (next < 0 || next >= PRUEBAS_OFICIALES_DATA.length) return;
-  abrirPrueba(PRUEBAS_OFICIALES_DATA[next].id);
-}
-
-function actualizarNavPrueba() {
-  const idx = PRUEBAS_OFICIALES_DATA.findIndex(p => p.id === currentPruebaId);
-  const btnP = document.getElementById('pruebNavPrev');
-  const btnN = document.getElementById('pruebNavNext');
-  if (btnP) btnP.disabled = idx <= 0;
-  if (btnN) btnN.disabled = idx >= PRUEBAS_OFICIALES_DATA.length - 1;
-}
-
-function triggerPruebaPhoto(side) {
-  currentPhotoTarget = 'prueba_' + side;
-  window._currentPruebaPhotoSide = side;
-  window._fromCamera = true;
-  document.getElementById('fileCamera').click();
-}
-function triggerPruebaPhotoGallery(side) {
-  currentPhotoTarget = 'prueba_' + side;
-  window._currentPruebaPhotoSide = side;
-  window._fromCamera = false;
-  document.getElementById('fileGallery').click();
-}
-function quitarFotoPrueba(side) {
-  const idx = PRUEBAS_OFICIALES_DATA.findIndex(p => p.id === currentPruebaId);
-  if (idx < 0) return;
-  PRUEBAS_OFICIALES_DATA[idx][side] = null;
-  setPruebaSlot(side, null);
-  try { localStorage.setItem('pruebas_oficiales', JSON.stringify(PRUEBAS_OFICIALES_DATA)); } catch(e) {}
-}
-
-// Restaurar datos de pruebas desde localStorage al cargar
-(function restaurarPruebas() {
-  try {
-    const saved = localStorage.getItem('pruebas_oficiales');
-    if (!saved) return;
-    const savedData = JSON.parse(saved);
-    savedData.forEach(saved => {
-      const idx = PRUEBAS_OFICIALES_DATA.findIndex(p => p.id === saved.id);
-      if (idx >= 0) {
-        PRUEBAS_OFICIALES_DATA[idx].estado = saved.estado;
-        PRUEBAS_OFICIALES_DATA[idx].notas = saved.notas;
-        PRUEBAS_OFICIALES_DATA[idx].año = saved.año;
-        PRUEBAS_OFICIALES_DATA[idx].descripcion = saved.descripcion;
-        PRUEBAS_OFICIALES_DATA[idx].delante = saved.delante || null;
-        PRUEBAS_OFICIALES_DATA[idx].detras = saved.detras || null;
-      }
-    });
-  } catch(e) {}
-})();
-
-// Swipe táctil en modal de pruebas
-(function() {
-  let tx = 0, ty = 0;
-  document.addEventListener('touchstart', (e) => {
-    if (!document.getElementById('modalPrueba')?.classList.contains('open')) return;
-    tx = e.touches[0].clientX; ty = e.touches[0].clientY;
-  }, { passive: true });
-  document.addEventListener('touchend', (e) => {
-    if (!document.getElementById('modalPrueba')?.classList.contains('open')) return;
-    const dx = e.changedTouches[0].clientX - tx;
-    const dy = e.changedTouches[0].clientY - ty;
-    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) navegarPrueba(dx < 0 ? 1 : -1);
-  }, { passive: true });
-})();
-
-// Historial: volver desde pruebas
-window.addEventListener('popstate', function(e) {
-  if (document.getElementById('seccionPruebas').classList.contains('open')) {
-    document.getElementById('seccionPruebas').classList.remove('open');
-    document.getElementById('seccionPruebas').style.paddingTop = '';
-    const hEpocas = document.getElementById('header-epocas-btns');
-    const hPruebas = document.getElementById('header-pruebas-btns');
-    if (hEpocas) hEpocas.style.display = 'flex';
-    if (hPruebas) hPruebas.style.display = 'none';
-    const tituloEl = document.getElementById('header-epoca-titulo');
-    if (tituloEl) tituloEl.innerHTML = '';
-    document.getElementById('gridView') && (document.getElementById('gridView').style.display = ''); document.getElementById('listView') && (document.getElementById('listView').style.display = '');
-    const sb = document.getElementById('syncBar');
-    if (sb) sb.style.display = '';
-    showPortada();
-  }
-});
-// ── FIN PRUEBAS OFICIALES ─────────────────────────────────────────────────────
 
 </script>
 
