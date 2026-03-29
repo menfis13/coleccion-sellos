@@ -1302,13 +1302,29 @@ function setSyncStatus(status, msg) {
   msgEl.textContent = msg;
 }
 
+async function fetchAllSheetRows(sheetName) {
+  const sid = _cfg().sid;
+  const PAGE = 300;
+  let offset = 0;
+  let allRows = [];
+  while (true) {
+    const tq = encodeURIComponent('select * limit ' + PAGE + ' offset ' + offset);
+    const url = 'https://docs.google.com/spreadsheets/d/' + sid + '/gviz/tq?tqx=out:json&tq=' + tq + '&sheet=' + encodeURIComponent(sheetName);
+    const res = await fetch(url);
+    const text = await res.text();
+    const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\((.*)\);?$/s)[1]);
+    const rows = json.table?.rows || [];
+    allRows = allRows.concat(rows);
+    if (rows.length < PAGE) break;
+    offset += PAGE;
+  }
+  return allRows;
+}
+
 async function loadFromSheets() {
   setSyncStatus('syncing', 'Cargando datos desde Google Sheets...');
   try {
-    const res = await fetch(SHEET_URL);
-    const text = await res.text();
-    const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\((.*)\);?$/s)[1]);
-    const rows = json.table.rows;
+    const rows = await fetchAllSheetRows(EPOCAS[currentEpoca].sheet);
 
 
     if (!rows || rows.length === 0) {
@@ -2873,11 +2889,7 @@ const edifilEpocaMap = {}; // edifil -> epochId (construido en precargarContador
 async function precargarContadores() {
   const promesas = Object.values(EPOCAS).map(async ep => {
     try {
-      const url = `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&tq=select%20*%20limit%209999&sheet=${encodeURIComponent(ep.sheet)}`;
-      const res = await fetch(url);
-      const text = await res.text();
-      const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\((.*)\);?$/s)[1]);
-      const rows = json.table?.rows || [];
+      const rows = await fetchAllSheetRows(ep.sheet);
       const validRows = rows.filter(row => row.c && row.c[0] && (row.c[0].v != null || row.c[0].f != null));
       epocasTotales[ep.id] = validRows.length;
       let count = 0, variantes = 0;
