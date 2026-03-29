@@ -984,7 +984,7 @@ function _cfg() {
   ].forEach(([k,v]) => _r[k] = _d(v));
   return _r;
 }
-let SHEET_URL = `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=Hoja 1`;
+let SHEET_URL = `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&tq=select%20*%20limit%209999&sheet=Hoja 1`;
 
 // ==================== AUTENTICACIÓN GOOGLE ====================
 const AUTHORIZED_EMAIL = _cfg().mail;
@@ -2848,8 +2848,8 @@ history.replaceState({ view: 'portada' }, '', '');
 function switchEpoca(epocaId) {
   currentEpoca = epocaId;
   SHEET_URL = epocaId === 'pruebas'
-    ? `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(EPOCAS[epocaId].sheet)}`
-    : `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=${EPOCAS[epocaId].sheet}`;
+    ? `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&tq=select%20*%20limit%209999&sheet=${encodeURIComponent(EPOCAS[epocaId].sheet)}`
+    : `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&tq=select%20*%20limit%209999&sheet=${EPOCAS[epocaId].sheet}`;
   const ep = EPOCAS[epocaId];
   // Resetear filtro de stat al cambiar de época
   activeStatFilter = null;
@@ -2873,7 +2873,7 @@ const edifilEpocaMap = {}; // edifil -> epochId (construido en precargarContador
 async function precargarContadores() {
   const promesas = Object.values(EPOCAS).map(async ep => {
     try {
-      const url = `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(ep.sheet)}`;
+      const url = `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&tq=select%20*%20limit%209999&sheet=${encodeURIComponent(ep.sheet)}`;
       const res = await fetch(url);
       const text = await res.text();
       const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\((.*)\);?$/s)[1]);
