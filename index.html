@@ -984,7 +984,7 @@ function _cfg() {
   ].forEach(([k,v]) => _r[k] = _d(v));
   return _r;
 }
-let SHEET_URL = `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&tq=select%20*%20limit%209999&sheet=Hoja 1`;
+let SHEET_URL = `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=Hoja 1&range=A1:N500`;
 
 // ==================== AUTENTICACIÓN GOOGLE ====================
 const AUTHORIZED_EMAIL = _cfg().mail;
@@ -1302,55 +1302,20 @@ function setSyncStatus(status, msg) {
   msgEl.textContent = msg;
 }
 
-function _parseCSVLine(line) {
-  const result = [];
-  let cur = '', inQ = false;
-  for (let i = 0; i < line.length; i++) {
-    const ch = line[i];
-    if (ch === '"') {
-      if (inQ && line[i+1] === '"') { cur += '"'; i++; }
-      else inQ = !inQ;
-    } else if (ch === ',' && !inQ) { result.push(cur); cur = ''; }
-    else cur += ch;
-  }
-  result.push(cur);
-  return result;
-}
-
-async function fetchAllSheetRows(sheetName) {
-  const sid = _cfg().sid;
-  // CSV format devuelve TODOS los valores como texto, evitando que gviz
-  // infiera tipo NUMBER en columna A y convierta a null las celdas con texto (ej: "213A")
-  const url = 'https://docs.google.com/spreadsheets/d/' + sid
-    + '/gviz/tq?tqx=out:csv&range=A1:N2000&sheet='
-    + encodeURIComponent(sheetName);
-  const res = await fetch(url);
-  const text = await res.text();
-  const lines = text.trim().split('\n');
-  // La primera línea es la cabecera — la saltamos
-  return lines.slice(1).map(line => {
-    const vals = _parseCSVLine(line.replace(/\r$/, ''));
-    return { c: vals.map(v => v === '' ? null : { v: v, f: v }) };
-  });
-}
-
 async function loadFromSheets() {
   setSyncStatus('syncing', 'Cargando datos desde Google Sheets...');
   try {
-    const rows = await fetchAllSheetRows(EPOCAS[currentEpoca].sheet);
-
+    const res = await fetch(SHEET_URL);
+    const text = await res.text();
+    const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\((.*)\);?$/s)[1]);
+    const rows = json.table.rows;
 
     if (!rows || rows.length === 0) {
       stamps = [];
       setSyncStatus('', 'Google Sheets vacío para esta época.');
     } else {
-      let _descartadas = 0;
       stamps = rows.map(row => {
-        if (!row.c || !row.c[0] || (row.c[0].v == null && row.c[0].f == null)) {
-          _descartadas++;
-          if (_descartadas <= 3) console.log('[map] fila descartada c[0]:', JSON.stringify(row.c?.[0]), 'row.c length:', row.c?.length, 'c[1]:', JSON.stringify(row.c?.[1]));
-          return null;
-        }
+        if (!row.c || !row.c[0]) return null;
         // Sheets puede devolver null en .v para celdas con texto (ej: "1A") si la columna está formateada como número
         // En ese caso el valor viene solo en .f (formatted). Leemos ambos.
         const cell = row.c[0];
@@ -1368,7 +1333,7 @@ async function loadFromSheets() {
             codigo,
             año:          row.c[1]?.v || null,
             descripcion:  row.c[2]?.v || '',
-            estado:       row.c[6]?.v || row.c[6]?.f || null,
+            estado:       row.c[6]?.v || null,
             notas:        row.c[7]?.v || '',
             referencia:   row.c[8]?.v || (codigo ? `https://res.cloudinary.com/do4ltpfbo/image/upload/prueba_oficial_${codigo.toLowerCase()}.jpg` : null),
             delante:      row.c[9]?.v || null,
@@ -1396,7 +1361,6 @@ async function loadFromSheets() {
           variante:     /[a-zA-Z]/.test(String(edifil)),
         };
       }).filter(Boolean);
-      console.log('[map] descartadas:', _descartadas, 'restantes:', stamps.length);
       const variantes = stamps.filter(s => s.variante);
       console.log('VARIANTES ENCONTRADAS:', variantes.map(s => s.edifil));
       setSyncStatus('', `Sincronizado con Google Sheets — ${stamps.length} registros`);
@@ -1406,10 +1370,8 @@ async function loadFromSheets() {
     stamps = [];
     setSyncStatus('error', 'Sin conexión con Sheets — no hay datos locales disponibles');
   }
-  console.log('[load] FIN loadFromSheets: stamps=' + stamps.length + ' epoca=' + currentEpoca + ' t=' + Date.now());
   populateFilters();
   renderStamps();
-  console.log('[load] TRAS renderStamps: stamps=' + stamps.length);
   if (currentEpoca) epocasContadores[currentEpoca] = stamps.filter(s => s.estado).length;
 }
 async function saveToSheets(stamp) {
@@ -1551,7 +1513,6 @@ function colorClass(color) {
 }
 
 function renderStamps() {
-  if (currentEpoca === 'alfonso13') console.log('[render] renderStamps stamps=' + stamps.length + ' t=' + Date.now());
   const filtered = getFiltered();
   const withEstado   = stamps.filter(s => s.estado).length;
   const withVariante = stamps.filter(s => s.variante).length;
@@ -2877,8 +2838,8 @@ history.replaceState({ view: 'portada' }, '', '');
 function switchEpoca(epocaId) {
   currentEpoca = epocaId;
   SHEET_URL = epocaId === 'pruebas'
-    ? `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&tq=select%20*%20limit%209999&sheet=${encodeURIComponent(EPOCAS[epocaId].sheet)}`
-    : `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&tq=select%20*%20limit%209999&sheet=${EPOCAS[epocaId].sheet}`;
+    ? `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(EPOCAS[epocaId].sheet)}`
+    : `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=${EPOCAS[epocaId].sheet}&range=A1:N500`;
   const ep = EPOCAS[epocaId];
   // Resetear filtro de stat al cambiar de época
   activeStatFilter = null;
@@ -2902,8 +2863,12 @@ const edifilEpocaMap = {}; // edifil -> epochId (construido en precargarContador
 async function precargarContadores() {
   const promesas = Object.values(EPOCAS).map(async ep => {
     try {
-      const rows = await fetchAllSheetRows(ep.sheet);
-      const validRows = rows.filter(row => row.c && row.c[0] && (row.c[0].v != null || row.c[0].f != null));
+      const url = `https://docs.google.com/spreadsheets/d/${_cfg().sid}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(ep.sheet)}&range=A1:N500`;
+      const res = await fetch(url);
+      const text = await res.text();
+      const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\((.*)\);?$/s)[1]);
+      const rows = json.table?.rows || [];
+      const validRows = rows.filter(row => row.c && row.c[0] && row.c[0].v);
       epocasTotales[ep.id] = validRows.length;
       let count = 0, variantes = 0;
       validRows.forEach(row => {
@@ -2915,7 +2880,7 @@ async function precargarContadores() {
           // Detectar variante: Edifil con letra (ej: 48A)
           if (/[a-zA-Z]/.test(String(edFmt || edVal))) variantes++;
         }
-        if (row.c[6] && (row.c[6].v || row.c[6].f)) count++;
+        if (row.c[6] && row.c[6].v) count++;
       });
       epocasContadores[ep.id]  = count;
       epocasVariantes[ep.id]   = variantes;
