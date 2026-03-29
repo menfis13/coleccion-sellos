@@ -2945,8 +2945,16 @@ function hacerCopiaSeguridad() {
 
   const fecha = new Date().toISOString().slice(0,10); // YYYY-MM-DD
 
-  // 1. Descargar el HTML
+  // 1. Descargar el HTML — vaciar contenido dinámico antes de copiar
+  const _gridView = document.getElementById('gridView');
+  const _listBody = document.getElementById('listBody');
+  const _gridSaved = _gridView ? _gridView.innerHTML : '';
+  const _listSaved = _listBody ? _listBody.innerHTML : '';
+  if (_gridView) _gridView.innerHTML = '';
+  if (_listBody) _listBody.innerHTML = '';
   const htmlBlob = new Blob([document.documentElement.outerHTML], { type: 'text/html;charset=utf-8' });
+  if (_gridView) _gridView.innerHTML = _gridSaved;
+  if (_listBody) _listBody.innerHTML = _listSaved;
   const htmlUrl = URL.createObjectURL(htmlBlob);
   const htmlLink = document.createElement('a');
   htmlLink.href = htmlUrl;
