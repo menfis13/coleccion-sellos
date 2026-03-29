@@ -1315,8 +1315,13 @@ async function loadFromSheets() {
       stamps = [];
       setSyncStatus('', 'Google Sheets vacío para esta época.');
     } else {
+      let _descartadas = 0;
       stamps = rows.map(row => {
-        if (!row.c || !row.c[0] || (row.c[0].v == null && row.c[0].f == null)) return null;
+        if (!row.c || !row.c[0] || (row.c[0].v == null && row.c[0].f == null)) {
+          _descartadas++;
+          if (_descartadas <= 3) console.log('[map] fila descartada c[0]:', JSON.stringify(row.c?.[0]), 'row.c length:', row.c?.length, 'c[1]:', JSON.stringify(row.c?.[1]));
+          return null;
+        }
         // Sheets puede devolver null en .v para celdas con texto (ej: "1A") si la columna está formateada como número
         // En ese caso el valor viene solo en .f (formatted). Leemos ambos.
         const cell = row.c[0];
@@ -1362,6 +1367,7 @@ async function loadFromSheets() {
           variante:     /[a-zA-Z]/.test(String(edifil)),
         };
       }).filter(Boolean);
+      console.log('[map] descartadas:', _descartadas, 'restantes:', stamps.length);
       const variantes = stamps.filter(s => s.variante);
       console.log('VARIANTES ENCONTRADAS:', variantes.map(s => s.edifil));
       setSyncStatus('', `Sincronizado con Google Sheets — ${stamps.length} registros`);
